@@ -14,6 +14,9 @@ data class GameData(
     val xpForNextLevel: Int
         get() = level * 100
 
+    val xpInCurrentLevel: Int
+        get() = xp % 100
+
     val xpProgress: Float
-        get() = (xp % xpForNextLevel).toFloat() / xpForNextLevel
+        get() = xpInCurrentLevel.toFloat() / 100f
 }
