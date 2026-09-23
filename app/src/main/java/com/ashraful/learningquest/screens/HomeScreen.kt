@@ -2,6 +2,8 @@ package com.ashraful.learningquest.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -40,6 +42,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(Color(0xFFF4F7FF), Color.White)))
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 18.dp)
     ) {
         Spacer(Modifier.height(18.dp))
@@ -108,6 +111,31 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         }
 
         Spacer(Modifier.height(20.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            Column(Modifier.padding(16.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("YOUR SCORES", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7A8798))
+                        Text("Keep building your skills", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
+                    }
+                    Text("📈", fontSize = 24.sp)
+                }
+                Spacer(Modifier.height(12.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    ScorePill("Math", data?.mathScore ?: 0, Color(0xFF2457A6))
+                    ScorePill("English", data?.englishScore ?: 0, Color(0xFF7043A8))
+                    ScorePill("Science", data?.scienceScore ?: 0, Color(0xFF23754A))
+                    ScorePill("Puzzle", data?.puzzleScore ?: 0, Color(0xFF9A5A00))
+                }
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
         Text("CHOOSE A CHALLENGE", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
         Spacer(Modifier.height(7.dp))
 
@@ -146,6 +174,14 @@ private fun MiniStat(icon: String, title: String, value: String, modifier: Modif
                 Text(value, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
             }
         }
+    }
+}
+
+@Composable
+private fun ScorePill(subject: String, score: Int, accent: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("$score", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = accent)
+        Text(subject, fontSize = 10.sp, color = Color(0xFF7A8798))
     }
 }
 
