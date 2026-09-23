@@ -4,13 +4,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -180,78 +183,84 @@ private fun PuzzleSectionScreen(
     onBack: () -> Unit,
     onSectionSelected: (PuzzleSection) -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF8ED))
-            .padding(20.dp),
+            .background(Brush.verticalGradient(listOf(Color(0xFFFFF8ED), Color.White)))
+            .padding(horizontal = 18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(Modifier.height(18.dp))
 
-        OutlinedButton(
-            onClick = onBack,
-            shape = RoundedCornerShape(30.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("< Home")
+            OutlinedButton(
+                onClick = onBack,
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Text("‹ Home")
+            }
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) {
+                Text("🧩 Puzzles", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF9A5A00))
+                Text("Train your thinking with patterns, logic and riddles", fontSize = 13.sp, color = Color(0xFF71809A))
+            }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(18.dp))
 
-        Text(
-            "Puzzles",
-            fontSize = 32.sp,
-            color = Color(0xFF9A5A00)
-        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEED7)),
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(17.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(shape = CircleShape, color = Color.White.copy(alpha = 0.8f)) {
+                    Text("🧩", modifier = Modifier.padding(12.dp), fontSize = 22.sp)
+                }
+                Spacer(Modifier.width(13.dp))
+                Column {
+                    Text("Choose a Challenge", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9A5A00))
+                    Text("10 questions • Earn XP & Coins", fontSize = 12.sp, color = Color(0xFF71809A))
+                }
+            }
+        }
 
-        Text(
-            "Choose a Challenge",
-            fontSize = 18.sp,
-            color = Color(0xFF806A4D)
-        )
-
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(14.dp))
 
         puzzleSections.forEach { section ->
-
-            Button(
-                onClick = {
-                    onSectionSelected(section)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 5.dp),
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFE58A19)
-                )
+            Card(
+                onClick = { onSectionSelected(section) },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(2.dp)
             ) {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(vertical = 5.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    Text(
-                        section.name,
-                        fontSize = 20.sp
-                    )
-
-                    Text(
-                        "10 Questions",
-                        fontSize = 13.sp
-                    )
+                    Surface(shape = CircleShape, color = Color(0xFFFFEED7)) {
+                        Text("▶", modifier = Modifier.padding(11.dp), fontSize = 13.sp, color = Color(0xFF9A5A00))
+                    }
+                    Spacer(Modifier.width(13.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(section.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9A5A00))
+                        Text("10 Questions", fontSize = 12.sp, color = Color(0xFF7A8798))
+                    }
+                    Text("›", fontSize = 28.sp, color = Color(0xFF9A5A00))
                 }
             }
         }
 
         Spacer(Modifier.weight(1f))
-
-        Text(
-            "Think, solve and earn rewards!",
-            fontSize = 15.sp,
-            color = Color(0xFF806A4D)
-        )
+        Text("Complete challenges to earn rewards 🌟", fontSize = 12.sp, color = Color(0xFF8A96A8), modifier = Modifier.padding(bottom = 8.dp))
     }
 }
 
