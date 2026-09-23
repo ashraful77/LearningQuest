@@ -212,7 +212,7 @@ private fun ScienceQuizScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF3FBF6))
+                .background(Brush.verticalGradient(listOf(Color(0xFFF1FBF6), Color.White)))
                 .padding(24.dp),
             horizontalAlignment =
                 Alignment.CenterHorizontally
@@ -223,7 +223,7 @@ private fun ScienceQuizScreen(
             )
 
             Text(
-                text = "Challenge Complete!",
+                text = "🎉 Challenge Complete!",
                 fontSize = 30.sp,
                 color = Color(0xFF176B45)
             )
@@ -342,7 +342,7 @@ private fun ScienceQuizScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF3FBF6))
+            .background(Brush.verticalGradient(listOf(Color(0xFFF1FBF6), Color.White)))
             .padding(18.dp),
         horizontalAlignment =
             Alignment.CenterHorizontally
