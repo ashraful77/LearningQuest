@@ -28,6 +28,7 @@ fun HomeScreen() {
         "english" -> EnglishScreen { screen = "home" }
         "science" -> ScienceScreen { screen = "home" }
         "puzzle" -> PuzzleScreen { screen = "home" }
+        "mixed" -> MixedQuizScreen { screen = "home" }
     }
 }
 
@@ -143,6 +144,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         SubjectCard("🔤", "English", "Words, grammar & language", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("english") }
         SubjectCard("🔬", "Science", "Explore the world around you", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("science") }
         SubjectCard("🧩", "Puzzles", "Think, solve & discover", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("puzzle") }
+        SubjectCard("🌈", "Mixed Quiz", "20 marks • Math + English + Science + Puzzle", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
 
         Spacer(Modifier.weight(1f))
 
