@@ -620,3 +620,15 @@ private fun PuzzleQuizScreen(
         )
     }
 }
+@Composable
+private fun CelebrationOverlay() {
+    val transition = rememberInfiniteTransition(label = "win")
+    val scale by transition.animateFloat(0.92f, 1.08f, infiniteRepeatable(tween(500), RepeatMode.Reverse), label = "scale")
+    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF1565C0), Color(0xFF00BFA5), Color(0xFFFFC107))).copy(alpha = 0.96f)), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.scale(scale)) {
+            Text("🎉", fontSize = 72.sp)
+            Text("CORRECT!", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
+            Text("⭐ +10 XP   🪙 +10 Coins ⭐", fontSize = 19.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        }
+    }
+}
