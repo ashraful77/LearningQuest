@@ -23,6 +23,7 @@ class GameDataStore(private val context: Context) {
         val SCIENCE_SCORE = intPreferencesKey("science_score")
         val PUZZLE_SCORE = intPreferencesKey("puzzle_score")
         val MATH_DIFFICULTY = intPreferencesKey("math_difficulty")
+        val LAST_ACTIVITY_DAY = intPreferencesKey("last_activity_day")
     }
 
     val gameData: Flow<GameData> =
