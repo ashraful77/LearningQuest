@@ -289,6 +289,7 @@ private fun PuzzleQuizScreen(
     var earnedXp by remember { mutableIntStateOf(0) }
 
     val question = section.questions[index]
+    val shuffledOptions = remember(section, index) { question.options.shuffled() }
 
     val infiniteTransition =
         rememberInfiniteTransition(label = "puzzleCelebration")
@@ -478,7 +479,7 @@ private fun PuzzleQuizScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        question.options.forEach { option ->
+        shuffledOptions.forEach { option ->
 
             val isSelected = option == selected
 
