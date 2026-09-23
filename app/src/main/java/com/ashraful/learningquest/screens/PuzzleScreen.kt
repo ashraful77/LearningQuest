@@ -308,7 +308,7 @@ private fun PuzzleQuizScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFF8ED))
+                .background(Brush.verticalGradient(listOf(Color(0xFFFFF8ED), Color.White)))
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -406,7 +406,7 @@ private fun PuzzleQuizScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF8ED))
+            .background(Brush.verticalGradient(listOf(Color(0xFFFFF8ED), Color.White)))
             .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -435,6 +435,7 @@ private fun PuzzleQuizScreen(
         Text(
             section.name,
             fontSize = 30.sp,
+            fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF9A5A00)
         )
 
