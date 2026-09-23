@@ -21,6 +21,7 @@ import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.QuizSection
 import com.ashraful.learningquest.data.englishSections
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 @Composable
 fun EnglishScreen(onBack: () -> Unit) {
@@ -610,6 +611,12 @@ private fun EnglishQuizScreen(
 }
 @Composable
 private fun CelebrationOverlay() {
+    var visible by remember { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        delay(900)
+        visible = false
+    }
+    if (!visible) return
     val transition = rememberInfiniteTransition(label = "win")
     val scale by transition.animateFloat(0.92f, 1.08f, infiniteRepeatable(tween(500), RepeatMode.Reverse), label = "scale")
     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107))).copy(alpha = 0.96f)), contentAlignment = Alignment.Center) {
