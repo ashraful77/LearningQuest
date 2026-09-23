@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
+import java.time.ZoneId
 
 private val Context.gameDataStore by preferencesDataStore(
     name = "learning_quest_data"
@@ -51,6 +53,14 @@ class GameDataStore(private val context: Context) {
             val currentCoins = preferences[Keys.COINS] ?: 0
             val currentXp = preferences[Keys.XP] ?: 0
             val currentLevel = preferences[Keys.LEVEL] ?: 1
+            val currentStreak = preferences[Keys.STREAK] ?: 0
+            val lastActivityDay = preferences[Keys.LAST_ACTIVITY_DAY] ?: 0
+            val today = LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()
+            val newStreak = when {
+                lastActivityDay == today -> currentStreak
+                lastActivityDay == today - 1 -> currentStreak + 1
+                else -> 1
+            }
 
             val newXp = currentXp + xp
             val newLevel = (newXp / 100) + 1
@@ -59,6 +69,8 @@ class GameDataStore(private val context: Context) {
             preferences[Keys.XP] = newXp
             preferences[Keys.LEVEL] =
                 maxOf(currentLevel, newLevel)
+            preferences[Keys.STREAK] = newStreak
+            preferences[Keys.LAST_ACTIVITY_DAY] = today
         }
     }
 
