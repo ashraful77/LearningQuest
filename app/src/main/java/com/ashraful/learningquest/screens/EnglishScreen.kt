@@ -54,7 +54,7 @@ fun EnglishScreen(onBack: () -> Unit) {
 @Composable
 private fun EnglishSectionScreen(
     onBack: () -> Unit,
-    onSectionSelected: (EnglishSection) -> Unit
+    onSectionSelected: (QuizSection) -> Unit
 ) {
     Column(
         modifier = Modifier
