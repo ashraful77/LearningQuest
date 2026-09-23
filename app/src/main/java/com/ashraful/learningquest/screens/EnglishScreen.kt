@@ -212,7 +212,7 @@ private fun EnglishQuizScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F9FF))
+                .background(Brush.verticalGradient(listOf(Color(0xFFF7F3FF), Color.White)))
                 .padding(24.dp),
             horizontalAlignment =
                 Alignment.CenterHorizontally
@@ -223,7 +223,7 @@ private fun EnglishQuizScreen(
             )
 
             Text(
-                text = "Challenge Complete!",
+                text = "🎉 Challenge Complete!",
                 fontSize = 30.sp,
                 color = Color(0xFF173C8C)
             )
@@ -337,7 +337,7 @@ private fun EnglishQuizScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F9FF))
+            .background(Brush.verticalGradient(listOf(Color(0xFFF7F3FF), Color.White)))
             .padding(18.dp),
         horizontalAlignment =
             Alignment.CenterHorizontally
