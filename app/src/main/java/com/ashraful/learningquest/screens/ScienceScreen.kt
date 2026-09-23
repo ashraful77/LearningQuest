@@ -188,6 +188,7 @@ private fun ScienceQuizScreen(
     }
 
     val question = section.questions[index]
+    val shuffledOptions = remember(section, index) { question.options.shuffled() }
 
     val infiniteTransition =
         rememberInfiniteTransition(
@@ -435,7 +436,7 @@ private fun ScienceQuizScreen(
             Modifier.height(18.dp)
         )
 
-        question.options.forEach { option ->
+        shuffledOptions.forEach { option ->
 
             val isSelected =
                 option == selected
