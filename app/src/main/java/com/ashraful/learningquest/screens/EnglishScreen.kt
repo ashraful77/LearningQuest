@@ -619,7 +619,7 @@ private fun CelebrationOverlay() {
     if (!visible) return
     val transition = rememberInfiniteTransition(label = "win")
     val scale by transition.animateFloat(0.92f, 1.08f, infiniteRepeatable(tween(500), RepeatMode.Reverse), label = "scale")
-    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107))).copy(alpha = 0.96f)), contentAlignment = Alignment.Center) {
+    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107)))), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.scale(scale)) {
             Text("🎉", fontSize = 72.sp)
             Text("CORRECT!", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
