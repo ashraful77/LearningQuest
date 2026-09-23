@@ -210,7 +210,7 @@ private fun MixedCelebrationOverlay() {
 
     Box(
         Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107))).copy(alpha = 0.96f)
+            Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107)))
         ),
         contentAlignment = Alignment.Center
     ) {
