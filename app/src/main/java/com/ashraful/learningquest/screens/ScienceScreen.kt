@@ -54,7 +54,7 @@ fun ScienceScreen(onBack: () -> Unit) {
 @Composable
 private fun ScienceSectionScreen(
     onBack: () -> Unit,
-    onSectionSelected: (ScienceSection) -> Unit
+    onSectionSelected: (QuizSection) -> Unit
 ) {
     Column(
         modifier = Modifier
