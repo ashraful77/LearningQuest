@@ -31,6 +31,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
     val dataStore = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
     val gameData by dataStore.gameData.collectAsState(initial = null)
+    var quizSeed by remember { mutableIntStateOf(0) }
 
     val questions = remember(quizSeed) {
         val english = englishSections.flatMap { it.questions }.map { MixedQuestion("English", it) }
