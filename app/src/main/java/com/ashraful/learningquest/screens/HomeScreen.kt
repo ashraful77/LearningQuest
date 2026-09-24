@@ -56,6 +56,14 @@ fun HomeScreen() {
         "abid_colors" -> AbidColorsScreen { screen = "home" }
         "abid_color_match" -> AbidColorMatchScreen { screen = "home" }
         "abid_memory" -> AbidMemoryPairsScreen { screen = "home" }
+        "abid_letter_sounds" -> AbidLetterSoundsScreen { screen = "home" }
+        "abid_picture_match" -> AbidLetterPictureMatchScreen { screen = "home" }
+        "abid_simple_math" -> AbidSimpleMathScreen { screen = "home" }
+        "abid_shape_match" -> AbidShapeMatchScreen { screen = "home" }
+        "abid_animals" -> AbidAnimalSoundsScreen { screen = "home" }
+        "abid_fruits" -> AbidFruitsScreen { screen = "home" }
+        "abid_memory2" -> AbidMemoryGameScreen { screen = "home" }
+        "abid_achievements" -> AbidAchievementsScreen { screen = "home" }
         "abid_match_letters" -> AbidMatchLettersScreen { screen = "home" }
         "abid_number_match" -> AbidNumberMatchScreen { screen = "home" }
     }
