@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +31,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
 
     fun pointFor(index: Int, width: Float, height: Float, right: Boolean): Offset {
         val x = if (right) width * 0.75f else width * 0.25f
-        return Offset(x, height * (index + 1) / 6f)
+        return Offset(x, height * (index + 1).toFloat() / 6f)
     }
 
     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFFEAF7FF), Color.White, Color(0xFFFFF1D6))))) {
@@ -89,7 +90,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                     if (li >= 0 && ri >= 0) drawLine(Color(0xFF20B957), pointFor(li, size.width, size.height, false), pointFor(ri, size.width, size.height, true), strokeWidth = 12f, cap = StrokeCap.Round)
                 }
 
-                if (dragging != null && dragStart.isSpecified && dragCurrent.isSpecified)
+                if (dragging != null && dragStart != Offset.Unspecified && dragCurrent != Offset.Unspecified)
                     drawLine(Color(0xFF7B3FC6), dragStart, dragCurrent, strokeWidth = 10f, cap = StrokeCap.Round)
 
                 leftLetters.forEachIndexed { i, letter ->
