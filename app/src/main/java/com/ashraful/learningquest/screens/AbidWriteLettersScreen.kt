@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.hypot
@@ -64,20 +65,39 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
     var strokes by remember { mutableStateOf<List<List<Offset>>>(emptyList()) }
     var result by remember { mutableStateOf<Boolean?>(null) }
     var score by remember { mutableIntStateOf(0) }
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
 
     val letter = ('A'.code + index).toChar()
     val guide = remember(letter) { makeGuideBitmap(letter) }
     val expectedPoints = remember(letter) { guidePoints(guide) }
 
     fun checkLetter(width: Float, height: Float) {
-        if (userPoints.size < 15) {
+        if (userPoints.size < 15 || width <= 0f || height <= 0f) {
             score = 0
             result = false
             return
         }
 
-        val radius = minOf(width, height) * 0.055f
-        val covered = expectedPoints.count { point ->
+        // Score the child's actual strokes against the letter guide.
+        // This is much fairer than requiring the strokes to cover the entire
+        // filled area of the guide letter.
+        val radius = minOf(width, height) * 0.075f
+        val guideMatches = userPoints.count { user ->
+            expectedPoints.any { point ->
+                val target = Offset(
+                    point.x / guide.width * width,
+                    point.y / guide.height * height
+                )
+                hypot(
+                    (user.x - target.x).toDouble(),
+                    (user.y - target.y).toDouble()
+                ) <= radius
+            }
+        }
+
+        val userCoverage = guideMatches * 100 / userPoints.size.coerceAtLeast(1)
+
+        val guideCoverage = expectedPoints.count { point ->
             val target = Offset(
                 point.x / guide.width * width,
                 point.y / guide.height * height
@@ -88,10 +108,13 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                     (user.y - target.y).toDouble()
                 ) <= radius
             }
-        }
+        } * 100 / expectedPoints.size.coerceAtLeast(1)
 
-        score = (covered * 100 / expectedPoints.size.coerceAtLeast(1)).coerceIn(0, 100)
-        result = score >= 80
+        score = ((userCoverage * 0.65f) + (guideCoverage * 0.35f))
+            .toInt()
+            .coerceIn(0, 100)
+
+        result = score >= 55
     }
 
     Box(
@@ -156,6 +179,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                     Modifier
                         .fillMaxSize()
                         .padding(10.dp)
+                        .onSizeChanged { canvasSize = it }
                         .pointerInput(letter) {
                             detectDragGestures(
                                 onDragStart = { offset ->
@@ -264,7 +288,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                 } else {
                     Button(
                         onClick = {
-                            checkLetter(guide.width.toFloat(), guide.height.toFloat())
+                            checkLetter(canvasSize.width.toFloat(), canvasSize.height.toFloat())
                         },
                         modifier = Modifier.weight(1f).height(54.dp)
                     ) {
