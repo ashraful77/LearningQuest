@@ -47,7 +47,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                 Modifier.fillMaxWidth().weight(1f).pointerInput(round, matched, rightLetters) {
                     detectDragGestures(
                         onDragStart = { offset ->
-                            val nearest = leftLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width, size.height, false) }
+                            val nearest = leftLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width.toFloat(), size.height.toFloat(), false) }
                                 .minByOrNull { (_, p) -> distanceSquared(p, offset) }
                             if (nearest != null && distanceSquared(nearest.second, offset) < 3000f && nearest.first.uppercaseChar() !in matched) {
                                 dragging = nearest.first
@@ -65,7 +65,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                         onDragEnd = {
                             val source = dragging
                             if (source != null) {
-                                val target = rightLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width, size.height, true) }
+                                val target = rightLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width.toFloat(), size.height.toFloat(), true) }
                                     .minByOrNull { (_, p) -> distanceSquared(p, dragCurrent) }
                                 if (target != null && distanceSquared(target.second, dragCurrent) < 3000f && target.first == source.uppercaseChar()) {
                                     matched = matched + target.first
