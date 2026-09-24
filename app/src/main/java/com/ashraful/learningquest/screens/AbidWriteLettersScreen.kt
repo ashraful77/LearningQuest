@@ -61,6 +61,7 @@ private fun guidePoints(bitmap: Bitmap, step: Int = 5): List<Offset> {
 fun AbidWriteLettersScreen(onBack: () -> Unit) {
     var index by remember { mutableIntStateOf(0) }
     var userPoints by remember { mutableStateOf<List<Offset>>(emptyList()) }
+    var strokes by remember { mutableStateOf<List<List<Offset>>>(emptyList()) }
     var result by remember { mutableStateOf<Boolean?>(null) }
     var score by remember { mutableIntStateOf(0) }
 
@@ -159,10 +160,12 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                             detectDragGestures(
                                 onDragStart = { offset ->
                                     userPoints = userPoints + offset
+                                    strokes = strokes + listOf(listOf(offset))
                                     result = null
                                 },
                                 onDrag = { change, _ ->
                                     userPoints = userPoints + change.position
+                                    strokes = strokes.dropLast(1) + listOf(strokes.lastOrNull().orEmpty() + change.position)
                                     result = null
                                 }
                             )
@@ -183,14 +186,16 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                         guidePaint
                     )
 
-                    userPoints.zipWithNext().forEach { (a, b) ->
-                        drawLine(
-                            Color(0xFF1769AA),
-                            a,
-                            b,
-                            strokeWidth = 15f,
-                            cap = StrokeCap.Round
-                        )
+                    strokes.forEach { stroke ->
+                        stroke.zipWithNext().forEach { (a, b) ->
+                            drawLine(
+                                Color(0xFF1769AA),
+                                a,
+                                b,
+                                strokeWidth = 15f,
+                                cap = StrokeCap.Round
+                            )
+                        }
                     }
 
                     userPoints.forEach {
@@ -230,6 +235,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                 OutlinedButton(
                     onClick = {
                         userPoints = emptyList()
+                        strokes = emptyList()
                         result = null
                         score = 0
                     },
@@ -243,6 +249,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                         onClick = {
                             index = (index + 1) % 26
                             userPoints = emptyList()
+                            strokes = emptyList()
                             result = null
                             score = 0
                         },
