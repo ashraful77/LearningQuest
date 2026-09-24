@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -20,6 +21,7 @@ import java.util.Locale
 import kotlin.random.Random
 
 private data class NextQuestion(val text: String, val options: List<String>, val answer: String)
+private data class Achievement(val icon: String, val title: String, val description: String, val unlocked: Boolean)
 
 @Composable
 private fun NextFrame(title: String, emoji: String, color: Color, pale: Color, onBack: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
@@ -193,22 +195,22 @@ fun ArifaAchievements2Screen(onBack: () -> Unit) {
     val data by remember { GameDataStore(context).gameData }.collectAsState(initial=null)
     val d=data
     val achievements=listOf(
-        Triple("🌟","First Steps","Earn 50 XP", (d?.xp ?: 0)>=50),
-        Triple("🔥","Streak Starter","Reach a 3-day streak", (d?.streak ?: 0)>=3),
-        Triple("🪙","Coin Collector","Earn 100 coins", (d?.coins ?: 0)>=100),
-        Triple("➗","Math Explorer","Score 10+ in maths", (d?.mathScore ?: 0)>=10),
-        Triple("🔤","English Explorer","Score 10+ in English", (d?.englishScore ?: 0)>=10),
-        Triple("🔬","Science Explorer","Score 10+ in science", (d?.scienceScore ?: 0)>=10),
-        Triple("🧩","Puzzle Explorer","Score 10+ in puzzles", (d?.puzzleScore ?: 0)>=10),
-        Triple("🚀","Level Up","Reach level 5", (d?.level ?: 1)>=5)
+        Achievement("🌟","First Steps","Earn 50 XP", (d?.xp ?: 0)>=50),
+        Achievement("🔥","Streak Starter","Reach a 3-day streak", (d?.streak ?: 0)>=3),
+        Achievement("🪙","Coin Collector","Earn 100 coins", (d?.coins ?: 0)>=100),
+        Achievement("➗","Math Explorer","Score 10+ in maths", (d?.mathScore ?: 0)>=10),
+        Achievement("🔤","English Explorer","Score 10+ in English", (d?.englishScore ?: 0)>=10),
+        Achievement("🔬","Science Explorer","Score 10+ in science", (d?.scienceScore ?: 0)>=10),
+        Achievement("🧩","Puzzle Explorer","Score 10+ in puzzles", (d?.puzzleScore ?: 0)>=10),
+        Achievement("🚀","Level Up","Reach level 5", (d?.level ?: 1)>=5)
     )
     NextFrame("Achievements 2.0","🏆",Color(0xFFB77900),Color(0xFFFFF5D9),onBack){
         achievements.forEach { a ->
-            Card(Modifier.fillMaxWidth().padding(vertical=4.dp),shape=RoundedCornerShape(18.dp),colors=CardDefaults.cardColors(containerColor=if(a.third) Color(0xFFE9F9EE) else Color.White)){
+            Card(Modifier.fillMaxWidth().padding(vertical=4.dp),shape=RoundedCornerShape(18.dp),colors=CardDefaults.cardColors(containerColor=if(a.unlocked) Color(0xFFE9F9EE) else Color.White)){
                 Row(Modifier.fillMaxWidth().padding(14.dp),verticalAlignment=Alignment.CenterVertically){
-                    Text(a.first,fontSize=28.sp)
+                    Text(a.icon,fontSize=28.sp)
                     Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)){Text(a.second,fontWeight=FontWeight.Bold,fontSize=17.sp);Text(a.third.let{if(it) "Unlocked!" else "Keep learning to unlock"},fontSize=12.sp,color=Color(0xFF71809A))}
+                    Column(Modifier.weight(1f)){Text(a.title,fontWeight=FontWeight.Bold,fontSize=17.sp);Text(a.third.let{if(it) "Unlocked!" else "Keep learning to unlock"},fontSize=12.sp,color=Color(0xFF71809A))}
                     Text(if(a.third) "✓" else "🔒",fontSize=22.sp)
                 }
             }
