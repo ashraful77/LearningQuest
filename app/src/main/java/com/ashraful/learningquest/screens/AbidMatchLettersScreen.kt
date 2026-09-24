@@ -50,7 +50,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                         onDragStart = { offset ->
                             val nearest = leftLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width.toFloat(), size.height.toFloat(), false) }
                                 .minByOrNull { (_, p) -> distanceSquared(p, offset) }
-                            if (nearest != null && distanceSquared(nearest.second, offset) < 7000f && nearest.first.uppercaseChar() !in matched) {
+                            if (nearest != null && distanceSquared(nearest.second, offset) < 14000f && nearest.first.uppercaseChar() !in matched) {
                                 dragging = nearest.first
                                 dragStart = nearest.second
                                 dragCurrent = offset
@@ -59,7 +59,6 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                         },
                         onDrag = { change, _ ->
                             if (dragging != null) {
-                                change.consume()
                                 dragCurrent = change.position
                             }
                         },
@@ -88,18 +87,18 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                 matched.forEach { upper ->
                     val li = leftLetters.indexOf(upper.lowercaseChar())
                     val ri = rightLetters.indexOf(upper)
-                    if (li >= 0 && ri >= 0) drawLine(Color(0xFF20B957), pointFor(li, size.width, size.height, false), pointFor(ri, size.width, size.height, true), strokeWidth = 16f, cap = StrokeCap.Round)
+                    if (li >= 0 && ri >= 0) drawLine(Color(0xFF20B957), pointFor(li, size.width, size.height, false), pointFor(ri, size.width, size.height, true), strokeWidth = 18f, cap = StrokeCap.Round)
                 }
 
                 if (dragging != null && dragStart != Offset.Unspecified && dragCurrent != Offset.Unspecified)
-                    drawLine(Color(0xFF7B3FC6), dragStart, dragCurrent, strokeWidth = 14f, cap = StrokeCap.Round)
+                    drawLine(Color(0xFF7B3FC6), dragStart, dragCurrent, strokeWidth = 16f, cap = StrokeCap.Round)
 
                 leftLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, false)
-                    drawCircle(Color(0xFFE8F4FF), 82f, p)
-                    drawCircle(Color(0xFF1769AA), 82f, p, style = Stroke(8f))
+                    drawCircle(Color(0xFFE8F4FF), 108f, p)
+                    drawCircle(Color(0xFF1769AA), 108f, p, style = Stroke(9f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), leftX, p.y + 14f, Paint().apply {
-                        textSize = 96f; textAlign = Paint.Align.CENTER
+                        textSize = 112f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(23,105,170); typeface = Typeface.create("sans-serif-rounded", Typeface.BOLD)
                     })
                 }
@@ -108,7 +107,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                     drawCircle(Color(0xFFFFF1D6), 82f, p)
                     drawCircle(Color(0xFF9A5A00), 82f, p, style = Stroke(8f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), rightX, p.y + 14f, Paint().apply {
-                        textSize = 72f; textAlign = Paint.Align.CENTER
+                        textSize = 94f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(154,90,0); typeface = Typeface.DEFAULT_BOLD
                     })
                 }
