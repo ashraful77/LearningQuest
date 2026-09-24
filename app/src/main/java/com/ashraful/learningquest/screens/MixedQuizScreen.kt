@@ -44,7 +44,6 @@ fun MixedQuizScreen(onBack: () -> Unit) {
         (english + science + puzzles + math).shuffled().take(20)
     }
 
-    var quizSeed by remember { mutableIntStateOf(0) }
     var index by remember { mutableIntStateOf(0) }
     var score by remember { mutableIntStateOf(0) }
     var answered by remember { mutableStateOf(false) }
