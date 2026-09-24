@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -177,7 +178,7 @@ private fun starPath(cx: Float, cy: Float, s: Float, points: Int) = Path().apply
     close()
 }
 
-private fun drawCube(cx: Float, cy: Float, s: Float) {
+private fun DrawScope.drawCube(cx: Float, cy: Float, s: Float) {
     val top = Path().apply {
         moveTo(cx, cy - s); lineTo(cx + s, cy - s * 0.55f); lineTo(cx, cy - s * 0.1f); lineTo(cx - s, cy - s * 0.55f); close()
     }
@@ -192,7 +193,7 @@ private fun drawCube(cx: Float, cy: Float, s: Float) {
     drawPath(right, Color(0xFF239B8A))
 }
 
-private fun drawCylinder(cx: Float, cy: Float, s: Float) {
+private fun DrawScope.drawCylinder(cx: Float, cy: Float, s: Float) {
     val width = s * 1.45f
     val height = s * 2f
     drawRoundRect(Color(0xFF5DADE2), Offset(cx - width, cy - height * 0.35f), androidx.compose.ui.geometry.Size(width * 2, height * 0.7f), CornerRadius(width, width))
@@ -200,7 +201,7 @@ private fun drawCylinder(cx: Float, cy: Float, s: Float) {
     drawOval(Color(0xFF2E86C1), Offset(cx - width, cy + height * 0.2f), androidx.compose.ui.geometry.Size(width * 2, height * 0.42f))
 }
 
-private fun drawCone(cx: Float, cy: Float, s: Float) {
+private fun DrawScope.drawCone(cx: Float, cy: Float, s: Float) {
     val path = Path().apply {
         moveTo(cx, cy - s * 1.2f); lineTo(cx - s, cy + s * 0.65f); lineTo(cx + s, cy + s * 0.65f); close()
     }
