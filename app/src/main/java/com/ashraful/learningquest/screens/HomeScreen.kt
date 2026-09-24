@@ -53,6 +53,11 @@ fun HomeScreen() {
         "arifa_writing" -> ArifaWritingPracticeScreen { screen = "home" }
         "arifa_advanced_math" -> ArifaAdvancedMathScreen { screen = "home" }
         "arifa_world" -> ArifaWorldExplorerScreen { screen = "home" }
+        "arifa_visual" -> ArifaVisualPuzzlesScreen { screen = "home" }
+        "arifa_speaking" -> ArifaEnglishSpeakingScreen { screen = "home" }
+        "arifa_daily" -> ArifaDailyChallengeScreen { screen = "home" }
+        "arifa_achievements2" -> ArifaAchievements2Screen { screen = "home" }
+        "arifa_path" -> ArifaLearningPathScreen { screen = "home" }
         "abid_letters" -> AbidLettersScreen { screen = "home" }
         "abid_write_letters" -> AbidWriteLettersScreen { screen = "home" }
         "abid_bengali_letters" -> AbidBengaliLettersScreen { screen = "home" }
@@ -197,6 +202,15 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         SubjectCard("✍️", "Writing Practice", "Spelling & sentence building", Color(0xFFE0F7F4), Color(0xFF00897B)) { onNavigate("arifa_writing") }
         SubjectCard("🔢", "Advanced Maths", "Multiplication, fractions & money", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("arifa_advanced_math") }
         SubjectCard("🌍", "World Explorer", "India, science & our world", Color(0xFFFFF1DE), Color(0xFFE67E22)) { onNavigate("arifa_world") }
+
+        Spacer(Modifier.height(14.dp))
+        Text("LEVEL 2 • MORE TO EXPLORE", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
+        Spacer(Modifier.height(7.dp))
+        SubjectCard("🧩", "Visual Puzzles", "Patterns, sequences & logic", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("arifa_visual") }
+        SubjectCard("🗣️", "English Speaking", "Listen and practise speaking", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("arifa_speaking") }
+        SubjectCard("🔥", "Daily Challenge", "10 fresh questions every day", Color(0xFFFFEEDB), Color(0xFFD35400)) { onNavigate("arifa_daily") }
+        SubjectCard("🏆", "Achievements 2.0", "Unlock learning milestones", Color(0xFFFFF5D9), Color(0xFFB77900)) { onNavigate("arifa_achievements2") }
+        SubjectCard("🛤️", "Learning Path", "See your journey and levels", Color(0xFFE8F8EF), Color(0xFF247A57)) { onNavigate("arifa_path") }
 
         Spacer(Modifier.weight(1f))
 
