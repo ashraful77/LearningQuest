@@ -78,13 +78,13 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                             Color(0xFFB084CC)
                         )[index % 5]
                         when ((target - 1) % 4) {
-                            0 -> drawCircle(shapeColor, radius = 34f, center = Offset(x, y))
+                            0 -> drawCircle(shapeColor, radius = 48f, center = Offset(x, y))
                             1 -> {
                                 val path = Path()
                                 val points = 5
                                 for (p in 0 until points * 2) {
                                     val angle = -Math.PI / 2 + p * Math.PI / points
-                                    val radius = if (p % 2 == 0) 38.0 else 17.0
+                                    val radius = if (p % 2 == 0) 52.0 else 24.0
                                     val px = x + (kotlin.math.cos(angle) * radius).toFloat()
                                     val py = y + (kotlin.math.sin(angle) * radius).toFloat()
                                     if (p == 0) path.moveTo(px, py) else path.lineTo(px, py)
@@ -94,28 +94,22 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                             }
                             2 -> drawRoundRect(
                                 shapeColor,
-                                topLeft = Offset(x - 34f, y - 34f),
-                                size = androidx.compose.ui.geometry.Size(68f, 68f),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(14f, 14f)
+                                topLeft = Offset(x - 48f, y - 48f),
+                                size = androidx.compose.ui.geometry.Size(96f, 96f),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(18f, 18f)
                             )
                             else -> {
                                 val path = Path()
-                                path.moveTo(x, y - 38f)
-                                path.lineTo(x + 38f, y)
-                                path.lineTo(x, y + 38f)
-                                path.lineTo(x - 38f, y)
+                                path.moveTo(x, y - 52f)
+                                path.lineTo(x + 52f, y)
+                                path.lineTo(x, y + 52f)
+                                path.lineTo(x - 52f, y)
                                 path.close()
                                 drawPath(path, shapeColor)
                             }
                         }
                     }
                 }
-                Text(
-                    "Count carefully!",
-                    fontSize = 21.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                    color = Color(0xFF71809A)
-                )
             }
         }
 
