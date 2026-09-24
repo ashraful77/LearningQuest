@@ -128,14 +128,20 @@ fun AbidShapeMatchScreen(onBack: () -> Unit) {
 fun AbidAnimalSoundsScreen(onBack: () -> Unit) {
     val animals = listOf("🐶" to "Dog — Woof!", "🐱" to "Cat — Meow!", "🐮" to "Cow — Moo!", "🦁" to "Lion — Roar!", "🐑" to "Sheep — Baa!")
     var index by remember { mutableIntStateOf(0) }
-    val tts = remember { TextToSpeech(null) { }.apply { language = Locale.US } }
+    var ttsReady by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val tts = remember(context) {
+        TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) ttsReady = true
+        }.apply { language = Locale.US }
+    }
     DisposableEffect(Unit) { onDispose { tts.shutdown() } }
     val current = animals[index]
     AbidGameFrame("🐾 Animal Sounds", Color(0xFF23754A), onBack) {
         Text("What does this animal say?", fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
         Text(current.first, fontSize = 105.sp)
         Text(current.second, fontSize = 25.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF23754A))
-        Button(onClick = { tts.speak(current.second, TextToSpeech.QUEUE_FLUSH, null, "animal") }, Modifier.fillMaxWidth().height(58.dp)) { Text("🔊 Hear the sound", fontSize = 20.sp) }
+        Button(onClick = { if (ttsReady) tts.speak(current.second, TextToSpeech.QUEUE_FLUSH, null, "animal") }, Modifier.fillMaxWidth().height(58.dp)) { Text("🔊 Hear the sound", fontSize = 20.sp) }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             OutlinedButton(onClick = { index = (index - 1).coerceAtLeast(0) }, Modifier.weight(1f).height(56.dp), enabled = index > 0) { Text("← Previous") }
             Button(onClick = { index = (index + 1) % animals.size }, Modifier.weight(1f).height(56.dp)) { Text("Next →") }
