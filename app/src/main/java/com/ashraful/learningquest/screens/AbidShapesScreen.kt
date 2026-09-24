@@ -113,16 +113,13 @@ fun AbidShapesScreen(onBack: () -> Unit) {
 
         Spacer(Modifier.height(14.dp))
 
-        Button(
-            onClick = { index = (index + 1) % shapes.size },
-            modifier = Modifier.fillMaxWidth().height(62.dp),
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Text(
-                if (index == shapes.lastIndex) "🔄 Start Again" else "Next Shape →",
-                fontSize = 21.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-            )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            OutlinedButton(onClick = { index = (index - 1).coerceAtLeast(0) }, modifier = Modifier.weight(1f).height(62.dp), shape = RoundedCornerShape(20.dp), enabled = index > 0) {
+                Text("← Previous", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
+            Button(onClick = { index = (index + 1) % shapes.size }, modifier = Modifier.weight(1f).height(62.dp), shape = RoundedCornerShape(20.dp)) {
+                Text(if (index == shapes.lastIndex) "🔄 Start Again" else "Next →", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
         }
 
         Spacer(Modifier.height(10.dp))
@@ -148,7 +145,8 @@ private fun ShapeDrawing(index: Int, modifier: Modifier) {
             8 -> drawCircle(Brush.radialGradient(listOf(Color.White, Color(0xFF5DADE2), Color(0xFF1769AA)), Offset(cx - s * 0.35f, cy - s * 0.35f), s * 1.5f), s, Offset(cx, cy))
             9 -> drawCube(cx, cy, s)
             10 -> drawCylinder(cx, cy, s)
-            11 -> drawCone(cx, cy, s)
+            11 -> drawRightCircularCylinder(cx, cy, s)
+            12 -> drawCone(cx, cy, s)
         }
     }
 }
