@@ -18,17 +18,18 @@ import androidx.compose.ui.unit.sp
 fun AbidHomeScreen(onNavigate: (String) -> Unit) {
     val scrollState = rememberScrollState()
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
             .verticalScroll(scrollState)
             .background(Brush.verticalGradient(listOf(Color(0xFFEAF7FF), Color.White, Color(0xFFFFF7DF))))
-            .padding(20.dp),
+            .padding(horizontal = 20.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(20.dp))
         Text("👦 Hi Abid!", fontSize = 34.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
         Text("Let's learn and play! 🚀", fontSize = 17.sp, color = Color(0xFF60758A))
-        Spacer(Modifier.height(28.dp))
+        Spacer(Modifier.height(20.dp))
 
+        SectionHeader("🔤", "Language & Letters", Color(0xFF1769AA))
         LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) {
             onNavigate("abid_letters")
         }
@@ -38,6 +39,19 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) {
             onNavigate("abid_bengali_letters")
         }
+        LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) {
+            onNavigate("abid_match_letters")
+        }
+
+        SectionHeader("🔢", "Numbers & Counting", Color(0xFF9A5A00))
+        LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) {
+            onNavigate("abid_numbers")
+        }
+        LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) {
+            onNavigate("abid_number_match")
+        }
+
+        SectionHeader("🎨", "Colors & Shapes", Color(0xFFB02A7A))
         LearningCard("🔷", "Shapes", "Learn 2D and 3D shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) {
             onNavigate("abid_shapes")
         }
@@ -47,18 +61,34 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("🎯", "Match Colors", "Find the name of the color!", Color(0xFFEAF7FF), Color(0xFF1769AA)) {
             onNavigate("abid_color_match")
         }
+
+        SectionHeader("🧠", "Games & Memory", Color(0xFF7043A8))
         LearningCard("🧠", "Memory Match", "Remember and find the same fruit!", Color(0xFFF0EAFF), Color(0xFF7043A8)) {
             onNavigate("abid_memory")
         }
-        LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) {
-            onNavigate("abid_numbers")
-        }
-        LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) {
-            onNavigate("abid_match_letters")
-        }
-        LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) {
-            onNavigate("abid_number_match")
-        }
+
+        Spacer(Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun SectionHeader(icon: String, title: String, color: Color) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 14.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(icon, fontSize = 24.sp)
+        Spacer(Modifier.width(8.dp))
+        Text(
+            title,
+            fontSize = 21.sp,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+            color = color
+        )
+        Spacer(Modifier.width(10.dp))
+        HorizontalDivider(Modifier.weight(1f), color = color.copy(alpha = 0.25f))
     }
 }
 
