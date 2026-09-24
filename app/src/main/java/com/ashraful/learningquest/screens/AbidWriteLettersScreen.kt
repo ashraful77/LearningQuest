@@ -82,7 +82,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
         // Score the child's actual strokes against the letter guide.
         // This is much fairer than requiring the strokes to cover the entire
         // filled area of the guide letter.
-        val radius = minOf(width, height) * 0.075f
+        val radius = minOf(width, height) * 0.035f
         val guideMatches = userPoints.count { user ->
             expectedPoints.any { point ->
                 val target = Offset(
@@ -111,11 +111,11 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
             }
         } * 100 / expectedPoints.size.coerceAtLeast(1)
 
-        score = ((userCoverage * 0.65f) + (guideCoverage * 0.35f))
+        score = ((userCoverage * 0.50f) + (guideCoverage * 0.50f))
             .toInt()
             .coerceIn(0, 100)
 
-        result = score >= 55
+        result = score >= 70
     }
 
     Box(
@@ -245,7 +245,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                     color = Color(0xFFD52E45)
                 )
                 null -> Text(
-                    "Cover about 80% of the letter to pass",
+                    "Trace the letter boundary carefully to pass",
                     fontSize = 15.sp,
                     color = Color(0xFF65738A)
                 )
