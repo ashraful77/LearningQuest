@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,10 @@ import com.ashraful.learningquest.data.GameDataStore
 @Composable
 fun HomeScreen() {
     var screen by remember { mutableStateOf("home") }
+
+    BackHandler(enabled = screen != "home") {
+        screen = "home"
+    }
     when (screen) {
         "home" -> HomeContent { screen = it }
         "math" -> MathScreen { screen = "home" }
