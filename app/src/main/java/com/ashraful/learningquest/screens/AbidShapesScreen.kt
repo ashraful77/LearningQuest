@@ -46,6 +46,8 @@ fun AbidShapesScreen(onBack: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .background(Brush.verticalGradient(listOf(Color(0xFFEAF7FF), Color.White, Color(0xFFFFF4DE))))
             .padding(horizontal = 18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
