@@ -37,10 +37,10 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFFEAF7FF), Color.White, Color(0xFFFFF1D6))))) {
         Column(Modifier.fillMaxSize().padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = onBack) { Text("‹ Home") }
-                Text("🔗 Match Letters", fontSize = 25.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
+                TextButton(onClick = onBack) { Text("‹ Home", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+                Text("🔗 Match Letters", fontSize = 31.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
             }
-            Text("Drag lowercase → matching CAPITAL", fontSize = 14.sp, color = Color(0xFF60758A))
+            Text("Drag lowercase → matching CAPITAL", fontSize = 19.sp, color = Color(0xFF60758A))
             Spacer(Modifier.height(8.dp))
 
             Canvas(
@@ -95,17 +95,17 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
 
                 leftLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, false)
-                    drawCircle(Color(0xFFE8F4FF), 38f, p)
-                    drawCircle(Color(0xFF1769AA), 38f, p, style = Stroke(4f))
+                    drawCircle(Color(0xFFE8F4FF), 48f, p)
+                    drawCircle(Color(0xFF1769AA), 48f, p, style = Stroke(5f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), leftX, p.y + 14f, Paint().apply {
-                        textSize = 40f; textAlign = Paint.Align.CENTER
+                        textSize = 56f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(23,105,170); typeface = Typeface.DEFAULT_BOLD
                     })
                 }
                 rightLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, true)
-                    drawCircle(Color(0xFFFFF1D6), 38f, p)
-                    drawCircle(Color(0xFF9A5A00), 38f, p, style = Stroke(4f))
+                    drawCircle(Color(0xFFFFF1D6), 48f, p)
+                    drawCircle(Color(0xFF9A5A00), 48f, p, style = Stroke(5f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), rightX, p.y + 14f, Paint().apply {
                         textSize = 40f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(154,90,0); typeface = Typeface.DEFAULT_BOLD
@@ -114,11 +114,11 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
             }
 
             if (matched.size == 5) {
-                Text("🎉 All 5 matched!", fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF159447))
+                Text("🎉 All 5 matched!", fontSize = 25.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF159447))
                 Spacer(Modifier.height(6.dp))
-                Button(onClick = { round++; matched = emptySet(); wrong = false }, modifier = Modifier.fillMaxWidth().height(54.dp)) { Text("🔄 Next Round", fontSize = 18.sp) }
+                Button(onClick = { round++; matched = emptySet(); wrong = false }, modifier = Modifier.fillMaxWidth().height(54.dp)) { Text("🔄 Next Round", fontSize = 20.sp) }
             } else {
-                Text("Matched: ${matched.size} / 5", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF40516A))
+                Text("Matched: ${matched.size} / 5", fontSize = 21.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF40516A))
                 if (wrong) Text("Try again! 😊", color = Color(0xFFD52E45), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
             }
