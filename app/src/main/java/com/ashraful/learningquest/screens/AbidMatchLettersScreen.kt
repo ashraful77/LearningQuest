@@ -49,7 +49,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                         onDragStart = { offset ->
                             val nearest = leftLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width.toFloat(), size.height.toFloat(), false) }
                                 .minByOrNull { (_, p) -> distanceSquared(p, offset) }
-                            if (nearest != null && distanceSquared(nearest.second, offset) < 3000f && nearest.first.uppercaseChar() !in matched) {
+                            if (nearest != null && distanceSquared(nearest.second, offset) < 7000f && nearest.first.uppercaseChar() !in matched) {
                                 dragging = nearest.first
                                 dragStart = nearest.second
                                 dragCurrent = offset
@@ -67,7 +67,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                             if (source != null) {
                                 val target = rightLetters.mapIndexed { i, letter -> letter to pointFor(i, size.width.toFloat(), size.height.toFloat(), true) }
                                     .minByOrNull { (_, p) -> distanceSquared(p, dragCurrent) }
-                                if (target != null && distanceSquared(target.second, dragCurrent) < 3000f && target.first == source.uppercaseChar()) {
+                                if (target != null && distanceSquared(target.second, dragCurrent) < 7000f && target.first == source.uppercaseChar()) {
                                     matched = matched + target.first
                                     wrong = false
                                 } else {
@@ -87,25 +87,25 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                 matched.forEach { upper ->
                     val li = leftLetters.indexOf(upper.lowercaseChar())
                     val ri = rightLetters.indexOf(upper)
-                    if (li >= 0 && ri >= 0) drawLine(Color(0xFF20B957), pointFor(li, size.width, size.height, false), pointFor(ri, size.width, size.height, true), strokeWidth = 12f, cap = StrokeCap.Round)
+                    if (li >= 0 && ri >= 0) drawLine(Color(0xFF20B957), pointFor(li, size.width, size.height, false), pointFor(ri, size.width, size.height, true), strokeWidth = 16f, cap = StrokeCap.Round)
                 }
 
                 if (dragging != null && dragStart != Offset.Unspecified && dragCurrent != Offset.Unspecified)
-                    drawLine(Color(0xFF7B3FC6), dragStart, dragCurrent, strokeWidth = 10f, cap = StrokeCap.Round)
+                    drawLine(Color(0xFF7B3FC6), dragStart, dragCurrent, strokeWidth = 14f, cap = StrokeCap.Round)
 
                 leftLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, false)
-                    drawCircle(Color(0xFFE8F4FF), 48f, p)
-                    drawCircle(Color(0xFF1769AA), 48f, p, style = Stroke(5f))
+                    drawCircle(Color(0xFFE8F4FF), 72f, p)
+                    drawCircle(Color(0xFF1769AA), 72f, p, style = Stroke(7f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), leftX, p.y + 14f, Paint().apply {
-                        textSize = 56f; textAlign = Paint.Align.CENTER
+                        textSize = 82f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(23,105,170); typeface = Typeface.DEFAULT_BOLD
                     })
                 }
                 rightLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, true)
-                    drawCircle(Color(0xFFFFF1D6), 48f, p)
-                    drawCircle(Color(0xFF9A5A00), 48f, p, style = Stroke(5f))
+                    drawCircle(Color(0xFFFFF1D6), 72f, p)
+                    drawCircle(Color(0xFF9A5A00), 72f, p, style = Stroke(7f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), rightX, p.y + 14f, Paint().apply {
                         textSize = 40f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(154,90,0); typeface = Typeface.DEFAULT_BOLD
