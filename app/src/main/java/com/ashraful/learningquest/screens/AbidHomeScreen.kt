@@ -34,6 +34,9 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) {
             onNavigate("abid_match_letters")
         }
+        LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) {
+            onNavigate("abid_number_match")
+        }
     }
 }
 
