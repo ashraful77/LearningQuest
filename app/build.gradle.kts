@@ -13,8 +13,13 @@ android {
         applicationId = "com.ashraful.learningquest"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        // Use the GitHub Actions run number so every CI APK can update the previous one.
+        val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER")
+            .orElse("1")
+            .get()
+            .toInt()
+        versionCode = buildNumber
+        versionName = "1.0.$buildNumber"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
