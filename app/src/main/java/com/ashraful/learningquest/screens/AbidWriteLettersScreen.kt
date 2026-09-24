@@ -18,7 +18,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.consume
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -163,7 +162,6 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                                     result = null
                                 },
                                 onDrag = { change, _ ->
-                                    change.consume()
                                     userPoints = userPoints + change.position
                                     result = null
                                 }
