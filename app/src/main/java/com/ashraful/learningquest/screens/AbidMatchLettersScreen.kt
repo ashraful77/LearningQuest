@@ -108,7 +108,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                     drawCircle(Color(0xFFFFF1D6), 82f, p)
                     drawCircle(Color(0xFF9A5A00), 82f, p, style = Stroke(8f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), rightX, p.y + 14f, Paint().apply {
-                        textSize = 40f; textAlign = Paint.Align.CENTER
+                        textSize = 72f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(154,90,0); typeface = Typeface.DEFAULT_BOLD
                     })
                 }
