@@ -30,6 +30,13 @@ fun AbidLettersScreen(onBack: () -> Unit) {
             }
         }
         Spacer(Modifier.height(28.dp))
-        Button(onClick = { index = (index + 1) % letters.size }, modifier = Modifier.fillMaxWidth().height(58.dp)) { Text(if (index == 25) "🔄 Start Again" else "Next Letter →", fontSize = 19.sp) }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            OutlinedButton(onClick = { index = (index - 1).coerceAtLeast(0) }, modifier = Modifier.weight(1f).height(58.dp), enabled = index > 0) {
+                Text("← Previous", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
+            Button(onClick = { index = (index + 1) % letters.size }, modifier = Modifier.weight(1f).height(58.dp)) {
+                Text(if (index == 25) "🔄 Start Again" else "Next →", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
+        }
     }
 }
