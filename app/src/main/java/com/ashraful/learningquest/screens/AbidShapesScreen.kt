@@ -37,6 +37,7 @@ fun AbidShapesScreen(onBack: () -> Unit) {
         ShapeItem("Sphere", "3D Shape", "A sphere is round like a ball."),
         ShapeItem("Cube", "3D Shape", "A cube has 6 square faces."),
         ShapeItem("Cylinder", "3D Shape", "A cylinder has 2 circular ends."),
+        ShapeItem("Right Circular Cylinder", "3D Shape", "It has 2 equal circular ends and a straight curved side."),
         ShapeItem("Cone", "3D Shape", "A cone has a circular base and a point.")
     )
 
@@ -199,6 +200,16 @@ private fun DrawScope.drawCylinder(cx: Float, cy: Float, s: Float) {
     drawRoundRect(Color(0xFF5DADE2), Offset(cx - width, cy - height * 0.35f), androidx.compose.ui.geometry.Size(width * 2, height * 0.7f), CornerRadius(width, width))
     drawOval(Color(0xFF85C1E9), Offset(cx - width, cy - height * 0.55f), androidx.compose.ui.geometry.Size(width * 2, height * 0.42f))
     drawOval(Color(0xFF2E86C1), Offset(cx - width, cy + height * 0.2f), androidx.compose.ui.geometry.Size(width * 2, height * 0.42f))
+}
+
+private fun DrawScope.drawRightCircularCylinder(cx: Float, cy: Float, s: Float) {
+    val width = s * 1.5f
+    val height = s * 2.2f
+    drawRoundRect(Color(0xFF5DADE2), Offset(cx - width, cy - height * 0.35f), androidx.compose.ui.geometry.Size(width * 2, height * 0.7f), CornerRadius(width, width))
+    drawOval(Color(0xFFA9D6F5), Offset(cx - width, cy - height * 0.58f), androidx.compose.ui.geometry.Size(width * 2, height * 0.44f))
+    drawOval(Color(0xFF2478B5), Offset(cx - width, cy + height * 0.20f), androidx.compose.ui.geometry.Size(width * 2, height * 0.44f))
+    drawLine(Color(0xFF1769AA), Offset(cx - width, cy - height * 0.36f), Offset(cx - width, cy + height * 0.36f), strokeWidth = 5f)
+    drawLine(Color(0xFF1769AA), Offset(cx + width, cy - height * 0.36f), Offset(cx + width, cy + height * 0.36f), strokeWidth = 5f)
 }
 
 private fun DrawScope.drawCone(cx: Float, cy: Float, s: Float) {
