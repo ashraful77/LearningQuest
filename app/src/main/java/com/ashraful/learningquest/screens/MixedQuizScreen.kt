@@ -32,7 +32,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gameData by dataStore.gameData.collectAsState(initial = null)
 
-    val questions = remember {
+    val questions = remember(quizSeed) {
         val english = englishSections.flatMap { it.questions }.map { MixedQuestion("English", it) }
         val science = scienceSections.flatMap { it.questions }.map { MixedQuestion("Science", it) }
         val puzzles = puzzleQuestions.map { MixedQuestion("Puzzle", it) }
@@ -43,6 +43,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
         (english + science + puzzles + math).shuffled().take(20)
     }
 
+    var quizSeed by remember { mutableIntStateOf(0) }
     var index by remember { mutableIntStateOf(0) }
     var score by remember { mutableIntStateOf(0) }
     var answered by remember { mutableStateOf(false) }
@@ -82,7 +83,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(28.dp))
             Button(
                 onClick = {
-                    index = 0; score = 0; answered = false; selected = null; correct = false; finished = false
+                    quizSeed++; index = 0; score = 0; answered = false; selected = null; correct = false; finished = false
                 },
                 modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)
             ) { Text("🔄 Try Again", fontSize = 18.sp) }
