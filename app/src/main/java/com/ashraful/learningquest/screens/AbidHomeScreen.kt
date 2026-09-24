@@ -28,6 +28,9 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) {
             onNavigate("abid_letters")
         }
+        LearningCard("✍️", "Write Letters", "Practice writing A, B, C and more!", Color(0xFFE8F8EF), Color(0xFF23754A)) {
+            onNavigate("abid_write_letters")
+        }
         LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) {
             onNavigate("abid_bengali_letters")
         }
