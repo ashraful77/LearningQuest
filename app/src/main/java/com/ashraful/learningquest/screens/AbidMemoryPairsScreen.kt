@@ -36,12 +36,11 @@ fun AbidMemoryPairsScreen(onBack: () -> Unit) {
             cards.take(2).forEach { card(it, selected, target, Modifier.weight(1f)) { if (selected == null) selected = it } }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            cards.drop(2).forEach { card(it, selected, target) { if (selected == null) selected = it } }
+            cards.drop(2).forEach { card(it, selected, target, Modifier.weight(1f)) { if (selected == null) selected = it } }
         }
         Spacer(Modifier.height(18.dp))
         if (selected != null) {
             Text(if (selected == target) "🎉 Excellent memory!" else "😊 Keep practicing!", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-            if (selected == target) score++
             Spacer(Modifier.height(10.dp))
             Button(onClick = { round++; selected = null }, modifier = Modifier.fillMaxWidth().height(56.dp)) {
                 Text("Next Memory →", fontSize = 19.sp)
