@@ -37,6 +37,9 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("🔷", "Shapes", "Learn 2D and 3D shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) {
             onNavigate("abid_shapes")
         }
+        LearningCard("🎨", "Colors", "Learn red, blue, green and more!", Color(0xFFFFE8F5), Color(0xFFB02A7A)) {
+            onNavigate("abid_colors")
+        }
         LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) {
             onNavigate("abid_numbers")
         }
