@@ -43,6 +43,9 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         LearningCard("🎯", "Match Colors", "Find the name of the color!", Color(0xFFEAF7FF), Color(0xFF1769AA)) {
             onNavigate("abid_color_match")
         }
+        LearningCard("🧠", "Memory Match", "Remember and find the same fruit!", Color(0xFFF0EAFF), Color(0xFF7043A8)) {
+            onNavigate("abid_memory")
+        }
         LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) {
             onNavigate("abid_numbers")
         }
