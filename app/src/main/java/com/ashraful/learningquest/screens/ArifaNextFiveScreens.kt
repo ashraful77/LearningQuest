@@ -149,7 +149,7 @@ fun ArifaEnglishSpeakingScreen(onBack: () -> Unit) {
     )
     var index by remember { mutableIntStateOf(0) }
     NextFrame("English Speaking","🗣️",Color(0xFF7043A8),Color(0xFFF3ECFF),onBack){
-        Text("Listen, then say it aloud.",fontSize=18.sp,fontWeight=Bold)
+        Text("Listen, then say it aloud.",fontSize=18.sp,fontWeight=FontWeight.Bold)
         Spacer(Modifier.height(20.dp))
         Card(Modifier.fillMaxWidth(),shape=RoundedCornerShape(28.dp),colors=CardDefaults.cardColors(containerColor=Color.White)){
             Column(Modifier.fillMaxWidth().padding(28.dp),horizontalAlignment=Alignment.CenterHorizontally){
