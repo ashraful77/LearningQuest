@@ -2,6 +2,8 @@ package com.ashraful.learningquest.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -14,8 +16,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AbidHomeScreen(onNavigate: (String) -> Unit) {
+    val scrollState = rememberScrollState()
     Column(
         Modifier.fillMaxSize()
+            .verticalScroll(scrollState)
             .background(Brush.verticalGradient(listOf(Color(0xFFEAF7FF), Color.White, Color(0xFFFFF7DF))))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
