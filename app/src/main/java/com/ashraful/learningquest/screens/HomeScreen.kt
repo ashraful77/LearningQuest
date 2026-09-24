@@ -48,6 +48,8 @@ fun HomeScreen() {
         "science" -> ScienceScreen { screen = "home" }
         "puzzle" -> PuzzleScreen { screen = "home" }
         "mixed" -> MixedQuizScreen { screen = "home" }
+        "abid_letters" -> AbidLettersScreen { screen = "home" }
+        "abid_numbers" -> AbidNumbersScreen { screen = "home" }
     }
 }
 
