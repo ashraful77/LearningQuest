@@ -22,13 +22,27 @@ import com.ashraful.learningquest.data.GameDataStore
 
 @Composable
 fun HomeScreen() {
+    var profile by remember { mutableStateOf<String?>(null) }
     var screen by remember { mutableStateOf("home") }
 
-    BackHandler(enabled = screen != "home") {
+    BackHandler(enabled = profile != null && screen != "home") {
         screen = "home"
     }
+
+    if (profile == null) {
+        ProfileSelectionScreen { selected ->
+            profile = selected
+            screen = "home"
+        }
+        return
+    }
+
     when (screen) {
-        "home" -> HomeContent { screen = it }
+        "home" -> if (profile == "arifa") {
+            HomeContent { screen = it }
+        } else {
+            AbidHomeScreen { screen = it }
+        }
         "math" -> MathScreen { screen = "home" }
         "english" -> EnglishScreen { screen = "home" }
         "science" -> ScienceScreen { screen = "home" }
