@@ -38,9 +38,10 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
         Column(Modifier.fillMaxSize().padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = onBack) { Text("‹ Home", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
-                Text("🔗 Match Letters", fontSize = 31.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
+                Text("🔗 Alphabet Match", fontSize = 31.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
             }
-            Text("Drag lowercase → matching CAPITAL", fontSize = 19.sp, color = Color(0xFF60758A))
+            Text("Drag lowercase → matching CAPITAL", fontSize = 19.sp, color = Color(0xFF60758A), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            Text("Round ${round + 1}  •  Match all 5!", fontSize = 16.sp, color = Color(0xFF7B3FC6), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
 
             Canvas(
