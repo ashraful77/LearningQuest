@@ -33,7 +33,7 @@ fun AbidMemoryPairsScreen(onBack: () -> Unit) {
         Text("Remember: $target", fontSize = 20.sp, color = Color(0xFF7043A8))
         Spacer(Modifier.height(18.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            cards.take(2).forEach { card(it, selected, target) { if (selected == null) selected = it } }
+            cards.take(2).forEach { card(it, selected, target, Modifier.weight(1f)) { if (selected == null) selected = it } }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             cards.drop(2).forEach { card(it, selected, target) { if (selected == null) selected = it } }
@@ -53,8 +53,8 @@ fun AbidMemoryPairsScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun card(value: String, selected: String?, target: String, onClick: () -> Unit) {
-    Card(onClick = onClick, modifier = Modifier.weight(1f).padding(vertical = 6.dp).height(130.dp), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = if (selected == value && value == target) Color(0xFFDDF5E5) else Color.White)) {
+private fun card(value: String, selected: String?, target: String, modifier: Modifier, onClick: () -> Unit) {
+    Card(onClick = onClick, modifier = modifier.padding(vertical = 6.dp).height(130.dp), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = if (selected == value && value == target) Color(0xFFDDF5E5) else Color.White)) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text(value, fontSize = 52.sp) }
     }
 }
