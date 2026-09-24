@@ -95,17 +95,17 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
 
                 leftLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, false)
-                    drawCircle(Color(0xFFE8F4FF), 72f, p)
-                    drawCircle(Color(0xFF1769AA), 72f, p, style = Stroke(7f))
+                    drawCircle(Color(0xFFE8F4FF), 82f, p)
+                    drawCircle(Color(0xFF1769AA), 82f, p, style = Stroke(8f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), leftX, p.y + 14f, Paint().apply {
-                        textSize = 82f; textAlign = Paint.Align.CENTER
-                        color = android.graphics.Color.rgb(23,105,170); typeface = Typeface.DEFAULT_BOLD
+                        textSize = 96f; textAlign = Paint.Align.CENTER
+                        color = android.graphics.Color.rgb(23,105,170); typeface = Typeface.create("sans-serif-rounded", Typeface.BOLD)
                     })
                 }
                 rightLetters.forEachIndexed { i, letter ->
                     val p = pointFor(i, size.width, size.height, true)
-                    drawCircle(Color(0xFFFFF1D6), 72f, p)
-                    drawCircle(Color(0xFF9A5A00), 72f, p, style = Stroke(7f))
+                    drawCircle(Color(0xFFFFF1D6), 82f, p)
+                    drawCircle(Color(0xFF9A5A00), 82f, p, style = Stroke(8f))
                     drawContext.canvas.nativeCanvas.drawText(letter.toString(), rightX, p.y + 14f, Paint().apply {
                         textSize = 40f; textAlign = Paint.Align.CENTER
                         color = android.graphics.Color.rgb(154,90,0); typeface = Typeface.DEFAULT_BOLD
