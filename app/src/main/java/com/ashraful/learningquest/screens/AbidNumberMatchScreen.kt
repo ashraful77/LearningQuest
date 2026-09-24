@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +28,6 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
         (wrong + target).shuffled()
     }
 
-    val emojis = listOf("🍎", "⭐", "🍓", "🦋", "🌸", "🐟", "🍪", "🎈", "🐰", "🌈")
 
     Column(
         Modifier
@@ -40,16 +40,16 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
             Modifier.fillMaxWidth().padding(top = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = onBack) { Text("‹ Home") }
+            TextButton(onClick = onBack) { Text("‹ Home", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
             Text(
                 "🔢 Count & Match",
-                fontSize = 25.sp,
+                fontSize = 29.sp,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
                 color = Color(0xFF9A5A00)
             )
         }
 
-        Text("How many objects are there?", fontSize = 18.sp, color = Color(0xFF536579))
+        Text("How many objects are there?", fontSize = 21.sp, color = Color(0xFF536579))
         Spacer(Modifier.height(12.dp))
 
         Card(
@@ -72,26 +72,55 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                         val row = index / columns
                         val x = cellW * (col + 0.5f)
                         val y = cellH * (row + 0.5f)
-                        drawCircle(
-                            color = listOf(
-                                Color(0xFFFF6B6B), Color(0xFFFFC857),
-                                Color(0xFF62C370), Color(0xFF5DADE2),
-                                Color(0xFFB084CC)
-                            )[index % 5],
-                            radius = 30f,
-                            center = Offset(x, y)
-                        )
+                        val shapeColor = listOf(
+                            Color(0xFFFFC857), Color(0xFFFF6B6B),
+                            Color(0xFF62C370), Color(0xFF5DADE2),
+                            Color(0xFFB084CC)
+                        )[index % 5]
+                        when ((target - 1) % 4) {
+                            0 -> drawCircle(shapeColor, radius = 34f, center = Offset(x, y))
+                            1 -> {
+                                val path = Path()
+                                val points = 5
+                                for (p in 0 until points * 2) {
+                                    val angle = -Math.PI / 2 + p * Math.PI / points
+                                    val radius = if (p % 2 == 0) 38.0 else 17.0
+                                    val px = x + (kotlin.math.cos(angle) * radius).toFloat()
+                                    val py = y + (kotlin.math.sin(angle) * radius).toFloat()
+                                    if (p == 0) path.moveTo(px, py) else path.lineTo(px, py)
+                                }
+                                path.close()
+                                drawPath(path, shapeColor)
+                            }
+                            2 -> drawRoundRect(
+                                shapeColor,
+                                topLeft = Offset(x - 34f, y - 34f),
+                                size = androidx.compose.ui.geometry.Size(68f, 68f),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(14f, 14f)
+                            )
+                            else -> {
+                                val path = Path()
+                                path.moveTo(x, y - 38f)
+                                path.lineTo(x + 38f, y)
+                                path.lineTo(x, y + 38f)
+                                path.lineTo(x - 38f, y)
+                                path.close()
+                                drawPath(path, shapeColor)
+                            }
+                        }
                     }
                 }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(emojis[(target - 1) % emojis.size], fontSize = 46.sp)
-                    Text("Count carefully! 👀", fontSize = 16.sp, color = Color(0xFF71809A))
-                }
+                Text(
+                    "Count carefully!",
+                    fontSize = 21.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = Color(0xFF71809A)
+                )
             }
         }
 
         Spacer(Modifier.height(14.dp))
-        Text("Choose the correct number", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF40516A))
+        Text("Choose the correct number", fontSize = 21.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF40516A))
         Spacer(Modifier.height(8.dp))
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -108,13 +137,13 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                             correct = number == target
                         }
                     },
-                    modifier = Modifier.weight(1f).height(76.dp),
+                    modifier = Modifier.weight(1f).height(88.dp),
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = bg),
                     elevation = CardDefaults.cardElevation(3.dp)
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(number.toString(), fontSize = 30.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF8A5200))
+                        Text(number.toString(), fontSize = 36.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF8A5200))
                     }
                 }
             }
