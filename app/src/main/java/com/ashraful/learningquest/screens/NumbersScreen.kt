@@ -29,6 +29,13 @@ fun AbidNumbersScreen(onBack: () -> Unit) {
             }
         }
         Spacer(Modifier.height(28.dp))
-        Button(onClick = { number = if (number == 20) 1 else number + 1 }, modifier = Modifier.fillMaxWidth().height(58.dp)) { Text(if (number == 20) "🔄 Start Again" else "Next Number →", fontSize = 19.sp) }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            OutlinedButton(onClick = { number = (number - 1).coerceAtLeast(1) }, modifier = Modifier.weight(1f).height(58.dp), enabled = number > 1) {
+                Text("← Previous", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
+            Button(onClick = { number = if (number == 20) 1 else number + 1 }, modifier = Modifier.weight(1f).height(58.dp)) {
+                Text(if (number == 20) "🔄 Start Again" else "Next →", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            }
+        }
     }
 }
