@@ -32,6 +32,8 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .background(Brush.verticalGradient(listOf(Color(0xFFFFF5DE), Color.White, Color(0xFFEAF7FF))))
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
