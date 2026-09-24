@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 import kotlin.random.Random
 
@@ -36,7 +37,8 @@ fun AbidLetterSoundsScreen(onBack: () -> Unit) {
         "I" to "I says /i/ — Igloo 🏠", "J" to "J says /j/ — Jam 🍓"
     )
     var index by remember { mutableIntStateOf(0) }
-    val tts = remember { TextToSpeech(null) { }.apply { language = Locale.US } }
+    val context = LocalContext.current
+    val tts = remember(context) { TextToSpeech(context) { }.apply { language = Locale.US } }
     DisposableEffect(Unit) { onDispose { tts.shutdown() } }
     val current = letters[index]
     AbidGameFrame("🔊 Letter Sounds", Color(0xFF1769AA), onBack) {
