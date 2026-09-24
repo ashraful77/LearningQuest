@@ -41,21 +41,38 @@ private fun makeGuideBitmap(letter: Char): Bitmap {
     return bitmap
 }
 
-private fun guidePoints(bitmap: Bitmap, step: Int = 5): List<Offset> {
+private fun guidePoints(bitmap: Bitmap, step: Int = 4): List<Offset> {
+    // Keep only the visible boundary of the glyph.
+    // The old scorer used every filled pixel, so a random stroke
+    // anywhere inside the faint letter could score as a good trace.
     val points = mutableListOf<Offset>()
-    var y = 0
-    while (y < bitmap.height) {
-        var x = 0
-        while (x < bitmap.width) {
-            val pixel = bitmap.getPixel(x, y)
-            if (android.graphics.Color.alpha(pixel) > 80 &&
-                android.graphics.Color.red(pixel) < 180) {
-                points += Offset(x.toFloat(), y.toFloat())
+
+    var y = 1
+    while (y < bitmap.height - 1) {
+        var x = 1
+        while (x < bitmap.width - 1) {
+            val p = bitmap.getPixel(x, y)
+            val filled = android.graphics.Color.alpha(p) > 80 &&
+                android.graphics.Color.red(p) < 180
+
+            if (filled) {
+                var edge = false
+                for (dy in -1..1) {
+                    for (dx in -1..1) {
+                        if (dx == 0 && dy == 0) continue
+                        val n = bitmap.getPixel(x + dx, y + dy)
+                        if (android.graphics.Color.alpha(n) <= 80) {
+                            edge = true
+                        }
+                    }
+                }
+                if (edge) points += Offset(x.toFloat(), y.toFloat())
             }
             x += step
         }
         y += step
     }
+
     return points
 }
 
