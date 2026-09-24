@@ -49,6 +49,7 @@ fun HomeScreen() {
         "puzzle" -> PuzzleScreen { screen = "home" }
         "mixed" -> MixedQuizScreen { screen = "home" }
         "abid_letters" -> AbidLettersScreen { screen = "home" }
+        "abid_bengali_letters" -> AbidBengaliLettersScreen { screen = "home" }
         "abid_numbers" -> AbidNumbersScreen { screen = "home" }
         "abid_match_letters" -> AbidMatchLettersScreen { screen = "home" }
         "abid_number_match" -> AbidNumberMatchScreen { screen = "home" }
