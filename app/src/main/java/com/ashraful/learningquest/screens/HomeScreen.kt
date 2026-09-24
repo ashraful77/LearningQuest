@@ -48,6 +48,11 @@ fun HomeScreen() {
         "science" -> ScienceScreen { screen = "home" }
         "puzzle" -> PuzzleScreen { screen = "home" }
         "mixed" -> MixedQuizScreen { screen = "home" }
+        "arifa_brain" -> ArifaBrainGamesScreen { screen = "home" }
+        "arifa_reading" -> ArifaReadingAdventureScreen { screen = "home" }
+        "arifa_writing" -> ArifaWritingPracticeScreen { screen = "home" }
+        "arifa_advanced_math" -> ArifaAdvancedMathScreen { screen = "home" }
+        "arifa_world" -> ArifaWorldExplorerScreen { screen = "home" }
         "abid_letters" -> AbidLettersScreen { screen = "home" }
         "abid_write_letters" -> AbidWriteLettersScreen { screen = "home" }
         "abid_bengali_letters" -> AbidBengaliLettersScreen { screen = "home" }
@@ -182,6 +187,16 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         SubjectCard("🔬", "Science", "Explore the world around you", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("science") }
         SubjectCard("🧩", "Puzzles", "Think, solve & discover", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("puzzle") }
         SubjectCard("🌈", "Mixed Quiz", "20 marks • Math + English + Science + Puzzle", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
+
+        Spacer(Modifier.height(14.dp))
+        Text("LEVEL 2 • NEW CHALLENGES", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
+        Spacer(Modifier.height(7.dp))
+
+        SubjectCard("🧠", "Brain Games", "Logic, patterns & thinking", Color(0xFFF3E5FF), Color(0xFF6A1B9A)) { onNavigate("arifa_brain") }
+        SubjectCard("📖", "Reading Adventure", "Stories & comprehension", Color(0xFFE3F2FD), Color(0xFF1565C0)) { onNavigate("arifa_reading") }
+        SubjectCard("✍️", "Writing Practice", "Spelling & sentence building", Color(0xFFE0F7F4), Color(0xFF00897B)) { onNavigate("arifa_writing") }
+        SubjectCard("🔢", "Advanced Maths", "Multiplication, fractions & money", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("arifa_advanced_math") }
+        SubjectCard("🌍", "World Explorer", "India, science & our world", Color(0xFFFFF1DE), Color(0xFFE67E22)) { onNavigate("arifa_world") }
 
         Spacer(Modifier.weight(1f))
 
