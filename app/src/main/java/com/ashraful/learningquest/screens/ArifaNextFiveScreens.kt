@@ -210,7 +210,7 @@ fun ArifaAchievements2Screen(onBack: () -> Unit) {
                 Row(Modifier.fillMaxWidth().padding(14.dp),verticalAlignment=Alignment.CenterVertically){
                     Text(a.icon,fontSize=28.sp)
                     Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)){Text(a.title,fontWeight=FontWeight.Bold,fontSize=17.sp);Text(a.third.let{if(it) "Unlocked!" else "Keep learning to unlock"},fontSize=12.sp,color=Color(0xFF71809A))}
+                    Column(Modifier.weight(1f)){Text(a.title,fontWeight=FontWeight.Bold,fontSize=17.sp);Text(if(a.unlocked) "Unlocked!" else "Keep learning to unlock",fontSize=12.sp,color=Color(0xFF71809A))}
                     Text(if(a.third) "✓" else "🔒",fontSize=22.sp)
                 }
             }
