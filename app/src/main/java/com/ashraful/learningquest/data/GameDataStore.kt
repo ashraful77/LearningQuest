@@ -30,6 +30,9 @@ class GameDataStore(private val context: Context) {
         val PROFILE = stringPreferencesKey("profile")
         val TODAY_PROGRESS = intPreferencesKey("today_progress")
         val LAST_PROGRESS_DAY = intPreferencesKey("last_progress_day")
+        val TOTAL_QUESTIONS = intPreferencesKey("total_questions")
+        val CORRECT_ANSWERS = intPreferencesKey("correct_answers")
+        val ACHIEVEMENT_COUNT = intPreferencesKey("achievement_count")
     }
 
     val profile: Flow<String?> = context.gameDataStore.data.map { it[Keys.PROFILE] }
@@ -51,11 +54,14 @@ class GameDataStore(private val context: Context) {
                 scienceScore = preferences[Keys.SCIENCE_SCORE] ?: 0,
                 puzzleScore = preferences[Keys.PUZZLE_SCORE] ?: 0,
                 mathDifficulty = preferences[Keys.MATH_DIFFICULTY] ?: 1,
+                totalQuestions = preferences[Keys.TOTAL_QUESTIONS] ?: 0,
+                correctAnswers = preferences[Keys.CORRECT_ANSWERS] ?: 0,
+                achievementCount = preferences[Keys.ACHIEVEMENT_COUNT] ?: 0,
                 todayProgress = if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()) preferences[Keys.TODAY_PROGRESS] ?: 0 else 0
             )
         }
 
-    suspend fun addReward(
+    suspend fun recordAnswer(correct: Boolean) {\n        context.gameDataStore.edit { preferences ->\n            preferences[Keys.TOTAL_QUESTIONS] = (preferences[Keys.TOTAL_QUESTIONS] ?: 0) + 1\n            if (correct) preferences[Keys.CORRECT_ANSWERS] = (preferences[Keys.CORRECT_ANSWERS] ?: 0) + 1\n        }\n    }\n\n    suspend fun addReward(
         coins: Int,
         xp: Int
     ) {
