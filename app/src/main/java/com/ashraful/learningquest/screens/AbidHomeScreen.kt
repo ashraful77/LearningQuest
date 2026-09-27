@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ashraful.learningquest.data.AbidProgress
 import com.ashraful.learningquest.data.AbidProgressStore
 
@@ -23,7 +22,7 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
     val scrollState = rememberScrollState()
     var expandedSection by remember { mutableStateOf<String?>(null) }
     val progressStore = remember { AbidProgressStore(LocalContext.current) }
-    val progress by progressStore.progress.collectAsStateWithLifecycle(initialValue = AbidProgress())
+    val progress by progressStore.progress.collectAsState(initial = AbidProgress())
 
     Column(
         Modifier.fillMaxSize().verticalScroll(scrollState)
