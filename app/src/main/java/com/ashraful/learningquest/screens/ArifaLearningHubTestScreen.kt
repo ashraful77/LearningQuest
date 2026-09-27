@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashraful.learningquest.data.AdaptiveQuestionEngine
+import com.ashraful.learningquest.data.BengaliTranslation
 import com.ashraful.learningquest.data.BankQuestion
 import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.QuestionBank
@@ -37,6 +38,9 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     var answered by remember { mutableStateOf(false) }
     var finished by remember { mutableStateOf(false) }
     var testStarted by remember { mutableStateOf(false) }
+    var translatedQuestion by remember { mutableStateOf<String?>(null) }
+    var translating by remember { mutableStateOf(false) }
+    var translationError by remember { mutableStateOf<String?>(null) }
 
     val topicProgress = remember(progress) {
         QuestionBank.all.groupBy { it.topic }.map { (topic, bankQuestions) ->
@@ -66,6 +70,9 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         answered = false
         finished = false
         testStarted = true
+        translatedQuestion = null
+        translating = false
+        translationError = null
     }
 
     Box(
@@ -190,6 +197,9 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 answered = false
                 finished = false
                 testStarted = true
+                translatedQuestion = null
+                translating = false
+                translationError = null
             }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
                 Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
@@ -231,6 +241,77 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    if (!Regex("[\\u0980-\\u09FF]").containsMatchIn(q.prompt)) {
+                        Spacer(Modifier.height(12.dp))
+                        OutlinedButton(
+                            onClick = {
+                                translating = true
+                                translationError = null
+                                BengaliTranslation.translate(
+                                    text = q.prompt,
+                                    onSuccess = {
+                                        translatedQuestion = it
+                                        translating = false
+                                    },
+                                    onError = {
+                                        translationError = it
+                                        translating = false
+                                    }
+                                )
+                            },
+                            enabled = !translating,
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            if (translating) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(18.dp),
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("Translating…")
+                            } else {
+                                Text("বাংলা অনুবাদ  •  Translate to Bengali")
+                            }
+                        }
+
+                        translatedQuestion?.let { translated ->
+                            Spacer(Modifier.height(10.dp))
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(14.dp),
+                                color = Color(0xFFF1F8E9)
+                            ) {
+                                Column(Modifier.padding(12.dp)) {
+                                    Text(
+                                        "বাংলা",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = Color(0xFF388E3C)
+                                    )
+                                    Spacer(Modifier.height(4.dp))
+                                    Text(
+                                        translated,
+                                        fontSize = 19.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                            }
+                        }
+
+                        translationError?.let { error ->
+                            Text(
+                                error,
+                                modifier = Modifier.padding(top = 6.dp),
+                                fontSize = 12.sp,
+                                color = Color(0xFFD32F2F),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
 
@@ -304,6 +385,9 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             index++
                             selected = null
                             answered = false
+                            translatedQuestion = null
+                            translating = false
+                            translationError = null
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
