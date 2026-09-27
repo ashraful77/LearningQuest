@@ -26,7 +26,24 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            val keystorePath = System.getenv("LEARNINGQUEST_KEYSTORE_PATH")
+            val keystorePassword = System.getenv("LEARNINGQUEST_KEYSTORE_PASSWORD")
+            val keyAlias = System.getenv("LEARNINGQUEST_KEY_ALIAS")
+            val keyPassword = System.getenv("LEARNINGQUEST_KEY_PASSWORD")
+
+            if (!keystorePath.isNullOrBlank() &&
+                !keystorePassword.isNullOrBlank() &&
+                !keyAlias.isNullOrBlank() &&
+                !keyPassword.isNullOrBlank()
+            ) {
+                signingConfig = signingConfigs.create("learningQuestRelease") {
+                    storeFile = file(keystorePath)
+                    storePassword = keystorePassword
+                    this.keyAlias = keyAlias
+                    this.keyPassword = keyPassword
+                }
+            }
+
             optimization {
                 enable = false
             }
