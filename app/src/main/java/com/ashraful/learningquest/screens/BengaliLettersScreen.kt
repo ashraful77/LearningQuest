@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -36,9 +37,10 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
     )
 
     val tts = remember(context) {
-        TextToSpeech(context) { status ->
+        lateinit var engine: TextToSpeech
+        engine = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                val result = setLanguage(Locale("bn", "IN"))
+                val result = engine.setLanguage(Locale("bn", "IN"))
                 ttsReady = result == TextToSpeech.LANG_AVAILABLE ||
                     result == TextToSpeech.LANG_COUNTRY_AVAILABLE ||
                     result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE
@@ -46,6 +48,7 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
                 ttsReady = false
             }
         }
+        engine
     }
 
     DisposableEffect(Unit) {
