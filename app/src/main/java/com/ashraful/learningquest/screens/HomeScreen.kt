@@ -49,6 +49,7 @@ fun HomeScreen() {
         "science" -> ScienceScreen { screen = "home" }
         "puzzle" -> PuzzleScreen { screen = "home" }
         "mixed" -> MixedQuizScreen { screen = "home" }
+        "arifa_learning_hub" -> ArifaLearningHubTestScreen { screen = "home" }
         "arifa_brain" -> ArifaBrainGamesScreen { screen = "home" }
         "arifa_reading" -> ArifaReadingAdventureScreen { screen = "home" }
         "arifa_writing" -> ArifaWritingPracticeScreen { screen = "home" }
@@ -193,6 +194,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(14.dp))
         SubjectCard("🌈", "Mixed Quiz", "20 questions • all core subjects", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
+        SubjectCard("🧠", "Learning Hub Test", "Adaptive questions • remembers your weak areas", Color(0xFFEAF2FF), Color(0xFF315FBA)) { onNavigate("arifa_learning_hub") }
 
         Spacer(Modifier.height(14.dp))
         Card(modifier = Modifier.fillMaxWidth(), onClick = { showLevel2 = !showLevel2 }, shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(Color(0xFFF1F5FF))) {
