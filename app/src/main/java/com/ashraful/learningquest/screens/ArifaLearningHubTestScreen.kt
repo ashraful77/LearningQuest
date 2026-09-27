@@ -19,6 +19,7 @@ import com.ashraful.learningquest.data.BankQuestion
 import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.QuestionBank
 import com.ashraful.learningquest.data.QuestionProgressStore
+import com.ashraful.learningquest.data.TopicProgress
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,6 +36,22 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     var selected by remember { mutableStateOf<Int?>(null) }
     var answered by remember { mutableStateOf(false) }
     var finished by remember { mutableStateOf(false) }
+
+    val topicProgress = remember(progress) {
+        QuestionBank.all.groupBy { it.topic }.map { (topic, bankQuestions) ->
+            val history = bankQuestions.mapNotNull { progress[it.id] }
+            val attempts = history.sumOf { it.attempts }
+            val correct = history.sumOf { it.correct }
+            TopicProgress(
+                topic = topic,
+                attempts = attempts,
+                correct = correct,
+                accuracy = if (attempts == 0) 0 else (correct * 100) / attempts,
+                masteredQuestions = history.count { it.isMastered },
+                totalQuestions = bankQuestions.size
+            )
+        }.sortedBy { if (it.attempts == 0) 0 else it.accuracy }
+    }
 
     LaunchedEffect(progress) {
         if (questions.isEmpty() && QuestionBank.all.isNotEmpty()) {
@@ -87,6 +104,39 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(12.dp))
             Text("$score / ${questions.size}", fontSize = 48.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
             Text("Your question history has been updated.", fontSize = 15.sp)
+            Spacer(Modifier.height(18.dp))
+            Text("📊 Topic Progress", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(Modifier.height(8.dp))
+            topicProgress.take(4).forEach { topic ->
+                Surface(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color.White,
+                    tonalElevation = 1.dp
+                ) {
+                    Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(topic.topic, fontWeight = FontWeight.Bold)
+                            Text(
+                                if (topic.attempts == 0) "Not started" else "${topic.accuracy}% accuracy • ${topic.masteredQuestions}/${topic.totalQuestions} mastered",
+                                fontSize = 12.sp,
+                                color = Color(0xFF68778C)
+                            )
+                        }
+                        Text(
+                            when {
+                                topic.attempts == 0 -> "NEW"
+                                topic.isWeak -> "PRACTICE"
+                                topic.isStrong -> "STRONG"
+                                else -> "BUILDING"
+                            },
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF315FBA)
+                        )
+                    }
+                }
+            }
             Spacer(Modifier.height(24.dp))
             Button(onClick = ::startAgain, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
                 Text("🔄 New Adaptive Test", fontSize = 17.sp)
