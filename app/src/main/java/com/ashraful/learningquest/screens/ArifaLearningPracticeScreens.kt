@@ -95,7 +95,7 @@ private fun TopicPicker(
                 Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
                         Text(topic, fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                        Text("$$attempted/$${qs.size} attempted • $$accuracy% accuracy", fontSize = 12.sp, color = Color(0xFF68778C))
+                        Text("$attempted/${qs.size} attempted • $accuracy% accuracy", fontSize = 12.sp, color = Color(0xFF68778C))
                     }
                     Text("Practice →", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
                 }
@@ -118,6 +118,7 @@ private fun ReviewQuiz(
     var score by rememberSaveable { mutableIntStateOf(0) }
     var selected by rememberSaveable { mutableStateOf<Int?>(null) }
     var answered by rememberSaveable { mutableStateOf(false) }
+    var showBengali by rememberSaveable { mutableStateOf(false) }
 
     Column(
         Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFFEAF2FF), Color.White)))
@@ -145,13 +146,19 @@ private fun ReviewQuiz(
         val order = remember(index, q.id) { q.options.indices.shuffled() }
         Spacer(Modifier.height(14.dp))
         LinearProgressIndicator(progress = { (index + 1) / questions.size.toFloat() }, Modifier.fillMaxWidth().height(8.dp))
-        Text("Question $${index + 1} / $${questions.size}", Modifier.padding(top = 7.dp), fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
+        Text("Question ${index + 1} / ${questions.size}", Modifier.padding(top = 7.dp), fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
         Spacer(Modifier.height(12.dp))
         Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {
             Column(Modifier.padding(20.dp)) {
-                Text("$${q.subject} • $${q.topic}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
+                Text("${q.subject} • ${q.topic}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
                 Spacer(Modifier.height(8.dp))
-                Text(q.prompt, fontSize = 21.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                Text(if (showBengali && q.hasBengali) q.bengaliPrompt.orEmpty() else q.prompt, fontSize = 21.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                if (q.hasBengali) {
+                    Spacer(Modifier.height(10.dp))
+                    OutlinedButton(onClick = { showBengali = !showBengali }, shape = RoundedCornerShape(12.dp)) {
+                        Text(if (showBengali) "English দেখুন" else "বাংলা দেখুন")
+                    }
+                }
             }
         }
         order.forEach { optionIndex ->
@@ -173,11 +180,13 @@ private fun ReviewQuiz(
                     containerColor = when { !answered -> Color.White; correct -> Color(0xFF20B957); chosen -> Color(0xFFE94055); else -> Color.White },
                     contentColor = if (answered && (correct || chosen)) Color.White else Color(0xFF26354A)
                 )
-            ) { Text(q.options[optionIndex], fontSize = 18.sp, fontWeight = FontWeight.SemiBold) }
+            ) {
+                Text(if (showBengali && q.hasBengali) q.bengaliOptions?.getOrNull(optionIndex) ?: q.options[optionIndex] else q.options[optionIndex], fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            }
         }
         if (answered) {
             Spacer(Modifier.height(8.dp))
-            Text(if (selected == q.correctIndex) "🎉 Correct! +5 XP +5 Coins" else "💡 Correct answer: $${q.correctAnswer}", fontWeight = FontWeight.Bold)
+            Text(if (selected == q.correctIndex) "🎉 Correct! +5 XP +5 Coins" else "💡 Correct answer: " + if (showBengali && q.hasBengali) q.bengaliCorrectAnswer.orEmpty() else q.correctAnswer, fontWeight = FontWeight.Bold)
             if (q.explanation.isNotBlank()) Text(q.explanation, Modifier.padding(top = 5.dp), fontSize = 13.sp, color = Color(0xFF65738A), textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
             Button(onClick = {
@@ -187,6 +196,6 @@ private fun ReviewQuiz(
             }
         }
         Spacer(Modifier.height(12.dp))
-        Text("Score: $$score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
+        Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
     }
 }
