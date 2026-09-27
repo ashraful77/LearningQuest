@@ -40,9 +40,13 @@ fun HomeScreen() {
 
     when (screen) {
         "home" -> if (profile == "arifa") {
-            HomeContent { screen = it }
+            HomeContent { route ->
+                if (route == "switch_to_abid") profile = "abid" else screen = route
+            }
         } else {
-            AbidHomeScreen { screen = it }
+            AbidHomeScreen { route ->
+                if (route == "switch_to_arifa") profile = "arifa" else screen = route
+            }
         }
         "math" -> MathScreen { screen = "home" }
         "english" -> EnglishScreen { screen = "home" }
@@ -115,7 +119,17 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 18.dp)
         ) {
-            Spacer(Modifier.height(18.dp))
+            Spacer(Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = { onNavigate("switch_to_abid") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("👦 Switch to Abid", fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(Modifier.height(10.dp))
 
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
