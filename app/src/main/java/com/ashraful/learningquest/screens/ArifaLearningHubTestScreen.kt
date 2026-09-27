@@ -219,9 +219,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 answered = false
                 finished = false
                 testStarted = true
-                translatedQuestion = null
-                translating = false
-                translationError = null
+                showBengali = false
             }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
                 Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
