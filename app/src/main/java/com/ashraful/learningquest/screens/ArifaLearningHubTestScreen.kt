@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -31,16 +32,19 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val progress by progressStore.progress.collectAsState(initial = emptyMap())
 
-    var questions by remember { mutableStateOf<List<BankQuestion>>(emptyList()) }
-    var index by remember { mutableIntStateOf(0) }
-    var score by remember { mutableIntStateOf(0) }
-    var selected by remember { mutableStateOf<Int?>(null) }
-    var answered by remember { mutableStateOf(false) }
-    var finished by remember { mutableStateOf(false) }
-    var testStarted by remember { mutableStateOf(false) }
-    var translatedQuestion by remember { mutableStateOf<String?>(null) }
-    var translating by remember { mutableStateOf(false) }
-    var translationError by remember { mutableStateOf<String?>(null) }
+    var questionIds by rememberSaveable { mutableStateOf("") }
+    val questions = remember(questionIds) {
+        questionIds.split(",").filter { it.isNotBlank() }.mapNotNull(QuestionBank::findById)
+    }
+    var index by rememberSaveable { mutableIntStateOf(0) }
+    var score by rememberSaveable { mutableIntStateOf(0) }
+    var selected by rememberSaveable { mutableStateOf<Int?>(null) }
+    var answered by rememberSaveable { mutableStateOf(false) }
+    var finished by rememberSaveable { mutableStateOf(false) }
+    var testStarted by rememberSaveable { mutableStateOf(false) }
+    var translatedQuestion by rememberSaveable { mutableStateOf<String?>(null) }
+    var translating by rememberSaveable { mutableStateOf(false) }
+    var translationError by rememberSaveable { mutableStateOf<String?>(null) }
 
     val topicProgress = remember(progress) {
         QuestionBank.all.groupBy { it.topic }.map { (topic, bankQuestions) ->
@@ -59,11 +63,12 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     }
 
     fun startAgain() {
-        questions = AdaptiveQuestionEngine.mixedTest(
+        val selectedQuestions = AdaptiveQuestionEngine.mixedTest(
             questions = QuestionBank.all,
             progress = progress,
             count = minOf(10, QuestionBank.all.size)
         )
+        questionIds = selectedQuestions.joinToString(",") { it.id }
         index = 0
         score = 0
         selected = null
@@ -190,7 +195,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             }
             Spacer(Modifier.height(20.dp))
             Button(onClick = {
-                questions = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size))
+                questionIds = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size)).joinToString(",") { it.id }
                 index = 0
                 score = 0
                 selected = null
