@@ -153,8 +153,36 @@ object QuestionBank {
         )
     )
 
+
+    val mathGeometry = listOf(
+        BankQuestion("MATH_GEOM_001", "Math", "Geometry", 2, "How many sides does a triangle have?", listOf("2", "3", "4", "5"), 1, "A triangle has 3 sides."),
+        BankQuestion("MATH_GEOM_002", "Math", "Geometry", 2, "How many sides does a rectangle have?", listOf("3", "4", "5", "6"), 1, "A rectangle has 4 sides."),
+        BankQuestion("MATH_GEOM_003", "Math", "Geometry", 3, "How many corners does a square have?", listOf("2", "3", "4", "5"), 2, "A square has 4 corners."),
+        BankQuestion("MATH_MEASURE_001", "Math", "Measurement", 2, "Which unit is commonly used to measure the length of a pencil?", listOf("Kilometre", "Metre", "Centimetre", "Litre"), 2, "A pencil is conveniently measured in centimetres."),
+        BankQuestion("MATH_MONEY_001", "Math", "Money", 2, "A pencil costs ₹8. How much do 3 pencils cost?", listOf("₹16", "₹20", "₹24", "₹32"), 2, "8 × 3 = 24."),
+        BankQuestion("MATH_TIME_001", "Math", "Time", 2, "How many minutes are there in one hour?", listOf("30", "45", "60", "100"), 2, "One hour has 60 minutes.")
+    )
+
+    val englishGrammar = listOf(
+        BankQuestion("ENG_GRAMMAR_002", "English", "Grammar", 2, "Choose the correct word: She ___ a book.", listOf("read", "reads", "reading", "are read"), 1, "With 'she', the verb is 'reads'."),
+        BankQuestion("ENG_GRAMMAR_003", "English", "Grammar", 2, "Choose the correct word: They ___ playing.", listOf("is", "am", "are", "was"), 2, "'They' takes 'are'."),
+        BankQuestion("ENG_GRAMMAR_004", "English", "Grammar", 3, "Which word is a pronoun?", listOf("Rita", "School", "They", "Beautiful"), 2, "'They' is a pronoun."),
+        BankQuestion("ENG_GRAMMAR_005", "English", "Grammar", 3, "Which word is an adjective?", listOf("Quickly", "Beautiful", "Run", "Teacher"), 1, "'Beautiful' describes a noun."),
+        BankQuestion("ENG_VOCAB_002", "English", "Vocabulary", 2, "Which word means the same as 'big'?", listOf("Small", "Large", "Short", "Thin"), 1, "'Large' means big."),
+        BankQuestion("ENG_VOCAB_003", "English", "Vocabulary", 2, "Which word is the opposite of 'early'?", listOf("Fast", "Late", "Soon", "First"), 1, "The opposite of early is late.")
+    )
+
+    val sciencePlants = listOf(
+        BankQuestion("SCI_PLANT_002", "Science", "Plants", 2, "Which part of a plant makes most of its food?", listOf("Root", "Leaf", "Flower", "Seed"), 1, "Leaves make food using sunlight."),
+        BankQuestion("SCI_PLANT_003", "Science", "Plants", 2, "What do roots mainly take from the soil?", listOf("Water and minerals", "Sunlight", "Air only", "Flowers"), 0, "Roots absorb water and minerals."),
+        BankQuestion("SCI_SPACE_001", "Science", "Space", 2, "Which planet is called the Red Planet?", listOf("Earth", "Mars", "Venus", "Jupiter"), 1, "Mars appears reddish because of iron-rich material on its surface."),
+        BankQuestion("SCI_SPACE_002", "Science", "Space", 2, "What is Earth's natural satellite?", listOf("Sun", "Mars", "Moon", "Venus"), 2, "The Moon is Earth's natural satellite."),
+        BankQuestion("SCI_BODY_002", "Science", "Human Body", 2, "Which organ helps us think?", listOf("Heart", "Brain", "Lungs", "Stomach"), 1, "The brain controls thinking and many body functions."),
+        BankQuestion("SCI_BODY_003", "Science", "Human Body", 2, "Which organ helps us breathe?", listOf("Heart", "Brain", "Lungs", "Kidney"), 2, "The lungs help us take in oxygen.")
+    )
+
     val all: List<BankQuestion>
-        get() = mathWordProblems + english + science
+        get() = mathWordProblems + mathGeometry + english + englishGrammar + science + sciencePlants
 
     fun bySubject(subject: String): List<BankQuestion> =
         all.filter { it.subject.equals(subject, ignoreCase = true) }
