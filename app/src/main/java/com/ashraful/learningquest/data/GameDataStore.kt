@@ -28,6 +28,8 @@ class GameDataStore(private val context: Context) {
         val MATH_DIFFICULTY = intPreferencesKey("math_difficulty")
         val LAST_ACTIVITY_DAY = intPreferencesKey("last_activity_day")
         val PROFILE = stringPreferencesKey("profile")
+        val TODAY_PROGRESS = intPreferencesKey("today_progress")
+        val LAST_PROGRESS_DAY = intPreferencesKey("last_progress_day")
     }
 
     val profile: Flow<String?> = context.gameDataStore.data.map { it[Keys.PROFILE] }
@@ -48,7 +50,8 @@ class GameDataStore(private val context: Context) {
                 englishScore = preferences[Keys.ENGLISH_SCORE] ?: 0,
                 scienceScore = preferences[Keys.SCIENCE_SCORE] ?: 0,
                 puzzleScore = preferences[Keys.PUZZLE_SCORE] ?: 0,
-                mathDifficulty = preferences[Keys.MATH_DIFFICULTY] ?: 1
+                mathDifficulty = preferences[Keys.MATH_DIFFICULTY] ?: 1,
+                todayProgress = if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()) preferences[Keys.TODAY_PROGRESS] ?: 0 else 0
             )
         }
 
@@ -71,6 +74,8 @@ class GameDataStore(private val context: Context) {
             }
 
             val newXp = currentXp + xp
+            val progressDay = if (lastActivityDay == today) (preferences[Keys.TODAY_PROGRESS] ?: 0) else 0
+            val newProgress = (progressDay + 1).coerceAtMost(3)
             val newLevel = (newXp / 100) + 1
 
             preferences[Keys.COINS] = currentCoins + coins
@@ -79,6 +84,8 @@ class GameDataStore(private val context: Context) {
                 maxOf(currentLevel, newLevel)
             preferences[Keys.STREAK] = newStreak
             preferences[Keys.LAST_ACTIVITY_DAY] = today
+            preferences[Keys.TODAY_PROGRESS] = newProgress
+            preferences[Keys.LAST_PROGRESS_DAY] = today
         }
     }
 
