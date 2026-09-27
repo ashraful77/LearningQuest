@@ -302,7 +302,7 @@ object QuestionBank {
     )
 
     val all: List<BankQuestion>
-        get() = mathWordProblems + mathGeometry + mathMore + mathExpansion + english + englishGrammar + englishMore + englishExpansion + science + sciencePlants + scienceMore + scienceExpansion
+        get() = mathWordProblems + mathGeometry + mathMore + mathExpansion + QuestionBankExpansion2.math + english + englishGrammar + englishMore + englishExpansion + QuestionBankExpansion2.english + science + sciencePlants + scienceMore + scienceExpansion + QuestionBankExpansion2.science
 
     fun bySubject(subject: String): List<BankQuestion> =
         all.filter { it.subject.equals(subject, ignoreCase = true) }
