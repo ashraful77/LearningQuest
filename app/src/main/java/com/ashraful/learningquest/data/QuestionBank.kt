@@ -231,8 +231,78 @@ object QuestionBank {
         BankQuestion("SCI_ENV_001", "Science", "Environment", 3, "Which action helps reduce waste?", listOf("Throwing everything away", "Reusing useful items", "Leaving taps running", "Burning all plastic"), 1, "Reusing items can reduce the amount of waste.")
     )
 
+
+    val mathExpansion = listOf(
+        BankQuestion("MATH_WORD_005", "Math", "Addition", 2, "A shop has 35 red balloons and 27 blue balloons. How many balloons are there altogether?", listOf("52", "62", "72", "82"), 1, "35 + 27 = 62."),
+        BankQuestion("MATH_WORD_006", "Math", "Subtraction", 2, "A farmer has 64 mangoes and sells 29. How many mangoes remain?", listOf("25", "35", "45", "55"), 1, "64 - 29 = 35."),
+        BankQuestion("MATH_WORD_007", "Math", "Multiplication", 3, "There are 7 rows with 5 chairs in each row. How many chairs are there?", listOf("25", "30", "35", "40"), 2, "7 × 5 = 35."),
+        BankQuestion("MATH_WORD_008", "Math", "Division", 3, "32 pencils are put equally into 4 boxes. How many pencils go in each box?", listOf("6", "7", "8", "9"), 2, "32 ÷ 4 = 8."),
+        BankQuestion("MATH_GEOM_004", "Math", "Geometry", 3, "Which shape has no corners?", listOf("Triangle", "Square", "Circle", "Rectangle"), 2, "A circle has no corners."),
+        BankQuestion("MATH_GEOM_005", "Math", "Geometry", 3, "How many equal sides does a square have?", listOf("2", "3", "4", "5"), 2, "All 4 sides of a square are equal."),
+        BankQuestion("MATH_GEOM_006", "Math", "Geometry", 3, "Which shape has exactly one curved boundary and no straight sides?", listOf("Circle", "Triangle", "Square", "Rectangle"), 0, "A circle has a curved boundary and no straight sides."),
+        BankQuestion("MATH_MEASURE_003", "Math", "Measurement", 3, "Which is longer?", listOf("1 metre", "50 centimetres", "20 centimetres", "10 centimetres"), 0, "1 metre is 100 centimetres."),
+        BankQuestion("MATH_MEASURE_004", "Math", "Measurement", 3, "How many millimetres are in 1 centimetre?", listOf("5", "10", "50", "100"), 1, "1 centimetre = 10 millimetres."),
+        BankQuestion("MATH_MONEY_003", "Math", "Money", 3, "A toy costs ₹35 and you pay ₹50. How much change should you get?", listOf("₹5", "₹10", "₹15", "₹20"), 2, "50 - 35 = 15."),
+        BankQuestion("MATH_MONEY_004", "Math", "Money", 3, "Two notebooks cost ₹25 each. What is the total cost?", listOf("₹40", "₹45", "₹50", "₹55"), 2, "25 × 2 = 50."),
+        BankQuestion("MATH_TIME_003", "Math", "Time", 3, "How many hours are there in one day?", listOf("12", "18", "24", "30"), 2, "One day has 24 hours."),
+        BankQuestion("MATH_TIME_004", "Math", "Time", 3, "What time is 30 minutes after 4:00?", listOf("4:15", "4:30", "5:00", "5:30"), 1, "30 minutes after 4:00 is 4:30."),
+        BankQuestion("MATH_FRAC_003", "Math", "Fractions", 3, "What is one quarter written as a fraction?", listOf("1/2", "1/3", "1/4", "2/4"), 2, "One quarter is 1/4."),
+        BankQuestion("MATH_FRAC_004", "Math", "Fractions", 4, "Which fraction is equal to 3/4?", listOf("2/4", "6/8", "3/8", "4/8"), 1, "3/4 = 6/8."),
+        BankQuestion("MATH_LOGIC_002", "Math", "Logic", 3, "What number comes next: 2, 4, 6, 8, ?", listOf("9", "10", "11", "12"), 1, "The pattern adds 2."),
+        BankQuestion("MATH_LOGIC_003", "Math", "Logic", 4, "Which number does not belong: 2, 4, 6, 9?", listOf("2", "4", "6", "9"), 3, "9 is odd while the others are even."),
+        BankQuestion("MATH_LOGIC_004", "Math", "Logic", 4, "If 3 pencils cost ₹15, how much does 1 pencil cost?", listOf("₹3", "₹5", "₹8", "₹10"), 1, "15 ÷ 3 = 5."),
+        BankQuestion("MATH_COMPARE_001", "Math", "Comparison", 2, "Which number is greatest?", listOf("47", "74", "57", "67"), 1, "74 is the greatest."),
+        BankQuestion("MATH_COMPARE_002", "Math", "Comparison", 2, "Which number is smallest?", listOf("31", "13", "23", "33"), 1, "13 is the smallest.")
+    )
+
+    val englishExpansion = listOf(
+        BankQuestion("ENG_GRAMMAR_009", "English", "Grammar", 2, "Choose the correct word: He ___ to school every day.", listOf("go", "goes", "going", "gone"), 1, "He goes to school every day."),
+        BankQuestion("ENG_GRAMMAR_010", "English", "Grammar", 2, "Choose the correct word: We ___ friends.", listOf("is", "am", "are", "was"), 2, "We use 'are' with 'we'."),
+        BankQuestion("ENG_GRAMMAR_011", "English", "Grammar", 3, "Which word is a verb?", listOf("Jump", "Blue", "Happy", "Garden"), 0, "Jump is an action word, or verb."),
+        BankQuestion("ENG_GRAMMAR_012", "English", "Grammar", 3, "Which word is a noun?", listOf("Run", "Beautiful", "School", "Quickly"), 2, "School is a naming word, or noun."),
+        BankQuestion("ENG_GRAMMAR_013", "English", "Grammar", 3, "Choose the correct plural of 'child'.", listOf("Childs", "Childes", "Children", "Childrens"), 2, "The plural of child is children."),
+        BankQuestion("ENG_GRAMMAR_014", "English", "Grammar", 3, "Choose the correct sentence.", listOf("They is ready.", "They are ready.", "They am ready.", "They be ready."), 1, "They takes the verb are."),
+        BankQuestion("ENG_VOCAB_006", "English", "Vocabulary", 2, "Which word means the opposite of 'hot'?", listOf("Warm", "Cold", "Dry", "Bright"), 1, "The opposite of hot is cold."),
+        BankQuestion("ENG_VOCAB_007", "English", "Vocabulary", 2, "Which word means the same as 'small'?", listOf("Tiny", "Huge", "Long", "Heavy"), 0, "Tiny means very small."),
+        BankQuestion("ENG_VOCAB_008", "English", "Vocabulary", 3, "Which word means the same as 'begin'?", listOf("End", "Start", "Stop", "Close"), 1, "Begin means start."),
+        BankQuestion("ENG_VOCAB_009", "English", "Vocabulary", 3, "Which word is the opposite of 'clean'?", listOf("Neat", "Dirty", "Fresh", "Bright"), 1, "The opposite of clean is dirty."),
+        BankQuestion("ENG_READING_002", "English", "Reading", 2, "Rafi planted a seed and watered it every day. What was he trying to grow?", listOf("A plant", "A book", "A chair", "A toy"), 0, "A seed can grow into a plant."),
+        BankQuestion("ENG_READING_003", "English", "Reading", 3, "Mina wore a raincoat before going outside. What was the weather likely to be?", listOf("Rainy", "Very dry", "Snowy only", "Windless"), 0, "A raincoat is used to stay dry in rain."),
+        BankQuestion("ENG_GRAMMAR_015", "English", "Grammar", 3, "Which sentence starts with a capital letter correctly?", listOf("arifa likes books.", "Arifa likes books.", "arifa Likes books.", "ARifa likes books."), 1, "A sentence and a person's name begin with capital letters."),
+        BankQuestion("ENG_GRAMMAR_016", "English", "Grammar", 3, "Which word is an adverb?", listOf("Slowly", "Slow", "Runner", "Run"), 0, "Slowly tells how an action happens."),
+        BankQuestion("ENG_VOCAB_010", "English", "Vocabulary", 3, "What does 'enormous' mean?", listOf("Very small", "Very large", "Very quiet", "Very young"), 1, "Enormous means very large."),
+        BankQuestion("ENG_VOCAB_011", "English", "Vocabulary", 2, "Which word rhymes with 'cat'?", listOf("Sun", "Hat", "Dog", "Tree"), 1, "Cat and hat rhyme."),
+        BankQuestion("ENG_READING_004", "English", "Reading", 3, "Sara had 5 apples and gave 2 to her brother. How many did she have left?", listOf("2", "3", "4", "7"), 1, "5 - 2 = 3."),
+        BankQuestion("ENG_GRAMMAR_017", "English", "Grammar", 4, "Choose the correct past tense: Yesterday, I ___ a story.", listOf("read", "reads", "reading", "will read"), 0, "Read is used for the past in this sentence."),
+        BankQuestion("ENG_GRAMMAR_018", "English", "Grammar", 3, "Which punctuation mark ends a question?", listOf(".", ",", "?", "!"), 2, "A question ends with a question mark."),
+        BankQuestion("ENG_VOCAB_012", "English", "Vocabulary", 2, "Which word describes something that is not heavy?", listOf("Light", "Hard", "Tall", "Wide"), 0, "Light can mean not heavy.")
+    )
+
+    val scienceExpansion = listOf(
+        BankQuestion("SCI_PLANT_005", "Science", "Plants", 2, "Which gas do plants use to make food?", listOf("Oxygen", "Carbon dioxide", "Helium", "Hydrogen"), 1, "Plants use carbon dioxide during photosynthesis."),
+        BankQuestion("SCI_PLANT_006", "Science", "Plants", 3, "Which part usually carries water from roots toward the leaves?", listOf("Stem", "Flower", "Fruit", "Seed"), 0, "The stem transports water and minerals."),
+        BankQuestion("SCI_ANIMAL_002", "Science", "Animals", 2, "Which animal lays eggs?", listOf("Cow", "Hen", "Cat", "Dog"), 1, "A hen lays eggs."),
+        BankQuestion("SCI_ANIMAL_003", "Science", "Animals", 3, "Which animal is a herbivore?", listOf("Lion", "Cow", "Tiger", "Eagle"), 1, "A cow mainly eats plants."),
+        BankQuestion("SCI_BODY_004", "Science", "Human Body", 2, "Which organ helps us breathe?", listOf("Lungs", "Heart", "Brain", "Stomach"), 0, "The lungs help us breathe."),
+        BankQuestion("SCI_BODY_005", "Science", "Human Body", 3, "Which organ helps digest food?", listOf("Stomach", "Brain", "Ear", "Eye"), 0, "The stomach helps digest food."),
+        BankQuestion("SCI_BODY_006", "Science", "Human Body", 3, "Which body part helps us hear?", listOf("Eye", "Ear", "Nose", "Hand"), 1, "The ear helps us hear."),
+        BankQuestion("SCI_SPACE_003", "Science", "Space", 2, "Which star is closest to Earth?", listOf("The Moon", "The Sun", "Mars", "Jupiter"), 1, "The Sun is the closest star to Earth."),
+        BankQuestion("SCI_SPACE_004", "Science", "Space", 3, "Which planet do we live on?", listOf("Mars", "Venus", "Earth", "Saturn"), 2, "We live on Earth."),
+        BankQuestion("SCI_EARTH_002", "Science", "Earth", 2, "What do we call moving air?", listOf("Wind", "Rain", "Cloud", "Soil"), 0, "Moving air is called wind."),
+        BankQuestion("SCI_EARTH_003", "Science", "Earth", 3, "Which covers much of Earth's surface?", listOf("Water", "Sand only", "Buildings", "Roads"), 0, "Water covers much of Earth's surface."),
+        BankQuestion("SCI_MATTER_003", "Science", "Matter", 2, "Which state of matter can flow and takes the shape of its container?", listOf("Solid", "Liquid", "Rock", "Ice"), 1, "Liquids flow and take the shape of their container."),
+        BankQuestion("SCI_MATTER_004", "Science", "Matter", 3, "Water turns into ice when it is?", listOf("Heated", "Frozen", "Boiled", "Burned"), 1, "Water freezes into ice when cooled enough."),
+        BankQuestion("SCI_ENV_002", "Science", "Environment", 2, "Which item can usually be recycled?", listOf("Paper", "Smoke", "Sunlight", "Rain"), 0, "Paper can be recycled."),
+        BankQuestion("SCI_ENV_003", "Science", "Environment", 3, "Which action saves water?", listOf("Leaving the tap open", "Turning off the tap when not needed", "Breaking pipes", "Wasting clean water"), 1, "Turning off unused taps saves water."),
+        BankQuestion("SCI_ENERGY_001", "Science", "Energy", 2, "Which is a source of light?", listOf("Sun", "Stone", "Chair", "Book"), 0, "The Sun is a natural source of light."),
+        BankQuestion("SCI_ENERGY_002", "Science", "Energy", 3, "Which object uses electricity?", listOf("Electric fan", "Stone", "Pencil", "Paper"), 0, "An electric fan uses electrical energy."),
+        BankQuestion("SCI_WEATHER_001", "Science", "Weather", 2, "Which instrument is used to measure temperature?", listOf("Thermometer", "Ruler", "Clock", "Compass"), 0, "A thermometer measures temperature."),
+        BankQuestion("SCI_WEATHER_002", "Science", "Weather", 3, "Dark clouds often suggest that what may happen?", listOf("Rain", "Summer vacation", "An earthquake", "A rainbow always"), 0, "Dark clouds can bring rain."),
+        BankQuestion("SCI_MATERIALS_001", "Science", "Materials", 3, "Which material is transparent?", listOf("Clear glass", "Wood", "Brick", "Stone"), 0, "Clear glass lets light pass through.")
+    )
+
     val all: List<BankQuestion>
-        get() = mathWordProblems + mathGeometry + mathMore + english + englishGrammar + englishMore + science + sciencePlants + scienceMore
+        get() = mathWordProblems + mathGeometry + mathMore + mathExpansion + english + englishGrammar + englishMore + englishExpansion + science + sciencePlants + scienceMore + scienceExpansion
 
     fun bySubject(subject: String): List<BankQuestion> =
         all.filter { it.subject.equals(subject, ignoreCase = true) }
