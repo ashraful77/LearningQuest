@@ -32,6 +32,7 @@ class QuestionProgressStore(private val context: Context) {
 
     suspend fun recordAnswer(questionId: String, correct: Boolean) {
         val today = LocalDate.now(ZoneId.systemDefault()).toEpochDay()
+        val now = System.currentTimeMillis() / 1000L
 
         context.questionProgressStore.edit { preferences ->
             val current = decode(preferences[progressKey].orEmpty())
