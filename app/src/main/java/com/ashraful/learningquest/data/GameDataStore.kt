@@ -56,7 +56,7 @@ class GameDataStore(private val context: Context) {
                 mathDifficulty = preferences[Keys.MATH_DIFFICULTY] ?: 1,
                 totalQuestions = preferences[Keys.TOTAL_QUESTIONS] ?: 0,
                 correctAnswers = preferences[Keys.CORRECT_ANSWERS] ?: 0,
-                achievementCount = preferences[Keys.ACHIEVEMENT_COUNT] ?: 0,
+                achievementCount = listOf(\n                    (preferences[Keys.XP] ?: 0) >= 50,\n                    (preferences[Keys.STREAK] ?: 0) >= 3,\n                    (preferences[Keys.COINS] ?: 0) >= 100,\n                    (preferences[Keys.MATH_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.ENGLISH_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.SCIENCE_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.PUZZLE_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.LEVEL] ?: 1) >= 5,\n                    (preferences[Keys.TOTAL_QUESTIONS] ?: 0) >= 100,\n                    (preferences[Keys.TOTAL_QUESTIONS] ?: 0) >= 20 &&\n                        (preferences[Keys.CORRECT_ANSWERS] ?: 0) * 100 >=\n                        (preferences[Keys.TOTAL_QUESTIONS] ?: 0) * 90\n                ).count { it },
                 todayProgress = if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()) preferences[Keys.TODAY_PROGRESS] ?: 0 else 0
             )
         }
