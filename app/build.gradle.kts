@@ -60,8 +60,6 @@ android {
 
 dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.7")
-    implementation("com.google.mlkit:translate:17.0.3")
-    implementation("com.google.mlkit:language-id:17.0.6")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
