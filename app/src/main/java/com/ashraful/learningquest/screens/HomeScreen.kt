@@ -228,6 +228,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(18.dp))
         Text("Learn • Play • Grow 🚀", Modifier.fillMaxWidth().padding(bottom = 12.dp), fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF8A96A8))
+        }
     }
 }
 
