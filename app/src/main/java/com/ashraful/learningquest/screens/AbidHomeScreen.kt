@@ -28,7 +28,17 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
     ) {
         Text("👦 Hi Abid!", fontSize = 34.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
         Text("Let's learn and play! 🚀", fontSize = 17.sp, color = Color(0xFF60758A))
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(10.dp))
+
+        OutlinedButton(
+            onClick = { onNavigate("switch_to_arifa") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp)
+        ) {
+            Text("👧 Switch to Arifa", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        }
+
+        Spacer(Modifier.height(10.dp))
 
         LearningSection("🔤", "Language & Letters", "6 activities", Color(0xFF1769AA), expandedSection == "language", { expandedSection = if (expandedSection == "language") null else "language" }) {
             LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_letters") }
