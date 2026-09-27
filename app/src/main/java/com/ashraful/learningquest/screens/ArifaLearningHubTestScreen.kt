@@ -68,9 +68,12 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         testStarted = true
     }
 
+    Box(
+        Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFFEAF2FF), Color.White))),
+        contentAlignment = Alignment.TopCenter
+    ) {
     Column(
-        Modifier.fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFFEAF2FF), Color.White)))
+        Modifier.fillMaxWidth().widthIn(max = 760.dp)
             .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -313,6 +316,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             Spacer(Modifier.weight(1f))
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
         }
+    }
     }
 }
 
