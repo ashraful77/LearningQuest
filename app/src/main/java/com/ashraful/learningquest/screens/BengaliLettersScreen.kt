@@ -37,9 +37,14 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
 
     val tts = remember(context) {
         TextToSpeech(context) { status ->
-            ttsReady = status == TextToSpeech.SUCCESS
-        }.apply {
-            language = Locale("bn", "IN")
+            if (status == TextToSpeech.SUCCESS) {
+                val result = setLanguage(Locale("bn", "IN"))
+                ttsReady = result == TextToSpeech.LANG_AVAILABLE ||
+                    result == TextToSpeech.LANG_COUNTRY_AVAILABLE ||
+                    result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE
+            } else {
+                ttsReady = false
+            }
         }
     }
 
