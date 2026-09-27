@@ -70,6 +70,7 @@ fun HomeScreen() {
         "abid_write_letters" -> AbidWriteLettersScreen { screen = "home" }
         "abid_bengali_letters" -> AbidBengaliLettersScreen { screen = "home" }
         "abid_bengali_practice" -> AbidBengaliPracticeScreen { screen = "home" }
+        "abid_bengali_picture_match" -> AbidBengaliPictureMatchScreen { screen = "home" }
         "abid_numbers" -> AbidNumbersScreen { screen = "home" }
         "abid_shapes" -> AbidShapesScreen { screen = "home" }
         "abid_colors" -> AbidColorsScreen { screen = "home" }
