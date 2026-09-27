@@ -14,6 +14,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 import kotlin.random.Random
+import com.ashraful.learningquest.data.AbidProgressStore
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 
 @Composable
 private fun AbidGameFrame(title: String, color: Color, onBack: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
@@ -58,6 +61,8 @@ fun AbidLetterSoundsScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
+    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val scope = rememberCoroutineScope()
     val items = listOf(
         "A" to listOf("🍎 Apple", "🐱 Cat", "🐟 Fish", "🚌 Bus"),
         "B" to listOf("⚽ Ball", "🍎 Apple", "🐶 Dog", "🍌 Banana"),
@@ -74,7 +79,7 @@ fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
         Text(current.first, fontSize = 92.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF23754A))
         options.forEach { option ->
             val correct = option == current.second.first()
-            Button(onClick = { selected = option }, enabled = selected == null, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(18.dp)) { Text(option, fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+            Button(onClick = { selected = option; scope.launch { progressStore.completeActivity("letters", if (option == current.second.first()) 2 else 0, if (option == current.second.first()) 10 else 2) } }, enabled = selected == null, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(18.dp)) { Text(option, fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
         }
         if (selected != null) {
             Spacer(Modifier.height(12.dp))
@@ -86,6 +91,8 @@ fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidSimpleMathScreen(onBack: () -> Unit) {
+    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val scope = rememberCoroutineScope()
     var round by remember { mutableIntStateOf(0) }
     val a = remember(round) { Random.nextInt(1, 6) }
     val b = remember(round) { Random.nextInt(1, 6) }
@@ -95,7 +102,7 @@ fun AbidSimpleMathScreen(onBack: () -> Unit) {
     AbidGameFrame("➕ Little Maths", Color(0xFF9A5A00), onBack) {
         Text("What is $a + $b ?", fontSize = 42.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF9A5A00))
         options.forEach { option ->
-            Button(onClick = { selected = option }, enabled = selected == -1, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp)) { Text(option.toString(), fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+            Button(onClick = { selected = option; scope.launch { progressStore.completeActivity("numbers", if (option == answer) 2 else 0, if (option == answer) 10 else 2) } }, enabled = selected == -1, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp)) { Text(option.toString(), fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
         }
         if (selected != -1) {
             Text(if (selected == answer) "🎉 Great maths!" else "😊 Answer: $answer", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
@@ -106,6 +113,8 @@ fun AbidSimpleMathScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidShapeMatchScreen(onBack: () -> Unit) {
+    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val scope = rememberCoroutineScope()
     val shapes = listOf("●" to "Circle", "■" to "Square", "▲" to "Triangle", "▭" to "Rectangle")
     var round by remember { mutableIntStateOf(0) }
     val current = shapes[round % shapes.size]
@@ -115,7 +124,7 @@ fun AbidShapeMatchScreen(onBack: () -> Unit) {
         Text("What shape is this?", fontSize = 23.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
         Text(current.first, fontSize = 110.sp, color = Color(0xFF1769AA))
         options.forEach { option ->
-            Button(onClick = { selected = option }, enabled = selected == null, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(56.dp)) { Text(option, fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+            Button(onClick = { selected = option; scope.launch { progressStore.completeActivity("shapes", if (option == current.second) 2 else 0, if (option == current.second) 10 else 2) } }, enabled = selected == null, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(56.dp)) { Text(option, fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
         }
         if (selected != null) {
             Text(if (selected == current.second) "🎉 Correct shape!" else "😊 It is a ${current.second}", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
@@ -167,6 +176,8 @@ fun AbidFruitsScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidMemoryGameScreen(onBack: () -> Unit) {
+    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val scope = rememberCoroutineScope()
     val emojis = listOf("🍎","🍌","🍊","🍇","🍓","🍉","🐶","🐱","🦁","🐼","⭐","🌈")
     var round by remember { mutableIntStateOf(0) }
     val cards = remember(round) { emojis.shuffled().take(6).flatMap { listOf(it, it) }.shuffled() }
