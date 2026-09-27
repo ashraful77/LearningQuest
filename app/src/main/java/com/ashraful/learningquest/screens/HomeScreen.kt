@@ -82,99 +82,100 @@ fun HomeScreen() {
 @Composable
 private fun HomeContent(onNavigate: (String) -> Unit) {
     val context = LocalContext.current
-    val dataStore = remember { GameDataStore(context) }
-    val gameData by dataStore.gameData.collectAsState(initial = null)
-    val data = gameData
+    val store = remember { GameDataStore(context) }
+    val data by store.gameData.collectAsState(initial = null)
+    var showLevel2 by rememberSaveable { mutableStateOf(false) }
+
+    val scores = listOf(
+        "math" to (data?.mathScore ?: 0),
+        "english" to (data?.englishScore ?: 0),
+        "science" to (data?.scienceScore ?: 0),
+        "puzzle" to (data?.puzzleScore ?: 0)
+    )
+    val weakest = scores.minByOrNull { it.second }?.first ?: "math"
+    val continueInfo = when (weakest) {
+        "english" -> Triple("🔤", "English", "Words, grammar & language")
+        "science" -> Triple("🔬", "Science", "Explore the world around you")
+        "puzzle" -> Triple("🧩", "Puzzles", "Think, solve & discover")
+        else -> Triple("➗", "Quick Math", "Numbers & problem solving")
+    }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        Modifier.fillMaxSize()
             .background(Brush.verticalGradient(listOf(Color(0xFFF4F7FF), Color.White)))
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 18.dp)
     ) {
         Spacer(Modifier.height(18.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text("LearningQuest", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF172B5C))
-                Text("Learn • Play • Grow 🚀", fontSize = 14.sp, color = Color(0xFF71809A))
+                Text("Good to see you, Arifa! 👋", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF172B5C))
+                Text("Ready for today's learning adventure?", fontSize = 13.sp, color = Color(0xFF71809A))
             }
             Surface(shape = RoundedCornerShape(18.dp), color = Color(0xFFFFF3D4)) {
-                Text("🪙 ${data?.coins ?: 0}", modifier = Modifier.padding(horizontal = 13.dp, vertical = 9.dp), fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
+                Text("🪙 ${data?.coins ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
             }
         }
 
-        Spacer(Modifier.height(18.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Brush.linearGradient(listOf(Color(0xFF315FBA), Color(0xFF5636A8))))
-                    .padding(22.dp)
-            ) {
+        Spacer(Modifier.height(14.dp))
+        Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(26.dp), colors = CardDefaults.cardColors(Color.Transparent)) {
+            Box(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Color(0xFF315FBA), Color(0xFF5636A8)))).padding(20.dp)) {
                 Column {
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text("YOUR PROGRESS", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFFDDE7FF))
-                            Text("Level ${data?.level ?: 1}", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
+                            Text("LEVEL ${data?.level ?: 1}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFFDDE7FF))
+                            Text("${data?.xp ?: 0} XP", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
                         }
-                        Surface(shape = CircleShape, color = Color.White.copy(alpha = 0.16f)) {
-                            Text("⭐", modifier = Modifier.padding(13.dp), fontSize = 24.sp)
-                        }
+                        Text("🔥 ${data?.streak ?: 0} day streak", fontSize = 13.sp, color = Color.White)
                     }
-
-                    Spacer(Modifier.height(18.dp))
-
+                    Spacer(Modifier.height(14.dp))
                     LinearProgressIndicator(
                         progress = { data?.xpProgress ?: 0f },
-                        modifier = Modifier.fillMaxWidth().height(9.dp),
-                        color = Color.White,
-                        trackColor = Color.White.copy(alpha = 0.22f)
+                        Modifier.fillMaxWidth().height(8.dp),
+                        color = Color.White, trackColor = Color.White.copy(alpha = .22f)
                     )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("${data?.xp ?: 0} XP", fontSize = 13.sp, color = Color.White)
-                        Text("Keep going!", fontSize = 13.sp, color = Color(0xFFE6ECFF))
-                    }
+                    Spacer(Modifier.height(6.dp))
+                    Text("${data?.xpInCurrentLevel ?: 0} / 100 XP to next level", fontSize = 12.sp, color = Color(0xFFE6ECFF))
                 }
             }
         }
 
         Spacer(Modifier.height(14.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            MiniStat("🪙", "Coins", "${data?.coins ?: 0}", Modifier.weight(1f))
-            MiniStat("🔥", "Streak", "${data?.streak ?: 0} days", Modifier.weight(1f))
+        Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(Color(0xFFFFF8E8))) {
+            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("🎯", fontSize = 28.sp)
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text("TODAY'S GOAL", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF9A6800))
+                    Text("Complete 3 learning challenges", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Color(0xFF5F4700))
+                    Text("Earn XP, coins and keep your streak alive!", fontSize = 12.sp, color = Color(0xFF806B3B))
+                }
+            }
         }
 
-        Spacer(Modifier.height(20.dp))
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(22.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(1.dp)
-        ) {
-            Column(Modifier.padding(16.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f)) {
-                        Text("YOUR SCORES", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7A8798))
-                        Text("Keep building your skills", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
-                    }
-                    Text("📈", fontSize = 24.sp)
-                }
-                Spacer(Modifier.height(12.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Spacer(Modifier.height(14.dp))
+        Text("CONTINUE LEARNING", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
+        Spacer(Modifier.height(6.dp))
+        SubjectCard(continueInfo.first, continueInfo.second, continueInfo.third, Color(0xFFEAF2FF), Color(0xFF315FBA)) { onNavigate(weakest) }
+
+        Spacer(Modifier.height(14.dp))
+        Text("CORE SUBJECTS", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
+        Spacer(Modifier.height(5.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CompactSubject("➗", "Math", Color(0xFFEAF2FF), Color(0xFF2457A6), Modifier.weight(1f)) { onNavigate("math") }
+            CompactSubject("🔤", "English", Color(0xFFF3ECFF), Color(0xFF7043A8), Modifier.weight(1f)) { onNavigate("english") }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CompactSubject("🔬", "Science", Color(0xFFE8F8EF), Color(0xFF23754A), Modifier.weight(1f)) { onNavigate("science") }
+            CompactSubject("🧩", "Puzzle", Color(0xFFFFF1DE), Color(0xFF9A5A00), Modifier.weight(1f)) { onNavigate("puzzle") }
+        }
+
+        Spacer(Modifier.height(14.dp))
+        Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(1.dp)) {
+            Column(Modifier.padding(15.dp)) {
+                Text("YOUR SKILLS", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7A8798))
+                Spacer(Modifier.height(10.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     ScorePill("Math", data?.mathScore ?: 0, Color(0xFF2457A6))
                     ScorePill("English", data?.englishScore ?: 0, Color(0xFF7043A8))
                     ScorePill("Science", data?.scienceScore ?: 0, Color(0xFF23754A))
@@ -183,64 +184,49 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
             }
         }
 
-        Spacer(Modifier.height(20.dp))
-        Text("CHOOSE A CHALLENGE", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
-        Spacer(Modifier.height(7.dp))
-
-        SubjectCard("➗", "Quick Math", "Numbers & problem solving", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("math") }
-        SubjectCard("🔤", "English", "Words, grammar & language", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("english") }
-        SubjectCard("🔬", "Science", "Explore the world around you", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("science") }
-        SubjectCard("🧩", "Puzzles", "Think, solve & discover", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("puzzle") }
-        SubjectCard("🌈", "Mixed Quiz", "20 marks • Math + English + Science + Puzzle", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
+        Spacer(Modifier.height(14.dp))
+        SubjectCard("🌈", "Mixed Quiz", "20 questions • all core subjects", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
 
         Spacer(Modifier.height(14.dp))
-        Text("LEVEL 2 • NEW CHALLENGES", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
-        Spacer(Modifier.height(7.dp))
+        Card(onClick = { showLevel2 = !showLevel2 }, Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(Color(0xFFF1F5FF))) {
+            Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("🚀", fontSize = 26.sp)
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("LEVEL 2 • MORE ADVENTURES", fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text("Brain, reading, writing, world & more", fontSize = 12.sp, color = Color(0xFF71809A))
+                }
+                Text(if (showLevel2) "⌃" else "⌄", fontSize = 22.sp, color = Color(0xFF315FBA))
+            }
+        }
 
-        SubjectCard("🧠", "Brain Games", "Logic, patterns & thinking", Color(0xFFF3E5FF), Color(0xFF6A1B9A)) { onNavigate("arifa_brain") }
-        SubjectCard("📖", "Reading Adventure", "Stories & comprehension", Color(0xFFE3F2FD), Color(0xFF1565C0)) { onNavigate("arifa_reading") }
-        SubjectCard("✍️", "Writing Practice", "Spelling & sentence building", Color(0xFFE0F7F4), Color(0xFF00897B)) { onNavigate("arifa_writing") }
-        SubjectCard("🔢", "Advanced Maths", "Multiplication, fractions & money", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("arifa_advanced_math") }
-        SubjectCard("🌍", "World Explorer", "India, science & our world", Color(0xFFFFF1DE), Color(0xFFE67E22)) { onNavigate("arifa_world") }
+        if (showLevel2) {
+            Spacer(Modifier.height(5.dp))
+            SubjectCard("🧠", "Brain Games", "Logic, patterns & thinking", Color(0xFFF3E5FF), Color(0xFF6A1B9A)) { onNavigate("arifa_brain") }
+            SubjectCard("📖", "Reading Adventure", "Stories & comprehension", Color(0xFFE3F2FD), Color(0xFF1565C0)) { onNavigate("arifa_reading") }
+            SubjectCard("✍️", "Writing Practice", "Spelling & sentences", Color(0xFFE0F7F4), Color(0xFF00897B)) { onNavigate("arifa_writing") }
+            SubjectCard("🔢", "Advanced Maths", "Multiplication, fractions & money", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("arifa_advanced_math") }
+            SubjectCard("🌍", "World Explorer", "India, science & our world", Color(0xFFFFF1DE), Color(0xFFE67E22)) { onNavigate("arifa_world") }
+            SubjectCard("🧩", "Visual Puzzles", "Patterns & sequences", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("arifa_visual") }
+            SubjectCard("🗣️", "English Speaking", "Listen and practise", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("arifa_speaking") }
+            SubjectCard("🔥", "Daily Challenge", "10 daily questions", Color(0xFFFFEEDB), Color(0xFFD35400)) { onNavigate("arifa_daily") }
+            SubjectCard("🏆", "Achievements 2.0", "Unlock milestones", Color(0xFFFFF5D9), Color(0xFFB77900)) { onNavigate("arifa_achievements2") }
+            SubjectCard("🛤️", "Learning Path", "Your learning journey", Color(0xFFE8F8EF), Color(0xFF247A57)) { onNavigate("arifa_path") }
+        }
 
-        Spacer(Modifier.height(14.dp))
-        Text("LEVEL 2 • MORE TO EXPLORE", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF65738A))
-        Spacer(Modifier.height(7.dp))
-        SubjectCard("🧩", "Visual Puzzles", "Patterns, sequences & logic", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("arifa_visual") }
-        SubjectCard("🗣️", "English Speaking", "Listen and practise speaking", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("arifa_speaking") }
-        SubjectCard("🔥", "Daily Challenge", "10 fresh questions every day", Color(0xFFFFEEDB), Color(0xFFD35400)) { onNavigate("arifa_daily") }
-        SubjectCard("🏆", "Achievements 2.0", "Unlock learning milestones", Color(0xFFFFF5D9), Color(0xFFB77900)) { onNavigate("arifa_achievements2") }
-        SubjectCard("🛤️", "Learning Path", "See your journey and levels", Color(0xFFE8F8EF), Color(0xFF247A57)) { onNavigate("arifa_path") }
-
-        Spacer(Modifier.weight(1f))
-
-        Text(
-            "Complete challenges to earn more XP and Coins",
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-            color = Color(0xFF8A96A8)
-        )
+        Spacer(Modifier.height(18.dp))
+        Text("Learn • Play • Grow 🚀", Modifier.fillMaxWidth().padding(bottom = 12.dp), fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF8A96A8))
     }
 }
 
 @Composable
-private fun MiniStat(icon: String, title: String, value: String, modifier: Modifier) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(2.dp)
-    ) {
-        Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Surface(shape = CircleShape, color = Color(0xFFF4F6FA)) {
-                Text(icon, modifier = Modifier.padding(9.dp), fontSize = 18.sp)
-            }
-            Spacer(Modifier.width(10.dp))
-            Column {
-                Text(title, fontSize = 11.sp, color = Color(0xFF7A8798))
-                Text(value, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
-            }
+private fun CompactSubject(icon: String, title: String, background: Color, accent: Color, modifier: Modifier, onClick: () -> Unit) {
+    Card(onClick = onClick, modifier = modifier.padding(vertical = 3.dp), shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(background), elevation = CardDefaults.cardElevation(1.dp)) {
+        Column(Modifier.fillMaxWidth().padding(13.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(icon, fontSize = 25.sp)
+            Spacer(Modifier.height(4.dp))
+            Text(title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = accent)
         }
     }
 }
