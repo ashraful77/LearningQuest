@@ -2,6 +2,8 @@ package com.ashraful.learningquest.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -80,6 +82,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     ) {
     Column(
         Modifier.fillMaxWidth().widthIn(max = 760.dp)
+            .verticalScroll(rememberScrollState())
             .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -173,21 +176,22 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                     Text("$totalAttempts answers recorded", fontSize = 12.sp, color = Color(0xFF68778C), modifier = Modifier.padding(top = 6.dp))
                 }
             }
-            Spacer(Modifier.height(18.dp))
-            Text("🎯 Focus Areas", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
-            Spacer(Modifier.height(7.dp))
-            topicProgress.take(4).forEach { topic ->
-                Surface(Modifier.fillMaxWidth().padding(vertical = 3.dp), shape = RoundedCornerShape(14.dp), color = Color.White, tonalElevation = 1.dp) {
-                    Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text(topic.topic, fontWeight = FontWeight.Bold)
-                            Text(if (topic.attempts == 0) "Not started • ${topic.totalQuestions} questions" else "${topic.accuracy}% accuracy • ${topic.masteredQuestions}/${topic.totalQuestions} mastered", fontSize = 12.sp, color = Color(0xFF68778C))
-                        }
-                        Text(if (topic.attempts == 0) "START" else "PRACTICE", fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                    }
-                }
-            }
             Spacer(Modifier.height(16.dp))
+            Button(onClick = {
+                questionIds = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size)).joinToString(",") { it.id }
+                index = 0
+                score = 0
+                selected = null
+                answered = false
+                finished = false
+                testStarted = true
+                showBengali = false
+            }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
+                Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("10 questions • weak areas get more practice • mastered questions return less often", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+            Spacer(Modifier.height(18.dp))
             Text("📚 Subject Progress", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(Modifier.height(7.dp))
             Row(
@@ -210,21 +214,6 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                     )
                 }
             }
-            Spacer(Modifier.height(20.dp))
-            Button(onClick = {
-                questionIds = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size)).joinToString(",") { it.id }
-                index = 0
-                score = 0
-                selected = null
-                answered = false
-                finished = false
-                testStarted = true
-                showBengali = false
-            }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
-                Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-            Spacer(Modifier.height(8.dp))
-            Text("10 questions • weak areas get more practice • mastered questions return less often", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
         } else if (questions.isEmpty()) {
             Spacer(Modifier.height(60.dp))
             CircularProgressIndicator()
