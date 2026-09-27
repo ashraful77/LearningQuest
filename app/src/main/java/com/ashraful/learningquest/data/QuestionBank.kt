@@ -313,9 +313,9 @@ object QuestionBank {
     )
 
     val all: List<BankQuestion>
-        get() = (mathWordProblems + mathGeometry + mathMore + mathExpansion + QuestionBankExpansion2.math +
-            english + englishGrammar + englishMore + englishExpansion + QuestionBankExpansion2.english +
-            science + sciencePlants + scienceMore + scienceExpansion + QuestionBankExpansion2.science)
+        get() = (mathWordProblems + mathGeometry + mathMore + mathExpansion + QuestionBankExpansion2.math + QuestionBankExpansion3.math +
+            english + englishGrammar + englishMore + englishExpansion + QuestionBankExpansion2.english + QuestionBankExpansion3.english +
+            science + sciencePlants + scienceMore + scienceExpansion + QuestionBankExpansion2.science + QuestionBankExpansion3.science)
             .map(BengaliQuestionContent::apply)
 
     fun bySubject(subject: String): List<BankQuestion> =
