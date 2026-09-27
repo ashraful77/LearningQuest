@@ -49,13 +49,14 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(10.dp))
 
-        LearningSection("🔤", "Language & Letters", "7 activities", Color(0xFF1769AA), expandedSection == "language", { expandedSection = if (expandedSection == "language") null else "language" }) {
+        LearningSection("🔤", "Language & Letters", "8 activities", Color(0xFF1769AA), expandedSection == "language", { expandedSection = if (expandedSection == "language") null else "language" }) {
             LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_letters") }
             LearningCard("🔊", "Letter Sounds", "Hear letters and phonics!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_letter_sounds") }
             LearningCard("🖼️", "Letter → Picture", "Match letters with pictures!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_picture_match") }
             LearningCard("✍️", "Write Letters", "Practice writing A, B, C and more!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_write_letters") }
             LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_letters") }
             LearningCard("🎯", "বাংলা বর্ণমালা অনুশীলন", "১০টি প্রশ্নে বর্ণ চিনে অনুশীলন করি!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_bengali_practice") }
+            LearningCard("🖼️", "বাংলা বর্ণ → ছবি", "বর্ণ দেখে সঠিক ছবি খুঁজি!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_bengali_picture_match") }
             LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_match_letters") }
         }
 
