@@ -244,6 +244,9 @@ object BengaliQuestionContent {
     )
 
     fun apply(question: BankQuestion): BankQuestion {
+        // English is the learning target, so English questions stay English-only.
+        if (question.subject.equals("English", ignoreCase = true)) return question
+
         val localized = content[question.id] ?: return question
         return question.copy(
             bengaliPrompt = localized.first,
