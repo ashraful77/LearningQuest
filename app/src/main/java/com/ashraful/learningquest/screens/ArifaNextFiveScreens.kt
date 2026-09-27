@@ -83,7 +83,7 @@ private fun NextQuiz(title: String, emoji: String, color: Color, pale: Color, qu
                 onClick={
                     if(!answered){
                         answered=true; selected=option
-                        if(option==q.answer){ score++; scope.launch { store.addReward(5,5) } }
+                        val correct = option == q.answer\n                        scope.launch {\n                            store.recordAnswer(correct)\n                            if (correct) {\n                                score++\n                                store.addReward(5, 5)\n                            }\n                        }
                     }
                 },
                 enabled=!answered,
@@ -202,7 +202,7 @@ fun ArifaAchievements2Screen(onBack: () -> Unit) {
         Achievement("🔤","English Explorer","Score 10+ in English", (d?.englishScore ?: 0)>=10),
         Achievement("🔬","Science Explorer","Score 10+ in science", (d?.scienceScore ?: 0)>=10),
         Achievement("🧩","Puzzle Explorer","Score 10+ in puzzles", (d?.puzzleScore ?: 0)>=10),
-        Achievement("🚀","Level Up","Reach level 5", (d?.level ?: 1)>=5)
+        Achievement("🚀","Level Up","Reach level 5", (d?.level ?: 1)>=5),\n        Achievement("💯","Question Master","Answer 100 questions", (d?.totalQuestions ?: 0)>=100),\n        Achievement("🎯","Accuracy Star","Reach 90% accuracy after 20 questions", (d?.totalQuestions ?: 0)>=20 && ((d?.correctAnswers ?: 0) * 100 >= (d?.totalQuestions ?: 0) * 90))
     )
     NextFrame("Achievements 2.0","🏆",Color(0xFFB77900),Color(0xFFFFF5D9),onBack){
         achievements.forEach { a ->
