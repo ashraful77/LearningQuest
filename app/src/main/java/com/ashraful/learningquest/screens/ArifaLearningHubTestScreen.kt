@@ -193,6 +193,29 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                     }
                 }
             }
+            Spacer(Modifier.height(16.dp))
+            Text("📚 Subject Progress", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(Modifier.height(7.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listOf("Math", "English", "Science").forEach { subject ->
+                    val subjectQuestions = QuestionBank.bySubject(subject)
+                    val subjectHistory = subjectQuestions.mapNotNull { progress[it.id] }
+                    val attempts = subjectHistory.sumOf { it.attempts }
+                    val correct = subjectHistory.sumOf { it.correct }
+                    val accuracy = if (attempts == 0) 0 else (correct * 100) / attempts
+                    val mastered = subjectHistory.count { it.isMastered }
+                    SubjectProgressCard(
+                        subject = subject,
+                        accuracy = accuracy,
+                        mastered = mastered,
+                        total = subjectQuestions.size,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
             Spacer(Modifier.height(20.dp))
             Button(onClick = {
                 questionIds = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size)).joinToString(",") { it.id }
@@ -406,6 +429,47 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
         }
     }
+    }
+}
+
+@Composable
+private fun SubjectProgressCard(
+    subject: String,
+    accuracy: Int,
+    mastered: Int,
+    total: Int,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White,
+        tonalElevation = 1.dp
+    ) {
+        Column(
+            Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(subject, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(Modifier.height(5.dp))
+            Text(
+                "$accuracy%",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF315FBA)
+            )
+            Text(
+                "$mastered/$total mastered",
+                fontSize = 10.sp,
+                color = Color(0xFF68778C),
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(6.dp))
+            LinearProgressIndicator(
+                progress = { accuracy / 100f },
+                modifier = Modifier.fillMaxWidth().height(5.dp)
+            )
+        }
     }
 }
 
