@@ -16,8 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashraful.learningquest.data.AdaptiveQuestionEngine
-import com.ashraful.learningquest.data.BengaliTranslation
-import com.ashraful.learningquest.data.BankQuestion
 import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.QuestionBank
 import com.ashraful.learningquest.data.QuestionProgressStore
@@ -42,9 +40,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     var answered by rememberSaveable { mutableStateOf(false) }
     var finished by rememberSaveable { mutableStateOf(false) }
     var testStarted by rememberSaveable { mutableStateOf(false) }
-    var translatedQuestion by rememberSaveable { mutableStateOf<String?>(null) }
-    var translating by rememberSaveable { mutableStateOf(false) }
-    var translationError by rememberSaveable { mutableStateOf<String?>(null) }
+    var showBengali by rememberSaveable { mutableStateOf(false) }
 
     val topicProgress = remember(progress) {
         QuestionBank.all.groupBy { it.topic }.map { (topic, bankQuestions) ->
@@ -75,9 +71,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         answered = false
         finished = false
         testStarted = true
-        translatedQuestion = null
-        translating = false
-        translationError = null
+        showBengali = false
     }
 
     Box(
@@ -262,91 +256,35 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         color = Color(0xFF315FBA)
                     )
                     Spacer(Modifier.height(8.dp))
+                    if (q.hasBengali) {
+                        OutlinedButton(
+                            onClick = { showBengali = !showBengali },
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Text(if (showBengali) "English দেখুন" else "বাংলা দেখুন")
+                        }
+                    }
+
+                    Spacer(Modifier.height(10.dp))
                     Text(
-                        q.prompt,
+                        if (showBengali) q.bengaliPrompt.orEmpty() else q.prompt,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-
-                    if (!Regex("[\\u0980-\\u09FF]").containsMatchIn(q.prompt)) {
-                        Spacer(Modifier.height(12.dp))
-                        OutlinedButton(
-                            onClick = {
-                                translating = true
-                                translationError = null
-                                BengaliTranslation.translate(
-                                    text = q.prompt,
-                                    onSuccess = {
-                                        translatedQuestion = it
-                                        translating = false
-                                    },
-                                    onError = {
-                                        translationError = it
-                                        translating = false
-                                    }
-                                )
-                            },
-                            enabled = !translating,
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            shape = RoundedCornerShape(14.dp)
-                        ) {
-                            if (translating) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(18.dp),
-                                    strokeWidth = 2.dp
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text("Translating…")
-                            } else {
-                                Text("বাংলা অনুবাদ  •  Translate to Bengali")
-                            }
-                        }
-
-                        translatedQuestion?.let { translated ->
-                            Spacer(Modifier.height(10.dp))
-                            Surface(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(14.dp),
-                                color = Color(0xFFF1F8E9)
-                            ) {
-                                Column(Modifier.padding(12.dp)) {
-                                    Text(
-                                        "বাংলা",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        color = Color(0xFF388E3C)
-                                    )
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        translated,
-                                        fontSize = 19.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            }
-                        }
-
-                        translationError?.let { error ->
-                            Text(
-                                error,
-                                modifier = Modifier.padding(top = 6.dp),
-                                fontSize = 12.sp,
-                                color = Color(0xFFD32F2F),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
                 }
             }
 
             Spacer(Modifier.height(12.dp))
 
             optionOrder.forEach { optionIndex ->
-                val option = q.options[optionIndex]
+                val option = if (showBengali) {
+                    q.bengaliOptions?.getOrNull(optionIndex) ?: q.options[optionIndex]
+                } else {
+                    q.options[optionIndex]
+                }
                 val isSelected = selected == optionIndex
                 val isCorrect = optionIndex == q.correctIndex
 
@@ -413,9 +351,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             index++
                             selected = null
                             answered = false
-                            translatedQuestion = null
-                            translating = false
-                            translationError = null
+                            showBengali = false
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
