@@ -102,9 +102,12 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         else -> Triple("➗", "Quick Math", "Numbers & problem solving")
     }
 
+    Box(
+        Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0xFFF4F7FF), Color.White))),
+        contentAlignment = Alignment.TopCenter
+    ) {
     Column(
-        Modifier.fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFFF4F7FF), Color.White)))
+        Modifier.fillMaxWidth().widthIn(max = 920.dp)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 18.dp)
     ) {
@@ -245,6 +248,7 @@ private fun ScorePill(subject: String, score: Int, accent: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text("$score", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = accent)
         Text(subject, fontSize = 10.sp, color = Color(0xFF7A8798))
+    }
     }
 }
 
