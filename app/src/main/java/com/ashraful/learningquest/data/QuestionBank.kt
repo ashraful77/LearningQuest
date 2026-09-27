@@ -42,6 +42,7 @@ data class QuestionProgress(
     val consecutiveCorrect: Int = 0,
     val mastery: Int = 0,
     val lastAnsweredEpochDay: Long = 0L,
+    val lastAnsweredEpochSecond: Long = 0L,
     val nextReviewEpochDay: Long = 0L
 ) {
     val accuracy: Int
@@ -202,7 +203,8 @@ object QuestionProgressEngine {
     fun recordAnswer(
         previous: QuestionProgress,
         correct: Boolean,
-        todayEpochDay: Long
+        todayEpochDay: Long,
+        answeredEpochSecond: Long = 0L
     ): QuestionProgress {
         val attempts = previous.attempts + 1
 
@@ -221,6 +223,7 @@ object QuestionProgressEngine {
                 consecutiveCorrect = consecutive,
                 mastery = mastery,
                 lastAnsweredEpochDay = todayEpochDay,
+                lastAnsweredEpochSecond = answeredEpochSecond,
                 nextReviewEpochDay = todayEpochDay + reviewGap
             )
         } else {
@@ -230,6 +233,7 @@ object QuestionProgressEngine {
                 consecutiveCorrect = 0,
                 mastery = (previous.mastery - 1).coerceAtLeast(0),
                 lastAnsweredEpochDay = todayEpochDay,
+                lastAnsweredEpochSecond = answeredEpochSecond,
                 nextReviewEpochDay = todayEpochDay + 1
             )
         }
