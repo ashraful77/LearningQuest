@@ -23,8 +23,8 @@ import com.ashraful.learningquest.data.GameDataStore
 
 @Composable
 fun HomeScreen() {
-    var profile by remember { mutableStateOf<String?>(null) }
-    var screen by remember { mutableStateOf("home") }
+    var profile by rememberSaveable { mutableStateOf<String?>(null) }
+    var screen by rememberSaveable { mutableStateOf("home") }
 
     BackHandler(enabled = profile != null && screen != "home") {
         screen = "home"
