@@ -148,7 +148,13 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 Column {
                     Text("TODAY'S GOAL", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF9A6800))
                     Text("Complete 3 learning challenges", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Color(0xFF5F4700))
-                    Text("Earn XP, coins and keep your streak alive!", fontSize = 12.sp, color = Color(0xFF806B3B))
+                    Text("${data?.todayProgress ?: 0} / 3 completed", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B6500))
+                    LinearProgressIndicator(
+                        progress = { (data?.todayProgress ?: 0) / 3f },
+                        modifier = Modifier.fillMaxWidth().padding(top = 5.dp).height(6.dp),
+                        color = Color(0xFFE0A400),
+                        trackColor = Color(0xFFFFE9A8)
+                    )
                 }
             }
         }
