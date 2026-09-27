@@ -61,7 +61,8 @@ fun AbidLetterSoundsScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
-    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val context = LocalContext.current
+    val progressStore = remember(context) { AbidProgressStore(context) }
     val scope = rememberCoroutineScope()
     val items = listOf(
         "A" to listOf("🍎 Apple", "🐱 Cat", "🐟 Fish", "🚌 Bus"),
