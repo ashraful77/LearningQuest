@@ -17,7 +17,7 @@ import java.util.Locale
 
 @Composable
 fun AbidBengaliLettersScreen(onBack: () -> Unit) {
-    var index by remember { mutableIntStateOf(0) }
+    var index by rememberSaveable { mutableIntStateOf(0) }
     var ttsReady by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -54,9 +54,15 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
 
     val current = letters[index]
 
+    fun speakLetter(targetIndex: Int) {
+        if (ttsReady) {
+            tts.speak(letters[targetIndex].second, TextToSpeech.QUEUE_FLUSH, null, "bengali_letter_" + targetIndex)
+        }
+    }
+
     fun speakCurrent() {
         if (ttsReady) {
-            tts.speak(current.second, TextToSpeech.QUEUE_FLUSH, null, "bengali_letter_" + index)
+            speakLetter(index)
         }
     }
 
@@ -106,8 +112,9 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             OutlinedButton(
                 onClick = {
-                    index = (index - 1 + letters.size) % letters.size
-                    speakCurrent()
+                    val newIndex = (index - 1 + letters.size) % letters.size
+                    index = newIndex
+                    speakLetter(newIndex)
                 },
                 modifier = Modifier.weight(1f).height(58.dp),
                 shape = RoundedCornerShape(18.dp)
@@ -115,8 +122,9 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
 
             Button(
                 onClick = {
-                    index = (index + 1) % letters.size
-                    speakCurrent()
+                    val newIndex = (index + 1) % letters.size
+                    index = newIndex
+                    speakLetter(newIndex)
                 },
                 modifier = Modifier.weight(1f).height(58.dp),
                 shape = RoundedCornerShape(18.dp)
