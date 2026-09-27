@@ -32,10 +32,10 @@ class GameDataStore(private val context: Context) {
         val LAST_PROGRESS_DAY = intPreferencesKey("last_progress_day")
         val TOTAL_QUESTIONS = intPreferencesKey("total_questions")
         val CORRECT_ANSWERS = intPreferencesKey("correct_answers")
-        val ACHIEVEMENT_COUNT = intPreferencesKey("achievement_count")
     }
 
-    val profile: Flow<String?> = context.gameDataStore.data.map { it[Keys.PROFILE] }
+    val profile: Flow<String?> =
+        context.gameDataStore.data.map { it[Keys.PROFILE] }
 
     suspend fun saveProfile(value: String) {
         context.gameDataStore.edit { it[Keys.PROFILE] = value }
@@ -43,6 +43,27 @@ class GameDataStore(private val context: Context) {
 
     val gameData: Flow<GameData> =
         context.gameDataStore.data.map { preferences ->
+
+            val totalQuestions = preferences[Keys.TOTAL_QUESTIONS] ?: 0
+            val correctAnswers = preferences[Keys.CORRECT_ANSWERS] ?: 0
+
+            val achievementCount = listOf(
+                (preferences[Keys.XP] ?: 0) >= 50,
+                (preferences[Keys.STREAK] ?: 0) >= 3,
+                (preferences[Keys.COINS] ?: 0) >= 100,
+                (preferences[Keys.MATH_SCORE] ?: 0) >= 10,
+                (preferences[Keys.ENGLISH_SCORE] ?: 0) >= 10,
+                (preferences[Keys.SCIENCE_SCORE] ?: 0) >= 10,
+                (preferences[Keys.PUZZLE_SCORE] ?: 0) >= 10,
+                (preferences[Keys.LEVEL] ?: 1) >= 5,
+                totalQuestions >= 100,
+                totalQuestions >= 20 &&
+                    correctAnswers * 100 >= totalQuestions * 90
+            ).count { it }
+
+            val today = LocalDate.now(ZoneId.systemDefault())
+                .toEpochDay()
+                .toInt()
 
             GameData(
                 coins = preferences[Keys.COINS] ?: 0,
@@ -54,17 +75,31 @@ class GameDataStore(private val context: Context) {
                 scienceScore = preferences[Keys.SCIENCE_SCORE] ?: 0,
                 puzzleScore = preferences[Keys.PUZZLE_SCORE] ?: 0,
                 mathDifficulty = preferences[Keys.MATH_DIFFICULTY] ?: 1,
-                totalQuestions = preferences[Keys.TOTAL_QUESTIONS] ?: 0,
-                correctAnswers = preferences[Keys.CORRECT_ANSWERS] ?: 0,
-                achievementCount = listOf(\n                    (preferences[Keys.XP] ?: 0) >= 50,\n                    (preferences[Keys.STREAK] ?: 0) >= 3,\n                    (preferences[Keys.COINS] ?: 0) >= 100,\n                    (preferences[Keys.MATH_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.ENGLISH_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.SCIENCE_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.PUZZLE_SCORE] ?: 0) >= 10,\n                    (preferences[Keys.LEVEL] ?: 1) >= 5,\n                    (preferences[Keys.TOTAL_QUESTIONS] ?: 0) >= 100,\n                    (preferences[Keys.TOTAL_QUESTIONS] ?: 0) >= 20 &&\n                        (preferences[Keys.CORRECT_ANSWERS] ?: 0) * 100 >=\n                        (preferences[Keys.TOTAL_QUESTIONS] ?: 0) * 90\n                ).count { it },
-                todayProgress = if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()) preferences[Keys.TODAY_PROGRESS] ?: 0 else 0
+                totalQuestions = totalQuestions,
+                correctAnswers = correctAnswers,
+                achievementCount = achievementCount,
+                todayProgress =
+                    if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == today) {
+                        preferences[Keys.TODAY_PROGRESS] ?: 0
+                    } else {
+                        0
+                    }
             )
         }
 
-    suspend fun recordAnswer(correct: Boolean) {\n        context.gameDataStore.edit { preferences ->\n            preferences[Keys.TOTAL_QUESTIONS] = (preferences[Keys.TOTAL_QUESTIONS] ?: 0) + 1\n            if (correct) preferences[Keys.CORRECT_ANSWERS] = (preferences[Keys.CORRECT_ANSWERS] ?: 0) + 1\n        }\n    }\n\n    suspend fun addReward(
-        coins: Int,
-        xp: Int
-    ) {
+    suspend fun recordAnswer(correct: Boolean) {
+        context.gameDataStore.edit { preferences ->
+            preferences[Keys.TOTAL_QUESTIONS] =
+                (preferences[Keys.TOTAL_QUESTIONS] ?: 0) + 1
+
+            if (correct) {
+                preferences[Keys.CORRECT_ANSWERS] =
+                    (preferences[Keys.CORRECT_ANSWERS] ?: 0) + 1
+            }
+        }
+    }
+
+    suspend fun addReward(coins: Int, xp: Int) {
         context.gameDataStore.edit { preferences ->
 
             val currentCoins = preferences[Keys.COINS] ?: 0
@@ -72,7 +107,11 @@ class GameDataStore(private val context: Context) {
             val currentLevel = preferences[Keys.LEVEL] ?: 1
             val currentStreak = preferences[Keys.STREAK] ?: 0
             val lastActivityDay = preferences[Keys.LAST_ACTIVITY_DAY] ?: 0
-            val today = LocalDate.now(ZoneId.systemDefault()).toEpochDay().toInt()
+
+            val today = LocalDate.now(ZoneId.systemDefault())
+                .toEpochDay()
+                .toInt()
+
             val newStreak = when {
                 lastActivityDay == today -> currentStreak
                 lastActivityDay == today - 1 -> currentStreak + 1
@@ -80,14 +119,20 @@ class GameDataStore(private val context: Context) {
             }
 
             val newXp = currentXp + xp
-            val progressDay = if (lastActivityDay == today) (preferences[Keys.TODAY_PROGRESS] ?: 0) else 0
+
+            val progressDay =
+                if (lastActivityDay == today) {
+                    preferences[Keys.TODAY_PROGRESS] ?: 0
+                } else {
+                    0
+                }
+
             val newProgress = (progressDay + 1).coerceAtMost(3)
             val newLevel = (newXp / 100) + 1
 
             preferences[Keys.COINS] = currentCoins + coins
             preferences[Keys.XP] = newXp
-            preferences[Keys.LEVEL] =
-                maxOf(currentLevel, newLevel)
+            preferences[Keys.LEVEL] = maxOf(currentLevel, newLevel)
             preferences[Keys.STREAK] = newStreak
             preferences[Keys.LAST_ACTIVITY_DAY] = today
             preferences[Keys.TODAY_PROGRESS] = newProgress
@@ -96,7 +141,6 @@ class GameDataStore(private val context: Context) {
     }
 
     suspend fun recordMathAnswer(correct: Boolean) {
-
         context.gameDataStore.edit { preferences ->
 
             val currentDifficulty =
@@ -109,38 +153,27 @@ class GameDataStore(private val context: Context) {
                 preferences[intPreferencesKey("math_wrong_streak")] ?: 0
 
             if (correct) {
-
-                val newCorrectStreak =
-                    currentCorrectStreak + 1
+                val newCorrectStreak = currentCorrectStreak + 1
 
                 preferences[intPreferencesKey("math_correct_streak")] =
                     newCorrectStreak
-
                 preferences[intPreferencesKey("math_wrong_streak")] = 0
 
                 if (newCorrectStreak >= 3) {
-
                     preferences[Keys.MATH_DIFFICULTY] =
                         (currentDifficulty + 1).coerceAtMost(10)
-
                     preferences[intPreferencesKey("math_correct_streak")] = 0
                 }
-
             } else {
-
-                val newWrongStreak =
-                    currentWrongStreak + 1
+                val newWrongStreak = currentWrongStreak + 1
 
                 preferences[intPreferencesKey("math_wrong_streak")] =
                     newWrongStreak
-
                 preferences[intPreferencesKey("math_correct_streak")] = 0
 
                 if (newWrongStreak >= 2) {
-
                     preferences[Keys.MATH_DIFFICULTY] =
                         (currentDifficulty - 1).coerceAtLeast(1)
-
                     preferences[intPreferencesKey("math_wrong_streak")] = 0
                 }
             }
