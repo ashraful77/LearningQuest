@@ -92,7 +92,8 @@ fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidSimpleMathScreen(onBack: () -> Unit) {
-    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val context = LocalContext.current
+    val progressStore = remember(context) { AbidProgressStore(context) }
     val scope = rememberCoroutineScope()
     var round by remember { mutableIntStateOf(0) }
     val a = remember(round) { Random.nextInt(1, 6) }
@@ -114,7 +115,8 @@ fun AbidSimpleMathScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidShapeMatchScreen(onBack: () -> Unit) {
-    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val context = LocalContext.current
+    val progressStore = remember(context) { AbidProgressStore(context) }
     val scope = rememberCoroutineScope()
     val shapes = listOf("●" to "Circle", "■" to "Square", "▲" to "Triangle", "▭" to "Rectangle")
     var round by remember { mutableIntStateOf(0) }
@@ -177,7 +179,8 @@ fun AbidFruitsScreen(onBack: () -> Unit) {
 
 @Composable
 fun AbidMemoryGameScreen(onBack: () -> Unit) {
-    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val context = LocalContext.current
+    val progressStore = remember(context) { AbidProgressStore(context) }
     val scope = rememberCoroutineScope()
     val emojis = listOf("🍎","🍌","🍊","🍇","🍓","🍉","🐶","🐱","🦁","🐼","⭐","🌈")
     var round by remember { mutableIntStateOf(0) }
