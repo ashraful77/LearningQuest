@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -194,7 +195,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
         SubjectCard("🌈", "Mixed Quiz", "20 questions • all core subjects", Color(0xFFFFE8F5), Color(0xFF6A1B9A)) { onNavigate("mixed") }
 
         Spacer(Modifier.height(14.dp))
-        Card(onClick = { showLevel2 = !showLevel2 }, Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(Color(0xFFF1F5FF))) {
+        Card(modifier = Modifier.fillMaxWidth(), onClick = { showLevel2 = !showLevel2 }, shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(Color(0xFFF1F5FF))) {
             Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text("🚀", fontSize = 26.sp)
                 Spacer(Modifier.width(12.dp))
