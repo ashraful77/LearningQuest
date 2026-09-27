@@ -15,17 +15,28 @@ data class BankQuestion(
     val options: List<String>,
     val correctIndex: Int,
     val explanation: String = "",
-    val familyId: String? = null
+    val familyId: String? = null,
+    val bengaliPrompt: String? = null,
+    val bengaliOptions: List<String>? = null
 ) {
     init {
         require(id.isNotBlank()) { "Question ID cannot be blank" }
         require(options.size == 4) { "Bank questions must have exactly 4 options: $id" }
         require(correctIndex in 0..3) { "Invalid correct option for: $id" }
         require(difficulty in 1..10) { "Difficulty must be 1..10: $id" }
+        require(bengaliOptions == null || bengaliOptions.size == 4) {
+            "Bengali questions must have exactly 4 options: $id"
+        }
     }
 
     val correctAnswer: String
         get() = options[correctIndex]
+
+    val hasBengali: Boolean
+        get() = !bengaliPrompt.isNullOrBlank() && bengaliOptions?.size == 4
+
+    val bengaliCorrectAnswer: String?
+        get() = bengaliOptions?.getOrNull(correctIndex)
 }
 
 /**
