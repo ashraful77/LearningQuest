@@ -4,6 +4,7 @@ import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -104,7 +105,7 @@ fun AbidBengaliPracticeScreen(onBack: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(10.dp))
-            OutlinedButton(onClick = { speak() }, enabled = ttsReady, Modifier.fillMaxWidth().height(52.dp)) {
+            OutlinedButton(onClick = { speak() }, enabled = ttsReady, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                 Text("🔊 উচ্চারণ শুনি", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
             Spacer(Modifier.height(7.dp))
@@ -137,7 +138,7 @@ fun AbidBengaliPracticeScreen(onBack: () -> Unit) {
                 Spacer(Modifier.height(4.dp))
                 Button(
                     onClick = { if (index == 9) finished = true else { index++; selected = null } },
-                    Modifier.fillMaxWidth().height(52.dp)
+                    modifier = Modifier.fillMaxWidth().height(52.dp)
                 ) { Text(if (index == 9) "ফলাফল দেখুন" else "পরের প্রশ্ন →", fontSize = 18.sp, fontWeight = FontWeight.Bold) }
             }
         }
