@@ -52,6 +52,27 @@ data class QuestionProgress(
         get() = consecutiveCorrect >= 3
 }
 
+
+
+/**
+ * Snapshot of learner performance by topic.
+ * Used by the Learning Hub to explain where practice is needed.
+ */
+data class TopicProgress(
+    val topic: String,
+    val attempts: Int,
+    val correct: Int,
+    val accuracy: Int,
+    val masteredQuestions: Int,
+    val totalQuestions: Int
+) {
+    val isWeak: Boolean
+        get() = attempts >= 2 && accuracy < 70
+
+    val isStrong: Boolean
+        get() = attempts >= 3 && accuracy >= 85
+}
+
 /**
  * Central question bank.
  *
