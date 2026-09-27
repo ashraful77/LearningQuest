@@ -2,6 +2,7 @@ package com.ashraful.learningquest.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,13 @@ class GameDataStore(private val context: Context) {
         val PUZZLE_SCORE = intPreferencesKey("puzzle_score")
         val MATH_DIFFICULTY = intPreferencesKey("math_difficulty")
         val LAST_ACTIVITY_DAY = intPreferencesKey("last_activity_day")
+        val PROFILE = stringPreferencesKey("profile")
+    }
+
+    val profile: Flow<String?> = context.gameDataStore.data.map { it[Keys.PROFILE] }
+
+    suspend fun saveProfile(value: String) {
+        context.gameDataStore.edit { it[Keys.PROFILE] = value }
     }
 
     val gameData: Flow<GameData> =
