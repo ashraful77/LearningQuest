@@ -40,7 +40,8 @@ class QuestionProgressStore(private val context: Context) {
             val updated = QuestionProgressEngine.recordAnswer(
                 previous = previous,
                 correct = correct,
-                todayEpochDay = today
+                todayEpochDay = today,
+                answeredEpochSecond = now
             )
 
             val next = current.toMutableMap()
@@ -76,6 +77,7 @@ class QuestionProgressStore(private val context: Context) {
                     put("consecutiveCorrect", item.consecutiveCorrect)
                     put("mastery", item.mastery)
                     put("lastAnsweredEpochDay", item.lastAnsweredEpochDay)
+                    put("lastAnsweredEpochSecond", item.lastAnsweredEpochSecond)
                     put("nextReviewEpochDay", item.nextReviewEpochDay)
                 }
             )
@@ -100,6 +102,7 @@ class QuestionProgressStore(private val context: Context) {
                         consecutiveCorrect = item.optInt("consecutiveCorrect", 0),
                         mastery = item.optInt("mastery", 0),
                         lastAnsweredEpochDay = item.optLong("lastAnsweredEpochDay", 0L),
+                        lastAnsweredEpochSecond = item.optLong("lastAnsweredEpochSecond", 0L),
                         nextReviewEpochDay = item.optLong("nextReviewEpochDay", 0L)
                     )
                     put(progress.questionId, progress)
