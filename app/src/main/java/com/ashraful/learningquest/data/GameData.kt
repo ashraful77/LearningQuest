@@ -10,7 +10,10 @@ data class GameData(
     val scienceScore: Int = 0,
     val puzzleScore: Int = 0,
     val mathDifficulty: Int = 1,
-    val todayProgress: Int = 0
+    val todayProgress: Int = 0,
+    val totalQuestions: Int = 0,
+    val correctAnswers: Int = 0,
+    val achievementCount: Int = 0
 ) {
     val xpForNextLevel: Int
         get() = level * 100
