@@ -21,7 +21,8 @@ import com.ashraful.learningquest.data.AbidProgressStore
 fun AbidHomeScreen(onNavigate: (String) -> Unit) {
     val scrollState = rememberScrollState()
     var expandedSection by remember { mutableStateOf<String?>(null) }
-    val progressStore = remember { AbidProgressStore(LocalContext.current) }
+    val context = LocalContext.current
+    val progressStore = remember(context) { AbidProgressStore(context) }
     val progress by progressStore.progress.collectAsState(initial = AbidProgress())
 
     Column(
