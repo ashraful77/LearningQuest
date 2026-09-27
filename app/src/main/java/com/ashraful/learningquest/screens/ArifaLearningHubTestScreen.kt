@@ -36,6 +36,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     var selected by remember { mutableStateOf<Int?>(null) }
     var answered by remember { mutableStateOf(false) }
     var finished by remember { mutableStateOf(false) }
+    var testStarted by remember { mutableStateOf(false) }
 
     val topicProgress = remember(progress) {
         QuestionBank.all.groupBy { it.topic }.map { (topic, bankQuestions) ->
@@ -53,16 +54,6 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         }.sortedBy { if (it.attempts == 0) 0 else it.accuracy }
     }
 
-    LaunchedEffect(progress) {
-        if (questions.isEmpty() && QuestionBank.all.isNotEmpty()) {
-            questions = AdaptiveQuestionEngine.mixedTest(
-                questions = QuestionBank.all,
-                progress = progress,
-                count = minOf(10, QuestionBank.all.size)
-            )
-        }
-    }
-
     fun startAgain() {
         questions = AdaptiveQuestionEngine.mixedTest(
             questions = QuestionBank.all,
@@ -74,6 +65,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         selected = null
         answered = false
         finished = false
+        testStarted = true
     }
 
     Column(
@@ -144,6 +136,62 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) {
                 Text("‹ Home")
             }
+        } else if (!testStarted) {
+            val attemptedQuestions = QuestionBank.all.count { progress[it.id]?.attempts ?: 0 > 0 }
+            val masteredQuestions = QuestionBank.all.count { progress[it.id]?.isMastered == true }
+            val totalAttempts = progress.values.sumOf { it.attempts }
+            val totalCorrect = progress.values.sumOf { it.correct }
+            val overallAccuracy = if (totalAttempts == 0) 0 else (totalCorrect * 100) / totalAttempts
+
+            Spacer(Modifier.height(18.dp))
+            Text("Your Learning Dashboard", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+            Text("Adaptive practice built around what you know and what needs more practice.", fontSize = 14.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+            Spacer(Modifier.height(18.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DashboardStat("📚", "Bank", QuestionBank.all.size.toString(), Modifier.weight(1f))
+                DashboardStat("🎯", "Attempted", attemptedQuestions.toString(), Modifier.weight(1f))
+                DashboardStat("🏆", "Mastered", masteredQuestions.toString(), Modifier.weight(1f))
+            }
+            Spacer(Modifier.height(8.dp))
+            Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = Color.White, tonalElevation = 2.dp) {
+                Column(Modifier.padding(16.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Overall accuracy", fontWeight = FontWeight.Bold)
+                        Text("$overallAccuracy%", fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    LinearProgressIndicator(progress = { overallAccuracy / 100f }, modifier = Modifier.fillMaxWidth().height(8.dp))
+                    Text("$totalAttempts answers recorded", fontSize = 12.sp, color = Color(0xFF68778C), modifier = Modifier.padding(top = 6.dp))
+                }
+            }
+            Spacer(Modifier.height(18.dp))
+            Text("🎯 Focus Areas", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(Modifier.height(7.dp))
+            topicProgress.take(4).forEach { topic ->
+                Surface(Modifier.fillMaxWidth().padding(vertical = 3.dp), shape = RoundedCornerShape(14.dp), color = Color.White, tonalElevation = 1.dp) {
+                    Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(topic.topic, fontWeight = FontWeight.Bold)
+                            Text(if (topic.attempts == 0) "Not started • ${topic.totalQuestions} questions" else "${topic.accuracy}% accuracy • ${topic.masteredQuestions}/${topic.totalQuestions} mastered", fontSize = 12.sp, color = Color(0xFF68778C))
+                        }
+                        Text(if (topic.attempts == 0) "START" else "PRACTICE", fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    }
+                }
+            }
+            Spacer(Modifier.height(20.dp))
+            Button(onClick = {
+                questions = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size))
+                index = 0
+                score = 0
+                selected = null
+                answered = false
+                finished = false
+                testStarted = true
+            }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
+                Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("10 questions • weak areas get more practice • mastered questions return less often", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
         } else if (questions.isEmpty()) {
             Spacer(Modifier.height(60.dp))
             CircularProgressIndicator()
@@ -264,6 +312,17 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.weight(1f))
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
+        }
+    }
+}
+
+@Composable
+private fun DashboardStat(icon: String, label: String, value: String, modifier: Modifier = Modifier) {
+    Surface(modifier, shape = RoundedCornerShape(16.dp), color = Color.White, tonalElevation = 2.dp) {
+        Column(Modifier.padding(vertical = 12.dp, horizontal = 6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(icon, fontSize = 20.sp)
+            Text(value, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+            Text(label, fontSize = 11.sp, color = Color(0xFF68778C), fontWeight = FontWeight.SemiBold)
         }
     }
 }
