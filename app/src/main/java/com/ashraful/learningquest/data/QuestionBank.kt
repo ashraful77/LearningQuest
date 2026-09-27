@@ -203,8 +203,36 @@ object QuestionBank {
         BankQuestion("SCI_BODY_003", "Science", "Human Body", 2, "Which organ helps us breathe?", listOf("Heart", "Brain", "Lungs", "Kidney"), 2, "The lungs help us take in oxygen.")
     )
 
+
+    val mathMore = listOf(
+        BankQuestion("MATH_FRAC_001", "Math", "Fractions", 3, "Which fraction is equal to one half?", listOf("1/3", "2/4", "2/3", "3/4"), 1, "2/4 simplifies to 1/2."),
+        BankQuestion("MATH_FRAC_002", "Math", "Fractions", 3, "Which fraction is larger?", listOf("1/4", "1/2", "1/5", "1/8"), 1, "One half is larger than the other listed fractions."),
+        BankQuestion("MATH_MEASURE_002", "Math", "Measurement", 3, "How many centimetres are in 1 metre?", listOf("10", "50", "100", "1000"), 2, "1 metre = 100 centimetres."),
+        BankQuestion("MATH_TIME_002", "Math", "Time", 3, "A class starts at 9:00 and lasts 1 hour. When does it finish?", listOf("9:30", "10:00", "10:30", "11:00"), 1, "9:00 + 1 hour = 10:00."),
+        BankQuestion("MATH_MONEY_002", "Math", "Money", 3, "You have ₹50 and spend ₹18. How much is left?", listOf("₹22", "₹28", "₹32", "₹38"), 2, "50 - 18 = 32."),
+        BankQuestion("MATH_LOGIC_001", "Math", "Logic", 3, "What number comes next: 5, 10, 15, 20, ?", listOf("22", "24", "25", "30"), 2, "The pattern adds 5 each time.")
+    )
+
+    val englishMore = listOf(
+        BankQuestion("ENG_GRAMMAR_006", "English", "Grammar", 2, "Choose the correct article: I saw ___ elephant.", listOf("a", "an", "thee", "no"), 1, "We use 'an' before a vowel sound."),
+        BankQuestion("ENG_GRAMMAR_007", "English", "Grammar", 3, "What is the past tense of 'go'?", listOf("goed", "going", "went", "goes"), 2, "The past tense of go is went."),
+        BankQuestion("ENG_GRAMMAR_008", "English", "Grammar", 3, "Which sentence uses a capital letter correctly?", listOf("my name is arifa.", "My name is Arifa.", "my Name is Arifa.", "My name is arifa."), 1, "Names and the beginning of a sentence use capital letters."),
+        BankQuestion("ENG_VOCAB_004", "English", "Vocabulary", 2, "Which word means the same as 'quick'?", listOf("Slow", "Fast", "Heavy", "Quiet"), 1, "Fast means quick."),
+        BankQuestion("ENG_VOCAB_005", "English", "Vocabulary", 3, "Which word is a noun?", listOf("Run", "Beautiful", "Teacher", "Quickly"), 2, "Teacher is a naming word, or noun."),
+        BankQuestion("ENG_READING_001", "English", "Reading", 2, "If a story says 'Rina carried an umbrella because it was raining', why did she carry it?", listOf("It was sunny", "It was raining", "She was swimming", "She was sleeping"), 1, "The story says it was raining.")
+    )
+
+    val scienceMore = listOf(
+        BankQuestion("SCI_PLANT_004", "Science", "Plants", 3, "Which part of a plant usually develops into a fruit after flowering?", listOf("Root", "Flower", "Stem", "Leaf"), 1, "In flowering plants, the ovary in the flower develops into the fruit."),
+        BankQuestion("SCI_ANIMAL_001", "Science", "Animals", 2, "Which animal is commonly known as a mammal?", listOf("Frog", "Cow", "Snake", "Fish"), 1, "A cow is a mammal."),
+        BankQuestion("SCI_MATTER_001", "Science", "Matter", 2, "Which state of matter has a fixed shape?", listOf("Solid", "Liquid", "Gas", "Steam only"), 0, "A solid has a fixed shape."),
+        BankQuestion("SCI_MATTER_002", "Science", "Matter", 3, "What happens to ice when it is heated enough?", listOf("It freezes", "It melts", "It becomes soil", "It disappears instantly"), 1, "Ice melts into liquid water when heated."),
+        BankQuestion("SCI_EARTH_001", "Science", "Earth", 2, "What gives Earth most of its light and heat?", listOf("Moon", "Sun", "Stars only", "Clouds"), 1, "The Sun provides most of Earth's light and heat."),
+        BankQuestion("SCI_ENV_001", "Science", "Environment", 3, "Which action helps reduce waste?", listOf("Throwing everything away", "Reusing useful items", "Leaving taps running", "Burning all plastic"), 1, "Reusing items can reduce the amount of waste.")
+    )
+
     val all: List<BankQuestion>
-        get() = mathWordProblems + mathGeometry + english + englishGrammar + science + sciencePlants
+        get() = mathWordProblems + mathGeometry + mathMore + english + englishGrammar + englishMore + science + sciencePlants + scienceMore
 
     fun bySubject(subject: String): List<BankQuestion> =
         all.filter { it.subject.equals(subject, ignoreCase = true) }
