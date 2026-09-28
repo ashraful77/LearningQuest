@@ -39,6 +39,10 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(10.dp))
 
+        DailyMissionCard(progress)
+
+        Spacer(Modifier.height(10.dp))
+
         OutlinedButton(
             onClick = { onNavigate("switch_to_arifa") },
             modifier = Modifier.fillMaxWidth(),
@@ -93,6 +97,50 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
         }
 
         Spacer(Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun DailyMissionCard(progress: AbidProgress) {
+    val completed = progress.todayActivities.coerceAtMost(3)
+    val missionDone = progress.dailyBonusClaimed
+    Card(
+        Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(if (missionDone) Color(0xFFE8F8EF) else Color(0xFFFFF1D6)),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Column(Modifier.fillMaxWidth().padding(15.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(if (missionDone) "🎉" else "🎯", fontSize = 28.sp)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        if (missionDone) "Daily Mission Complete!" else "Daily Learning Mission",
+                        fontSize = 18.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+                        color = if (missionDone) Color(0xFF23754A) else Color(0xFF9A5A00)
+                    )
+                    Text(
+                        if (missionDone) "Great job! +3 ⭐ bonus earned" else "Complete 3 activities today",
+                        fontSize = 12.sp,
+                        color = Color(0xFF60758A)
+                    )
+                }
+                Text("$completed/3", fontSize = 18.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold)
+            }
+            if (!missionDone) {
+                Spacer(Modifier.height(9.dp))
+                LinearProgressIndicator(
+                    progress = { completed / 3f },
+                    modifier = Modifier.fillMaxWidth().height(8.dp),
+                    color = Color(0xFFFFA000),
+                    trackColor = Color.White
+                )
+                Spacer(Modifier.height(6.dp))
+                Text("🎁 Finish 3 activities to earn +3 ⭐ and +10 XP!", fontSize = 12.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF8B5B00))
+            }
+        }
     }
 }
 
