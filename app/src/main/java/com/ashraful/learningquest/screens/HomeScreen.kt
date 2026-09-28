@@ -94,6 +94,7 @@ fun HomeScreen() {
             "arifa_daily" -> ArifaDailyChallengeScreen { goBack() }
             "arifa_achievements2" -> ArifaAchievements2Screen { goBack() }
             "arifa_path" -> ArifaLearningPathScreen { goBack() }
+            "arifa_gift_store" -> ArifaGiftStoreScreen { goBack() }
             "abid_letters" -> AbidLettersScreen { goBack() }
             "abid_write_letters" -> AbidWriteLettersScreen { goBack() }
             "abid_bengali_letters" -> AbidBengaliLettersScreen { goBack() }
@@ -184,8 +185,17 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                     Text("Hi, Arifa! 👋", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF172B5C))
                     Text("What shall we learn today?", fontSize = 14.sp, color = Color(0xFF71809A))
                 }
-                Surface(shape = RoundedCornerShape(18.dp), color = Color(0xFFFFF3D4)) {
-                    Text("🪙 ${data?.coins ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Surface(shape = RoundedCornerShape(18.dp), color = Color(0xFFFFF3D4)) {
+                        Text("🪙 ${data?.coins ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
+                    }
+                    Surface(
+                        onClick = { onNavigate("arifa_gift_store") },
+                        shape = RoundedCornerShape(16.dp),
+                        color = Color(0xFFEAF2FF)
+                    ) {
+                        Text("🎁", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 18.sp)
+                    }
                 }
             }
 
@@ -252,6 +262,25 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 CompactSubject("🌈", "Mixed Quiz", Color(0xFFFFE8F5), Color(0xFF6A1B9A), Modifier.weight(1f)) { onNavigate("mixed") }
                 CompactSubject("🎯", "Topics", Color(0xFFE8F8EF), Color(0xFF23754A), Modifier.weight(1f)) { onNavigate("arifa_topic_practice") }
+            }
+
+            Spacer(Modifier.height(12.dp))
+            Card(
+                onClick = { onNavigate("arifa_gift_store") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3D4)),
+                elevation = CardDefaults.cardElevation(1.dp)
+            ) {
+                Row(Modifier.fillMaxWidth().padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("🎁", fontSize = 30.sp)
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("GIFT STORE", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                        Text("Spend your coins on learning rewards", fontSize = 12.sp, color = Color(0xFF9A6B16))
+                    }
+                    Text("›", fontSize = 30.sp, color = Color(0xFF8B5B00))
+                }
             }
 
             Spacer(Modifier.height(18.dp))
