@@ -83,6 +83,10 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
             LearningCard("🏆", "Little Challenge", "Letters, numbers, colors & shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_challenge") }
         }
 
+        LearningSection("🏆", "Rewards", "Stars & badges", Color(0xFFB05A00), expandedSection == "rewards", { expandedSection = if (expandedSection == "rewards") null else "rewards" }) {
+            LearningCard("🏆", "My Rewards", "See your stars and unlocked badges!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_achievements") }
+        }
+
         LearningSection("🧠", "Games & Memory", "2 activities", Color(0xFF7043A8), expandedSection == "games", { expandedSection = if (expandedSection == "games") null else "games" }) {
             LearningCard("🧠", "Memory Match", "Remember and find the same fruit!", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onNavigate("abid_memory2") }
             LearningCard("🏆", "My Achievements", "See your learning stars!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_achievements") }
