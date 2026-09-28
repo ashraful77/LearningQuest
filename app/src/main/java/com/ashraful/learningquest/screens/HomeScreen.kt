@@ -391,6 +391,28 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
             Text("Learn • Play • Grow 🚀", Modifier.fillMaxWidth().padding(bottom = 12.dp), fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF8A96A8))
         }
 
+        val rewardEffect = when (equippedGift?.id) {
+            "rocket" -> "🚀 BOOST!"
+            "ufo" -> "🛸 SPACE BONUS!"
+            "balloon" -> "🎈 UP YOU GO!"
+            "teddy" -> "🧸 SUPER CUDDLE!"
+            "guitar" -> "🎸 ROCK ON!"
+            "skateboard" -> "🛹 AWESOME!"
+            "rainbow" -> "🌈 RAINBOW MAGIC!"
+            "space" -> "🌌 SPACE POWER!"
+            "ocean" -> "🌊 OCEAN POWER!"
+            "forest" -> "🌲 FOREST POWER!"
+            "sky" -> "☁️ SKY POWER!"
+            "garden" -> "🌷 GARDEN MAGIC!"
+            "star" -> "⭐ STAR POWER!"
+            "crown" -> "👑 ROYAL REWARD!"
+            "diamond" -> "💎 DIAMOND BONUS!"
+            "trophy" -> "🏆 CHAMPION!"
+            "fire" -> "🔥 FIRE POWER!"
+            "lightning" -> "⚡ LIGHTNING!"
+            else -> "🎉 GREAT JOB!"
+        }
+
         AnimatedVisibility(
             visible = showReward,
             enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
@@ -402,13 +424,13 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 color = Color(0xFFFFF3D4),
                 shadowElevation = 8.dp
             ) {
-                Text(
-                    "+$rewardDelta 🪙 Coins earned!",
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 11.dp),
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF8B5B00)
-                )
+                Column(
+                    modifier = Modifier.padding(horizontal = 22.dp, vertical = 11.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(rewardEffect, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                    Text("+$rewardDelta 🪙 Coins earned!", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
+                }
             }
         }
     }
