@@ -147,6 +147,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(14.dp))
             options.forEach { option ->
                 val isSelected = selected == option
+                val isCorrectOption = option == current.question.answer
                 Button(
                     onClick = {
                         if (!answered) {
@@ -160,29 +161,69 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                         }
                     },
                     enabled = !answered,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = when {
                             !answered -> Color.White
                             isSelected && correct -> Color(0xFF20B957)
                             isSelected && !correct -> Color(0xFFE94055)
-                            else -> Color.White
+                            isCorrectOption -> Color(0xFF20B957)
+                            else -> Color(0xFFE8EBF0)
                         },
-                        contentColor = if (answered && isSelected) Color.White else Color(0xFF233B68)
+                        contentColor = when {
+                            !answered -> Color(0xFF233B68)
+                            isSelected && correct -> Color.White
+                            isSelected && !correct -> Color.White
+                            isCorrectOption -> Color.White
+                            else -> Color(0xFF8A93A0)
+                        }
                     )
                 ) {
-                    Text(option, Modifier.padding(vertical = 5.dp), fontSize = 19.sp, fontWeight = FontWeight.SemiBold)
+                    Row(
+                        Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (answered && isSelected && !correct) {
+                            Text("✕  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                        } else if (answered && isCorrectOption) {
+                            Text("✓  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+                        Text(option, fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                        if (answered && isCorrectOption) {
+                            Text("  ✓", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+                    }
                 }
             }
 
             if (answered) {
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    if (correct) "🎉 Correct! +5 Coins +5 XP" else "💡 Correct answer: ${current.question.answer}",
-                    fontSize = 16.sp, fontWeight = FontWeight.Bold,
-                    color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
-                )
+                Card(
+                    Modifier.fillMaxWidth().padding(top = 4.dp),
+                    shape = RoundedCornerShape(22.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (correct) Color(0xFFEAF9EF) else Color(0xFFFFE9ED)
+                    )
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(14.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            if (correct) "🎉 CORRECT!" else "❌ WRONG ANSWER",
+                            fontSize = 23.sp, fontWeight = FontWeight.ExtraBold,
+                            color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
+                        )
+                        Spacer(Modifier.height(3.dp))
+                        Text(
+                            if (correct) "+5 Coins  •  +5 XP" else "Correct answer: " + current.question.answer,
+                            fontSize = 15.sp, fontWeight = FontWeight.Bold,
+                            color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
+                        )
+                    }
+                }
                 Spacer(Modifier.height(8.dp))
                 Button(
                     onClick = {
