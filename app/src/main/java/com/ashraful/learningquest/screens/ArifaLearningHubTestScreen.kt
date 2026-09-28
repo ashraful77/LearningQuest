@@ -423,7 +423,7 @@ private fun RealTestScreen(
     var elapsed by rememberSaveable { mutableLongStateOf(0L) }
     var showSubmit by rememberSaveable { mutableStateOf(false) }
     var review by rememberSaveable { mutableStateOf(false) }
-    var showBengali in rememberSaveable { mutableStateOf(false) }
+    var showBengali by rememberSaveable { mutableStateOf(false) }
     val answers = remember { mutableStateMapOf<Int, Int>() }
     val testStore = remember { GameDataStore(context) }
     val testHistory by testStore.realTestHistory.collectAsState(initial = emptyList())
