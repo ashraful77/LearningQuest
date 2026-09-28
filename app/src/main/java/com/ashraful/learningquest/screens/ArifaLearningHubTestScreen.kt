@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.ashraful.learningquest.data.AdaptiveQuestionEngine
 import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.QuestionBank
+import com.ashraful.learningquest.data.QuestionProgress
 import com.ashraful.learningquest.data.QuestionProgressStore
 import com.ashraful.learningquest.data.TopicProgress
 import kotlinx.coroutines.launch
