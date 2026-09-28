@@ -123,7 +123,9 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
             options.forEach { number ->
                 val bg = when {
                     selected == number && correct == true -> Color(0xFFB9F6C7)
-                    selected == number && correct == false -> Color(0xFFFFC1C1)
+                    selected == number && correct == false -> Color(0xFFE94055)
+                    selected != -1 && number == target -> Color(0xFF20B957)
+                    selected != -1 -> Color(0xFFE9EDF2)
                     else -> Color(0xFFFFF1D6)
                 }
                 Card(
@@ -139,7 +141,20 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                     elevation = CardDefaults.cardElevation(3.dp)
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(number.toString(), fontSize = 36.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF8A5200))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                when {
+                                    selected == number && correct == true -> "✓"
+                                    selected == number && correct == false -> "✕"
+                                    selected != -1 && number == target -> "✓"
+                                    else -> ""
+                                },
+                                fontSize = 25.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+                                color = Color.White
+                            )
+                            Text(number.toString(), fontSize = 36.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = if (selected != -1 && number == target) Color.White else Color(0xFF8A5200))
+                        }
                     }
                 }
             }
@@ -155,7 +170,16 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().height(52.dp)
                 ) { Text("🔄 Next", fontSize = 18.sp) }
             }
-            false -> Text("Try again! 😊", fontSize = 18.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFFD52E45))
+            false -> Card(
+                Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE5E8))
+            ) {
+                Column(Modifier.fillMaxWidth().padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("❌ WRONG ANSWER", fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFFD52E45))
+                    Text("Look for the green ✓", fontWeight = FontWeight.Bold, color = Color(0xFFD52E45))
+                }
+            }
             null -> Spacer(Modifier.height(52.dp))
         }
 
