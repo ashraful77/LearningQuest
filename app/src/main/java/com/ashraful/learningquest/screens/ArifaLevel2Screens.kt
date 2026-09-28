@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import com.ashraful.learningquest.data.GameDataStore
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 private data class Level2Question(val question: String, val options: List<String>, val answer: String)
 
@@ -166,28 +165,6 @@ fun ArifaWritingPracticeScreen(onBack: () -> Unit) {
         Level2Question("Which word rhymes with CAT?", listOf("Sun","Hat","Dog","Pen"), "Hat")
     )
     Level2Quiz("Writing Practice", "✍️", Color(0xFF00897B), Color(0xFFE0F7F4), q, onBack)
-}
-
-@Composable
-fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
-    val q = remember {
-        val list = mutableListOf<Level2Question>()
-        repeat(3) {
-            val a = Random.nextInt(2, 10); val b = Random.nextInt(2, 10); val n = a * b
-            list += Level2Question(a.toString() + " × " + b + " = ?", listOf(n.toString(),(n+2).toString(),(n-2).coerceAtLeast(0).toString(),(n+5).toString()), n.toString())
-        }
-        repeat(2) {
-            val quotient = Random.nextInt(2, 10); val divisor = Random.nextInt(2, 10); val n = quotient * divisor
-            list += Level2Question(n.toString() + " ÷ " + divisor + " = ?", listOf(quotient.toString(),(quotient+1).toString(),(quotient+2).toString(),(quotient-1).coerceAtLeast(0).toString()), quotient.toString())
-        }
-        list += Level2Question("What is 1/2 of 10?", listOf("2","5","6","10"), "5")
-        list += Level2Question("What time is 3:00?", listOf("Three o'clock","Six o'clock","Twelve o'clock","Nine o'clock"), "Three o'clock")
-        list += Level2Question("You have ₹20 and spend ₹7. How much is left?", listOf("₹10","₹12","₹13","₹14"), "₹13")
-        list += Level2Question("Which is greater?", listOf("3/4","1/4","2/4","1/2"), "3/4")
-        list += Level2Question("A pencil costs ₹5. How much do 4 pencils cost?", listOf("₹10","₹15","₹20","₹25"), "₹20")
-        list
-    }
-    Level2Quiz("Advanced Maths", "🔢", Color(0xFF2457A6), Color(0xFFEAF2FF), q, onBack)
 }
 
 @Composable
