@@ -69,12 +69,12 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text("MY COLLECTION", fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7A8798))
-                            Text("\${owned.size} / \${giftCatalog.size} gifts unlocked", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                            Text("${owned.size} / ${giftCatalog.size} gifts unlocked", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                         }
                         if (equipped != null) {
                             val equippedGift = giftCatalog.firstOrNull { it.id == equipped }
                             if (equippedGift != null) {
-                                Text("\${equippedGift.emoji} Equipped", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                Text("${equippedGift.emoji} Equipped", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -111,7 +111,7 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
                             onEquip = {
                                 scope.launch {
                                     store.equipGift(gift.id)
-                                    message = "\${gift.emoji} \${gift.name} equipped!"
+                                    message = "${gift.emoji} ${gift.name} equipped!"
                                 }
                             }
                         )
@@ -142,12 +142,12 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
     purchaseGift?.let { gift ->
         AlertDialog(
             onDismissRequest = { purchaseGift = null },
-            title = { Text("\${gift.emoji} \${gift.name}", fontWeight = FontWeight.ExtraBold) },
+            title = { Text("${gift.emoji} ${gift.name}", fontWeight = FontWeight.ExtraBold) },
             text = {
                 Column {
                     Text(gift.description)
                     Spacer(Modifier.height(10.dp))
-                    Text("🪙 \${gift.price} Coins", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                    Text("🪙 ${gift.price} Coins", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
                     Text("Your balance: 🪙 $coins", fontSize = 13.sp, color = Color(0xFF71809A))
                 }
             },
@@ -157,7 +157,7 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
                         scope.launch {
                             val success = store.purchaseGift(gift)
                             purchaseGift = null
-                            message = if (success) "\${gift.emoji} \${gift.name} unlocked!" else "🔒 Not enough coins for \${gift.name}."
+                            message = if (success) "${gift.emoji} ${gift.name} unlocked!" else "🔒 Not enough coins for ${gift.name}."
                         }
                     },
                     enabled = coins >= gift.price
@@ -204,7 +204,7 @@ private fun GiftCard(
                     ) { Text("USE", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold) }
                 }
             } else {
-                Text("🪙 \${gift.price}", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                Text("🪙 ${gift.price}", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
                 Spacer(Modifier.height(5.dp))
                 Button(
                     onClick = onBuy,
