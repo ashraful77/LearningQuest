@@ -38,13 +38,62 @@ fun AbidColorMatchScreen(onBack: () -> Unit) {
         Card(Modifier.size(190.dp), shape = RoundedCornerShape(35.dp), colors = CardDefaults.cardColors(containerColor = choices[targetIndex].color)) {}
         Spacer(Modifier.height(24.dp))
         options.forEach { option ->
-            Button(onClick = { answered = option }, modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).height(56.dp), enabled = answered == null, shape = RoundedCornerShape(18.dp)) {
-                Text(choices[option].name, fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            val chosen = answered == option
+            val isCorrect = answered != null && option == targetIndex
+            val bg = when {
+                answered == null -> Color(0xFF7E57C2)
+                chosen && option == targetIndex -> Color(0xFF20B957)
+                chosen -> Color(0xFFE94055)
+                isCorrect -> Color(0xFF20B957)
+                else -> Color(0xFFE9EDF2)
+            }
+            Button(
+                onClick = { answered = option },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).height(56.dp),
+                enabled = answered == null,
+                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = bg,
+                    contentColor = if (answered != null && (chosen || isCorrect)) Color.White else Color.White
+                )
+            ) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        when {
+                            chosen && option == targetIndex -> "✓"
+                            chosen -> "✕"
+                            isCorrect -> "✓"
+                            else -> ""
+                        },
+                        fontSize = 24.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+                        modifier = Modifier.width(30.dp)
+                    )
+                    Text(choices[option].name, fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                }
             }
         }
         if (answered != null) {
             Spacer(Modifier.height(12.dp))
-            Text(if (answered == targetIndex) "🎉 Correct! Great job!" else "Try again next time! 😊", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            Card(
+                Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = if (answered == targetIndex) Color(0xFFE4F8EA) else Color(0xFFFFE5E8))
+            ) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        if (answered == targetIndex) "🎉 CORRECT!" else "❌ WRONG ANSWER",
+                        fontSize = 24.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+                        color = if (answered == targetIndex) Color(0xFF138A40) else Color(0xFFD52E45)
+                    )
+                    if (answered != targetIndex) {
+                        Text("Correct color: " + choices[targetIndex].name, fontWeight = FontWeight.Bold, color = Color(0xFFD52E45))
+                    } else {
+                        Text("Great job! 🌟", fontWeight = FontWeight.Bold, color = Color(0xFF138A40))
+                    }
+                }
+            }
             Spacer(Modifier.height(8.dp))
             Button(onClick = { round++; answered = null }, modifier = Modifier.fillMaxWidth().height(56.dp)) { Text("Next Color →", fontSize = 19.sp) }
         }
