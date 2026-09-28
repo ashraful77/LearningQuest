@@ -638,7 +638,6 @@ private fun PuzzleQuizScreen(
             fontSize = 17.sp
         )
     }
-}
 @Composable
 private fun CelebrationOverlay() {
     var visible by remember { mutableStateOf(true) }
