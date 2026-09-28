@@ -31,13 +31,21 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
     val data by store.gameData.collectAsState(initial = null)
     val owned by store.ownedGiftIds().collectAsState(initial = emptySet())
     val equipped by store.equippedGiftId.collectAsState(initial = null)
+    val newGiftIds by store.newGiftIds().collectAsState(initial = emptySet())
 
     var selectedCategory by rememberSaveable { mutableStateOf(GiftCategory.CHARACTERS.name) }
+    var showCollection by rememberSaveable { mutableStateOf(false) }
     var purchaseGift by remember { mutableStateOf<Gift?>(null) }
     var message by remember { mutableStateOf<String?>(null) }
 
     val category = GiftCategory.valueOf(selectedCategory)
-    val visibleGifts = giftCatalog.filter { it.category == category }
+    val visibleGifts = giftCatalog.filter {
+        it.category == category && (!showCollection || it.id in owned)
+    }
+
+    LaunchedEffect(showCollection, owned) {
+        if (showCollection) store.markGiftsSeen(owned)
+    }
     val coins = data?.coins ?: 0
 
     Box(
@@ -86,6 +94,29 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.height(14.dp))
 
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = { showCollection = false },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (!showCollection) Color(0xFF315FBA) else Color(0xFFEAF2FF),
+                        contentColor = if (!showCollection) Color.White else Color(0xFF315FBA)
+                    )
+                ) { Text("🛍 SHOP", fontWeight = FontWeight.ExtraBold) }
+                Button(
+                    onClick = { showCollection = true },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (showCollection) Color(0xFF315FBA) else Color(0xFFEAF2FF),
+                        contentColor = if (showCollection) Color.White else Color(0xFF315FBA)
+                    )
+                ) { Text("🎁 COLLECTION", fontWeight = FontWeight.ExtraBold) }
+            }
+
+            Spacer(Modifier.height(10.dp))
+
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 GiftCategory.values().forEach { item ->
                     FilterChip(
@@ -99,6 +130,17 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.height(10.dp))
 
+            if (showCollection && visibleGifts.isEmpty()) {
+                Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = Color(0xFFFFF4D6)) {
+                    Text(
+                        "🎁 No gifts collected in this category yet. Keep learning and earn more coins!",
+                        Modifier.padding(16.dp), textAlign = TextAlign.Center,
+                        fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00)
+                    )
+                }
+                Spacer(Modifier.height(10.dp))
+            }
+
             visibleGifts.chunked(2).forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     row.forEach { gift ->
@@ -106,6 +148,7 @@ fun ArifaGiftStoreScreen(onBack: () -> Unit) {
                             gift = gift,
                             owned = gift.id in owned,
                             equipped = gift.id == equipped,
+                            isNew = gift.id in newGiftIds,
                             canAfford = coins >= gift.price,
                             modifier = Modifier.weight(1f),
                             onBuy = { purchaseGift = gift },
@@ -174,6 +217,7 @@ private fun GiftCard(
     gift: Gift,
     owned: Boolean,
     equipped: Boolean,
+    isNew: Boolean,
     canAfford: Boolean,
     modifier: Modifier,
     onBuy: () -> Unit,
@@ -186,6 +230,12 @@ private fun GiftCard(
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column(Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            if (isNew) {
+                Surface(shape = RoundedCornerShape(10.dp), color = Color(0xFFFFC107)) {
+                    Text("✨ NEW!", Modifier.padding(horizontal = 9.dp, vertical = 4.dp), fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF5D4300))
+                }
+                Spacer(Modifier.height(4.dp))
+            }
             Text(gift.emoji, fontSize = 46.sp)
             Text(gift.name, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center)
             Text(gift.description, fontSize = 10.sp, color = Color(0xFF71809A), textAlign = TextAlign.Center, minLines = 2)
