@@ -424,6 +424,8 @@ private fun RealTestScreen(
     var showSubmit by rememberSaveable { mutableStateOf(false) }
     var review by rememberSaveable { mutableStateOf(false) }
     val answers = remember { mutableStateMapOf<Int, Int>() }
+    val testStore = remember { GameDataStore(context) }
+    val testHistory by testStore.realTestHistory.collectAsState(initial = emptyList())
 
     LaunchedEffect(startedAt, finished) {
         if (startedAt > 0L && !finished) {
@@ -455,6 +457,8 @@ private fun RealTestScreen(
 
     fun submitTest() {
         elapsed = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)
+        val finalScore = questions.indices.count { answers[it] == questions[it].correctIndex }
+        scope.launch { testStore.recordRealTest(subject, finalScore, questions.size, elapsed) }
         finished = true
         startedAt = 0L
         showSubmit = false
@@ -511,6 +515,19 @@ private fun RealTestScreen(
     } else if (questions.isEmpty()) {
         Text("📋 REAL TEST", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
         Text("Choose the test size and subject, then start.", fontSize = 14.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+        if (testHistory.isNotEmpty()) {
+            Spacer(Modifier.height(14.dp))
+            Text("📊 Recent Tests", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.fillMaxWidth())
+            testHistory.take(5).forEach { entry ->
+                val parts = entry.split("|")
+                if (parts.size >= 5) {
+                    val seconds = parts[3].toLongOrNull() ?: 0L
+                    Surface(Modifier.fillMaxWidth().padding(vertical = 3.dp), shape = RoundedCornerShape(14.dp), color = Color.White, tonalElevation = 1.dp) {
+                        Text(parts[0] + " • " + parts[1] + "/" + parts[2] + " • " + timeText(seconds), Modifier.padding(12.dp), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
         Spacer(Modifier.height(18.dp))
         Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {
             Column(Modifier.padding(18.dp)) {
