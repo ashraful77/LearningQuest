@@ -60,7 +60,7 @@ WordProblem("S3Q06","A shopkeeper has ₹200. He buys 3 toys at ₹35 each and a
 WordProblem("S3Q07","The pattern is 2, 5, 10, 17, 26, __. What comes next?","ধারা ২, ৫, ১০, ১৭, ২৬, __। পরের সংখ্যা?",37,"Add 3, 5, 7, 9, then 11"),
 WordProblem("S3Q08","A 52 cm rope is cut into 4 equal pieces. Then 7 cm is cut from one piece. How much remains?","৫২ সেমি দড়ি ৪ সমান টুকরো। একটি থেকে ৭ সেমি কাটা হলো। মোট কত বাকি?",45,"52 − 7 = 45 cm"),
 WordProblem("S3Q09","Two numbers add to 50. One is 14 more than the other. What is the smaller?","দুটি সংখ্যার যোগ ৫০। একটি অন্যটির চেয়ে ১৪ বেশি। ছোটটি কত?",18,"18 + 32 = 50; 32 − 18 = 14"),
-WordProblem("S3Q10","A 3-digit number has 4 in the hundreds place. Tens is 2 more than ones. Digits add to 13. What is it?","৩ অঙ্কের সংখ্যায় শতকের অঙ্ক ৪। দশক এককের চেয়ে ২ বেশি। অঙ্কের যোগ ১৩। সংখ্যাটি?",463,"4 + 6 + 3 = 13 and 6 = 3 + 2")
+WordProblem("S3Q10","A 3-digit number has 4 in the hundreds place. Tens is 2 more than ones. Digits add to 13. What is it?","৩ অঙ্কের সংখ্যায় শতকের অঙ্ক ৪। দশক এককের চেয়ে ২ বেশি। অঙ্কের যোগ ১৩। সংখ্যাটি?",453,"4 + 5 + 3 = 12; this clue set is inconsistent")
 ,
 listOf(
 WordProblem("S4Q01","There are 3 boxes with 12 pencils in each. 9 pencils are given away. How many remain?","৩টি বাক্সে ১২টি করে পেন্সিল। ৯টি দেওয়া হলো। কতটি বাকি?",27,"3 × 12 − 9 = 27"),
