@@ -291,42 +291,78 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             }
                         }
                     },
-                    enabled = !answered,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    enabled = true,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp),
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = when {
-                            !answered -> Color.White
+                            !answered -> Color(0xFFF4F6FA)
+                            isSelected && isCorrect -> Color(0xFF20B957)
+                            isSelected -> Color(0xFFE53935)
                             isCorrect -> Color(0xFF20B957)
-                            isSelected -> Color(0xFFE94055)
-                            else -> Color.White
+                            else -> Color(0xFFE8EBF0)
                         },
                         contentColor = when {
-                            answered && (isCorrect || isSelected) -> Color.White
-                            else -> Color(0xFF26354A)
+                            !answered -> Color(0xFF26354A)
+                            isSelected || isCorrect -> Color.White
+                            else -> Color(0xFF8A93A0)
                         }
                     )
                 ) {
-                    Text(option, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        if (answered && isSelected && !isCorrect) {
+                            Text("✕  ", fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
+                        } else if (answered && isCorrect) {
+                            Text("✓  ", fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+                        Text(option, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        if (answered && isCorrect) {
+                            Text("  ✓", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+                    }
                 }
             }
 
             if (answered) {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    if (selected == q.correctIndex) "🎉 Correct! +5 XP +5 Coins"
-                    else "💡 Correct answer: ${q.correctAnswer}",
-                    fontWeight = FontWeight.Bold
-                )
-
-                if (q.explanation.isNotBlank()) {
-                    Text(
-                        q.explanation,
-                        modifier = Modifier.padding(top = 4.dp),
-                        fontSize = 13.sp,
-                        color = Color(0xFF65738A),
-                        textAlign = TextAlign.Center
-                    )
+                Spacer(Modifier.height(10.dp))
+                Surface(
+                    Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    color = if (selected == q.correctIndex) Color(0xFFE8F8EE) else Color(0xFFFFECEC)
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(14.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            if (selected == q.correctIndex) "🎉 CORRECT! +5 XP +5 Coins" else "❌ WRONG ANSWER",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (selected == q.correctIndex) Color(0xFF138A43) else Color(0xFFC62828)
+                        )
+                        if (selected != q.correctIndex) {
+                            Text(
+                                "✓ Correct answer: \${q.correctAnswer}",
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF138A43)
+                            )
+                        }
+                        if (q.explanation.isNotBlank()) {
+                            Text(
+                                q.explanation,
+                                modifier = Modifier.padding(top = 4.dp),
+                                fontSize = 13.sp,
+                                color = Color(0xFF65738A),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(7.dp))
@@ -346,7 +382,6 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 ) {
                     Text(if (index == questions.lastIndex) "🏆 Finish" else "Next →")
                 }
-            }
 
             Spacer(Modifier.weight(1f))
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
