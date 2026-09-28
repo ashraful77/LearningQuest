@@ -90,25 +90,31 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     ) {
         Row(
             Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                "🧠 Learning Hub",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF315FBA)
-            )
-            OutlinedButton(onClick = onBack, shape = RoundedCornerShape(16.dp)) {
-                Text("‹ Home")
+            OutlinedButton(
+                onClick = onBack,
+                modifier = Modifier.height(44.dp),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Text("‹ Back", fontWeight = FontWeight.Bold)
             }
+            Text(
+                "Learning Hub",
+                fontSize = 23.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF315FBA),
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.width(12.dp))
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(10.dp))
 
         Row(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(18.dp)).padding(4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Button(onClick = { hubTab = 0 }, modifier = Modifier.weight(1f).height(48.dp), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(containerColor = if (hubTab == 0) Color(0xFF315FBA) else Color.Transparent, contentColor = if (hubTab == 0) Color.White else Color(0xFF315FBA))) { Text("📚 LEARNING HUB", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold) }
-            Button(onClick = { hubTab = 1 }, modifier = Modifier.weight(1f).height(48.dp), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(containerColor = if (hubTab == 1) Color(0xFF315FBA) else Color.Transparent, contentColor = if (hubTab == 1) Color.White else Color(0xFF315FBA))) { Text("📋 REAL TEST", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold) }
+            Button(onClick = { hubTab = 0 }, modifier = Modifier.weight(1f).height(48.dp), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(containerColor = if (hubTab == 0) Color(0xFF315FBA) else Color.Transparent, contentColor = if (hubTab == 0) Color.White else Color(0xFF315FBA))) { Text("📚 LEARNING", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold) }
+            Button(onClick = { hubTab = 1 }, modifier = Modifier.weight(1f).height(48.dp), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(containerColor = if (hubTab == 1) Color(0xFF315FBA) else Color.Transparent, contentColor = if (hubTab == 1) Color.White else Color(0xFF315FBA))) { Text("📝 REAL TEST", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold) }
         }
 
         Spacer(Modifier.height(16.dp))
@@ -237,26 +243,27 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             val optionOrder = remember(index, q.id) { q.options.indices.shuffled() }
 
             Text(
-                "Adaptive Test • Question ${index + 1} / ${questions.size}",
-                fontWeight = FontWeight.Bold,
+                "Question ${index + 1} of ${questions.size}",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.ExtraBold,
                 color = Color(0xFF68778C)
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(6.dp))
             LinearProgressIndicator(
                 progress = { (index + 1) / questions.size.toFloat() },
-                modifier = Modifier.fillMaxWidth().height(8.dp)
+                modifier = Modifier.fillMaxWidth().height(7.dp)
             )
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(10.dp))
 
             Surface(shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {
-                Column(Modifier.fillMaxWidth().padding(20.dp)) {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 16.dp)) {
                     Text(
                         "${q.subject} • ${q.topic}",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF315FBA)
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(6.dp))
                     if (q.hasBengali) {
                         OutlinedButton(
                             onClick = { showBengali = !showBengali },
@@ -267,10 +274,10 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         }
                     }
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(7.dp))
                     Text(
                         if (showBengali) q.bengaliPrompt.orEmpty() else q.prompt,
-                        fontSize = 22.sp,
+                        fontSize = 23.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -306,7 +313,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         }
                     },
                     enabled = true,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp).height(54.dp),
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = when {
@@ -333,7 +340,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         } else if (answered && isCorrect) {
                             Text("✓  ", fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
                         }
-                        Text(option, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(option, fontSize = 18.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                         if (answered && isCorrect) {
                             Text("  ✓", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
                         }
@@ -349,12 +356,12 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                     color = if (selected == q.correctIndex) Color(0xFFE8F8EE) else Color(0xFFFFECEC)
                 ) {
                     Column(
-                        Modifier.fillMaxWidth().padding(14.dp),
+                        Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 11.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             if (selected == q.correctIndex) "🎉 CORRECT! +5 XP +5 Coins" else "❌ WRONG ANSWER",
-                            fontSize = 18.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = if (selected == q.correctIndex) Color(0xFF138A43) else Color(0xFFC62828)
                         )
@@ -362,7 +369,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             Text(
                                 "✓ Correct answer: \${q.correctAnswer}",
                                 modifier = Modifier.padding(top = 5.dp),
-                                fontSize = 15.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF138A43)
                             )
@@ -371,7 +378,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             Text(
                                 q.explanation,
                                 modifier = Modifier.padding(top = 4.dp),
-                                fontSize = 13.sp,
+                                fontSize = 12.sp,
                                 color = Color(0xFF65738A),
                                 textAlign = TextAlign.Center
                             )
@@ -391,14 +398,14 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             showBengali = false
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp)
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    shape = RoundedCornerShape(17.dp)
                 ) {
-                    Text(if (index == questions.lastIndex) "🏆 Finish" else "Next →")
+                    Text(if (index == questions.lastIndex) "🏆 Finish" else "Next →", fontSize = 17.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(8.dp))
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
         }
     }
