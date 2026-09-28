@@ -244,20 +244,31 @@ fun MathScreen(onBack: () -> Unit) {
                         !answered -> Color.White
                         selected && correct -> Color(0xFF20B957)
                         selected && !correct -> Color(0xFFE94055)
-                        else -> Color.White
+                        option == question.answer -> Color(0xFF20B957)
+                        else -> Color(0xFFE8EBF0)
                     },
-                    contentColor = if (answered && selected) Color.White else Color(0xFF142D78)
+                    contentColor = when {
+                        !answered -> Color(0xFF142D78)
+                        selected && correct -> Color.White
+                        selected && !correct -> Color.White
+                        option == question.answer -> Color.White
+                        else -> Color(0xFF8A93A0)
+                    }
                 )
             ) {
                 Row(
-                    Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                    Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 3.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(display, fontSize = 21.sp, fontWeight = FontWeight.SemiBold)
-                    if (answered && selected) {
-                        Spacer(Modifier.width(10.dp))
-                        Text(if (correct) "✓" else "✕", fontSize = 22.sp)
+                    if (answered && selected && !correct) {
+                        Text("✕  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                    } else if (answered && option == question.answer) {
+                        Text("✓  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                    Text(display, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                    if (answered && option == question.answer) {
+                        Text("  ✓", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
                     }
                 }
             }
