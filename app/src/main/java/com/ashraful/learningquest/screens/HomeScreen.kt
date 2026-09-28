@@ -145,8 +145,6 @@ fun HomeScreen() {
 
 @Composable
 private fun HomeContent(onNavigate: (String) -> Unit) {
-    var showReward by rememberSaveable { mutableStateOf(false) }
-    var rewardDelta by rememberSaveable { mutableIntStateOf(0) }
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val data by store.gameData.collectAsState(initial = null)
