@@ -178,7 +178,8 @@ fun AbidNumberMatchScreen(onBack: () -> Unit) {
             ) {
                 Column(Modifier.fillMaxWidth().padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("❌ WRONG ANSWER", fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFFD52E45))
-                    Text("Look for the green ✓", fontWeight = FontWeight.Bold, color = Color(0xFFD52E45))
+                    Text("Correct answer: \$target", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF159447))
+                    Text("Try again!", fontWeight = FontWeight.Bold, color = Color(0xFFD52E45))
                 }
             }
             null -> Spacer(Modifier.height(52.dp))
