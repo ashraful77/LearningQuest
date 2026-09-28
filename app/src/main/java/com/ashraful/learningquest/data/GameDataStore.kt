@@ -32,13 +32,67 @@ class GameDataStore(private val context: Context) {
         val LAST_PROGRESS_DAY = intPreferencesKey("last_progress_day")
         val TOTAL_QUESTIONS = intPreferencesKey("total_questions")
         val CORRECT_ANSWERS = intPreferencesKey("correct_answers")
+        val OWNED_GIFTS = stringPreferencesKey("owned_gifts")
+        val EQUIPPED_GIFT = stringPreferencesKey("equipped_gift")
     }
 
     val profile: Flow<String?> =
         context.gameDataStore.data.map { it[Keys.PROFILE] }
 
+    fun ownedGiftIds(): Flow<Set<String>> =
+        context.gameDataStore.data.map { preferences ->
+            preferences[Keys.OWNED_GIFTS]
+                ?.split(",")
+                ?.filter { it.isNotBlank() }
+                ?.toSet()
+                ?: emptySet()
+        }
+
+    val equippedGiftId: Flow<String?> =
+        context.gameDataStore.data.map { it[Keys.EQUIPPED_GIFT] }
+
     suspend fun saveProfile(value: String) {
         context.gameDataStore.edit { it[Keys.PROFILE] = value }
+    }
+
+    suspend fun purchaseGift(gift: Gift): Boolean {
+        var purchased = false
+        context.gameDataStore.edit { preferences ->
+            val currentCoins = preferences[Keys.COINS] ?: 0
+            val owned = preferences[Keys.OWNED_GIFTS]
+                ?.split(",")
+                ?.filter { it.isNotBlank() }
+                ?.toMutableSet()
+                ?: mutableSetOf()
+
+            if (gift.id !in owned && currentCoins >= gift.price) {
+                owned.add(gift.id)
+                preferences[Keys.COINS] = currentCoins - gift.price
+                preferences[Keys.OWNED_GIFTS] = owned.joinToString(",")
+                purchased = true
+            }
+        }
+        return purchased
+    }
+
+    suspend fun equipGift(giftId: String) {
+        context.gameDataStore.edit { preferences ->
+            val owned = preferences[Keys.OWNED_GIFTS]
+                ?.split(",")
+                ?.filter { it.isNotBlank() }
+                ?.toSet()
+                ?: emptySet()
+
+            if (giftId in owned) {
+                preferences[Keys.EQUIPPED_GIFT] = giftId
+            }
+        }
+    }
+
+    suspend fun clearEquippedGift() {
+        context.gameDataStore.edit { preferences ->
+            preferences.remove(Keys.EQUIPPED_GIFT)
+        }
     }
 
     val gameData: Flow<GameData> =
