@@ -423,6 +423,7 @@ private fun RealTestScreen(
     var elapsed by rememberSaveable { mutableLongStateOf(0L) }
     var showSubmit by rememberSaveable { mutableStateOf(false) }
     var review by rememberSaveable { mutableStateOf(false) }
+    var showBengali in rememberSaveable { mutableStateOf(false) }
     val answers = remember { mutableStateMapOf<Int, Int>() }
     val testStore = remember { GameDataStore(context) }
     val testHistory by testStore.realTestHistory.collectAsState(initial = emptyList())
@@ -450,6 +451,7 @@ private fun RealTestScreen(
         index = 0
         finished = false
         review = false
+        showBengali = false
         showSubmit = false
         elapsed = 0L
         startedAt = System.currentTimeMillis()
@@ -495,16 +497,20 @@ private fun RealTestScreen(
             OutlinedButton(onClick = onBackToHub, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) { Text("‹ Learning Hub") }
         } else {
             Text("📝 REVIEW ANSWERS", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)
+            OutlinedButton(onClick = { showBengali = !showBengali }, modifier = Modifier.padding(top = 6.dp), shape = RoundedCornerShape(14.dp)) {
+                Text(if (showBengali) "English দেখুন" else "বাংলা দেখুন")
+            }
             Text(correct.toString() + "/" + questions.size + " correct • " + timeText(elapsed), fontSize = 13.sp, color = Color(0xFF68778C))
             Spacer(Modifier.height(10.dp))
             questions.forEachIndexed { i, q ->
                 val a = answers[i]
                 Surface(Modifier.fillMaxWidth().padding(vertical = 5.dp), shape = RoundedCornerShape(16.dp), color = if (a == q.correctIndex) Color(0xFFE8F8EE) else Color(0xFFFFECEC)) {
                     Column(Modifier.padding(14.dp)) {
-                        Text("Q" + (i + 1) + ". " + q.prompt, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text(if (a == null) "⭕ Not answered" else "Your answer: " + q.options[a] + if (a == q.correctIndex) " ✓" else " ✕", fontSize = 14.sp, modifier = Modifier.padding(top = 6.dp))
+                        Text("Q" + (i + 1) + ". " + if (showBengali) q.bengaliPrompt.orEmpty() else q.prompt, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        val selectedText = if (a == null) "⭕ Not answered" else (if (showBengali) q.bengaliOptions?.getOrNull(a) ?: q.options[a] else q.options[a]) + if (a == q.correctIndex) " ✓" else " ✕"
+                        Text(if (a == null) selectedText else (if (showBengali) "আপনার উত্তর: " else "Your answer: ") + selectedText, fontSize = 14.sp, modifier = Modifier.padding(top = 6.dp))
                         if (a != q.correctIndex) {
-                            Text("Correct answer: " + q.correctAnswer + " ✓", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF138A43), modifier = Modifier.padding(top = 4.dp))
+                            Text((if (showBengali) "সঠিক উত্তর: " else "Correct answer: ") + (if (showBengali) q.bengaliOptions?.getOrNull(q.correctIndex) ?: q.correctAnswer else q.correctAnswer) + " ✓", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF138A43), modifier = Modifier.padding(top = 4.dp))
                             if (q.explanation.isNotBlank()) Text(q.explanation, fontSize = 12.sp, color = Color(0xFF65738A), modifier = Modifier.padding(top = 3.dp))
                         }
                     }
@@ -571,12 +577,18 @@ private fun RealTestScreen(
             Column(Modifier.fillMaxWidth().padding(20.dp)) {
                 Text(q.subject + " • " + q.topic, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
                 Spacer(Modifier.height(10.dp))
-                Text(q.prompt, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                if (q.hasBengali) {
+                    OutlinedButton(onClick = { showBengali = !showBengali }, modifier = Modifier.align(Alignment.CenterHorizontally), shape = RoundedCornerShape(14.dp)) {
+                        Text(if (showBengali) "English দেখুন" else "বাংলা দেখুন")
+                    }
+                }
+                Text(if (showBengali) q.bengaliPrompt.orEmpty() else q.prompt, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             }
         }
         Spacer(Modifier.height(12.dp))
         order.forEach { optionIndex ->
-            Button(onClick = { answers[index] = optionIndex }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(q.options[optionIndex], fontSize = 18.sp, fontWeight = FontWeight.Bold) }
+            val optionText = if (showBengali) q.bengaliOptions?.getOrNull(optionIndex) ?: q.options[optionIndex] else q.options[optionIndex]
+            Button(onClick = { answers[index] = optionIndex }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(optionText, fontSize = 18.sp, fontWeight = FontWeight.Bold) }
         }
         Spacer(Modifier.height(8.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
