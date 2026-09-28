@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import com.ashraful.learningquest.data.GameDataStore
+import com.ashraful.learningquest.data.giftCatalog
 
 @Composable
 fun HomeScreen() {
@@ -141,6 +142,8 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val data by store.gameData.collectAsState(initial = null)
+    val equippedGiftId by store.equippedGiftId.collectAsState(initial = null)
+    val equippedGift = giftCatalog.firstOrNull { it.id == equippedGiftId }
     var showMore by rememberSaveable { mutableStateOf(false) }
 
     val scores = listOf(
@@ -199,7 +202,34 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 }
             }
 
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(12.dp))
+
+            if (equippedGift != null) {
+                Card(
+                    onClick = { onNavigate("arifa_gift_store") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF3ECFF)),
+                    elevation = CardDefaults.cardElevation(1.dp)
+                ) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(shape = CircleShape, color = Color.White.copy(alpha = 0.85f)) {
+                            Text(equippedGift.emoji, Modifier.padding(10.dp), fontSize = 28.sp)
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("MY REWARD", fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7043A8))
+                            Text(equippedGift.name, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF4A2B73))
+                            Text(equippedGift.description, fontSize = 11.sp, color = Color(0xFF78658A))
+                        }
+                        Text("🎁", fontSize = 20.sp)
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+            }
 
             Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(26.dp), colors = CardDefaults.cardColors(Color.Transparent)) {
                 Box(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Color(0xFF315FBA), Color(0xFF5636A8)))).padding(20.dp)) {
