@@ -438,174 +438,112 @@ private fun ScienceQuizScreen(
         )
 
         shuffledOptions.forEach { option ->
-
-            val isSelected =
-                option == selected
-
+            val isSelected = option == selected
             val buttonColor = when {
-
-                !answered ->
-                    Color.White
-
-                isSelected && correct ->
-                    Color(0xFF20B957)
-
-                isSelected && !correct ->
-                    Color(0xFFE94055)
-
-                option == question.answer &&
-                        answered ->
-                    Color(0xFF20B957)
-
-                else ->
-                    Color.White
+                !answered -> Color.White
+                isSelected && correct -> Color(0xFF20B957)
+                isSelected && !correct -> Color(0xFFE94055)
+                option == question.answer && answered -> Color(0xFF20B957)
+                else -> Color(0xFFE8EBF0)
             }
 
             Button(
                 onClick = {
-
                     if (!answered) {
-
                         answered = true
                         selected = option
-
-                        if (
-                            option ==
-                            question.answer
-                        ) {
-
+                        if (option == question.answer) {
                             correct = true
-
                             score++
                             earnedCoins += 10
                             earnedXp += 10
-
-                            scope.launch {
-
-                                dataStore.addReward(
-                                    coins = 10,
-                                    xp = 10
-                                )
-                            }
-
+                            scope.launch { dataStore.addReward(10, 10) }
                         } else {
-
                             correct = false
                         }
                     }
                 },
                 enabled = !answered,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = 4.dp
-                        ),
-                shape =
-                    RoundedCornerShape(16.dp),
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor =
-                            buttonColor,
-                        contentColor =
-                            if (
-                                answered &&
-                                (
-                                        isSelected ||
-                                                option ==
-                                                question.answer
-                                        )
-                            ) {
-                                Color.White
-                            } else {
-                                Color(0xFF185A40)
-                            }
-                    )
-            ) {
-
-                Text(
-                    text = option,
-                    fontSize = 19.sp,
-                    modifier =
-                        Modifier.padding(
-                            vertical = 4.dp
-                        )
+                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                shape = RoundedCornerShape(17.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = buttonColor,
+                    contentColor = when {
+                        !answered -> Color(0xFF185A40)
+                        isSelected && correct -> Color.White
+                        isSelected && !correct -> Color.White
+                        option == question.answer -> Color.White
+                        else -> Color(0xFF8A93A0)
+                    }
                 )
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (answered && isSelected && !correct) {
+                        Text("✕  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                    } else if (answered && option == question.answer) {
+                        Text("✓  ", fontSize = 23.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                    Text(option, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    if (answered && option == question.answer) {
+                        Text("  ✓", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                }
             }
         }
 
-        Spacer(
-            Modifier.height(15.dp)
-        )
+        Spacer(Modifier.height(10.dp))
 
-        AnimatedVisibility(
-            visible = answered
-        ) {
-
-            Column(
-                horizontalAlignment =
-                    Alignment.CenterHorizontally
+        AnimatedVisibility(visible = answered) {
+            Card(
+                Modifier.fillMaxWidth().padding(top = 8.dp).scale(if (correct) celebrationScale else 1f),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (correct) Color(0xFFEAF9EF) else Color(0xFFFFE9ED)
+                )
             ) {
-
-                Text(
-                    text =
-                        if (correct) {
-                            "Correct! +10 Coins +10 XP"
-                        } else {
-                            "Correct answer: ${question.answer}"
-                        },
-                    fontSize = 17.sp,
-                    color =
-                        if (correct) {
-                            Color(0xFF159447)
-                        } else {
-                            Color(0xFFD52E45)
-                        }
-                )
-
-                Spacer(
-                    Modifier.height(12.dp)
-                )
-
-                Button(
-                    onClick = {
-
-                        if (
-                            index ==
-                            section.questions.lastIndex
-                        ) {
-
-                            finished = true
-
-                        } else {
-
-                            index++
-                            answered = false
-                            selected = null
-                            correct = false
-                        }
-                    },
-                    shape =
-                        RoundedCornerShape(18.dp),
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor =
-                                Color(0xFF258A5A)
-                        )
+                Column(
+                    Modifier.fillMaxWidth().padding(15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Text(
-                        text =
-                            if (
-                                index ==
-                                section.questions.lastIndex
-                            ) {
-                                "See Result"
-                            } else {
-                                "Next Question >"
-                            },
-                        fontSize = 17.sp
+                        if (correct) "🎉 CORRECT!" else "❌ WRONG ANSWER",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
                     )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        if (correct) "+10 Coins  •  +10 XP" else "Correct answer: " + question.answer,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Button(
+                        onClick = {
+                            if (index == section.questions.lastIndex) finished = true
+                            else {
+                                index++
+                                answered = false
+                                selected = null
+                                correct = false
+                            }
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF258A5A)
+                        )
+                    ) {
+                        Text(
+                            if (index == section.questions.lastIndex) "See Result  ›" else "Next Question  ›",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
