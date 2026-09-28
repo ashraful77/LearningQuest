@@ -61,6 +61,42 @@ WordProblem("S3Q07","The pattern is 2, 5, 10, 17, 26, __. What comes next?","ধ
 WordProblem("S3Q08","A 52 cm rope is cut into 4 equal pieces. Then 7 cm is cut from one piece. How much remains?","৫২ সেমি দড়ি ৪ সমান টুকরো। একটি থেকে ৭ সেমি কাটা হলো। মোট কত বাকি?",45,"52 − 7 = 45 cm"),
 WordProblem("S3Q09","Two numbers add to 50. One is 14 more than the other. What is the smaller?","দুটি সংখ্যার যোগ ৫০। একটি অন্যটির চেয়ে ১৪ বেশি। ছোটটি কত?",18,"18 + 32 = 50; 32 − 18 = 14"),
 WordProblem("S3Q10","A 3-digit number has 4 in the hundreds place. Tens is 2 more than ones. Digits add to 13. What is it?","৩ অঙ্কের সংখ্যায় শতকের অঙ্ক ৪। দশক এককের চেয়ে ২ বেশি। অঙ্কের যোগ ১৩। সংখ্যাটি?",463,"4 + 6 + 3 = 13 and 6 = 3 + 2")
+,
+listOf(
+WordProblem("S4Q01","There are 3 boxes with 12 pencils in each. 9 pencils are given away. How many remain?","৩টি বাক্সে ১২টি করে পেন্সিল। ৯টি দেওয়া হলো। কতটি বাকি?",27,"3 × 12 − 9 = 27"),
+WordProblem("S4Q02","Arifa has 84 stickers. She gives 17 each to 3 friends. How many stickers remain?","আরিফার ৮৪টি স্টিকার। ৩ বন্ধুকে ১৭টি করে দিল। কতটি বাকি?",33,"84 − (17 × 3) = 33"),
+WordProblem("S4Q03","I multiply a number by 3 and add 5 to get 29. What is the number?","একটি সংখ্যাকে ৩ দিয়ে গুণ করে ৫ যোগ করলে ২৯ হয়। সংখ্যাটি কত?",8,"3 × 8 + 5 = 29"),
+WordProblem("S4Q04","The pattern is 3, 7, 13, 21, 31, __. What comes next?","ধারা ৩, ৭, ১৩, ২১, ৩১, __। পরের সংখ্যা?",43,"Add 4, 6, 8, 10, then 12"),
+WordProblem("S4Q05","There are 5 rows with 7 chairs each. 8 more chairs arrive, but 4 are broken. How many usable chairs?","৫ সারিতে ৭টি করে চেয়ার। আরও ৮টি এল, কিন্তু ৪টি ভেঙে গেল। ব্যবহারযোগ্য কত?",39,"5 × 7 + 8 − 4 = 39"),
+WordProblem("S4Q06","Arifa has ₹150. She buys 2 toys at ₹37 each and a book for ₹28. How much remains?","আরিফার ১৫০ টাকা। ৩৭ টাকা করে ২টি খেলনা ও ২৮ টাকার বই কিনল। কত বাকি?",48,"150 − (2 × 37 + 28) = 48"),
+WordProblem("S4Q07","A movie starts at 3:20 and lasts 45 minutes. What time does it finish?","সিনেমা ৩:২০-এ শুরু হয় এবং ৪৫ মিনিট চলে। কখন শেষ হবে?",405,"3:20 + 45 minutes = 4:05"),
+WordProblem("S4Q08","There are 7 animals. They have 24 legs altogether. Some are cats and the rest are chickens. How many are cats?","৭টি প্রাণীর মোট ২৪টি পা। কিছু বিড়াল এবং বাকিগুলি মুরগি। বিড়াল কতটি?",5,"5 × 4 + 2 × 2 = 24"),
+WordProblem("S4Q09","Two numbers add to 42. One number is 12 more than the other. What is the smaller number?","দুটি সংখ্যার যোগ ৪২। একটি অন্যটির চেয়ে ১২ বেশি। ছোট সংখ্যা কত?",15,"15 + 27 = 42 and 27 − 15 = 12"),
+WordProblem("S4Q10","A 3-digit number has 5 in the hundreds place. The tens digit is 1 less than the ones digit. The digits add to 14. What is the number?","৩ অঙ্কের সংখ্যায় শতকের অঙ্ক ৫। দশকের অঙ্ক এককের চেয়ে ১ কম। অঙ্কগুলির যোগ ১৪। সংখ্যাটি কত?",545,"5 + 4 + 5 = 14 and 4 is 1 less than 5")
+),
+listOf(
+WordProblem("S5Q01","96 candies are shared equally among 4 children. Each child uses 7 candies. How many does each child have left?","৯৬টি ক্যান্ডি ৪ শিশুর মধ্যে সমান ভাগ। প্রত্যেকে ৭টি ব্যবহার করল। প্রত্যেকের কতটি বাকি?",17,"96 ÷ 4 = 24; 24 − 7 = 17"),
+WordProblem("S5Q02","Half of a number plus 9 equals 25. What is the number?","একটি সংখ্যার অর্ধেকের সঙ্গে ৯ যোগ করলে ২৫ হয়। সংখ্যাটি কত?",32,"25 − 9 = 16; 16 × 2 = 32"),
+WordProblem("S5Q03","Five consecutive numbers add up to 65. What is the middle number?","পরপর ৫টি সংখ্যার যোগফল ৬৫। মাঝের সংখ্যা কত?",13,"65 ÷ 5 = 13"),
+WordProblem("S5Q04","Each box holds 6 red balls and 3 blue balls. There are 36 balls altogether. How many boxes are there?","প্রতিটি বাক্সে ৬টি লাল ও ৩টি নীল বল। মোট ৩৬টি বল। বাক্স কতটি?",4,"6 + 3 = 9; 36 ÷ 9 = 4"),
+WordProblem("S5Q05","The pattern is 81, 27, 9, 3, __. What comes next?","ধারা ৮১, ২৭, ৯, ৩, __। পরের সংখ্যা?",1,"Divide by 3 each time"),
+WordProblem("S5Q06","Arifa has ₹500. She buys 4 books at ₹68 each and 2 pens at ₹27 each. How much remains?","আরিফার ৫০০ টাকা। ৬৮ টাকা করে ৪টি বই ও ২৭ টাকা করে ২টি কলম কিনল। কত বাকি?",174,"500 − (4 × 68 + 2 × 27) = 174"),
+WordProblem("S5Q07","A number is 4 more than twice another number. Their sum is 28. What is the smaller number?","একটি সংখ্যা অন্যটির দ্বিগুণের চেয়ে ৪ বেশি। তাদের যোগফল ২৮। ছোট সংখ্যা কত?",8,"8 + 20 = 28 and 20 = 2 × 8 + 4"),
+WordProblem("S5Q08","A class has 30 students. The number of girls is twice the number of boys. How many girls are there?","ক্লাসে ৩০ জন। মেয়ের সংখ্যা ছেলেদের দ্বিগুণ। মেয়ে কতজন?",20,"3 equal parts; 30 ÷ 3 = 10; girls = 20"),
+WordProblem("S5Q09","A 2-digit number has digits that add to 11. The tens digit is 3 more than the ones digit. What is the number?","২ অঙ্কের সংখ্যার অঙ্কগুলির যোগ ১১। দশকের অঙ্ক এককের চেয়ে ৩ বেশি। সংখ্যাটি কত?",74,"7 + 4 = 11 and 7 = 4 + 3"),
+WordProblem("S5Q10","A rope is 90 cm long. First 1/3 is cut off, then 15 cm more is cut. How many cm remain?","৯০ সেমি দড়ির প্রথমে এক-তৃতীয়াংশ কাটা হলো, তারপর আরও ১৫ সেমি কাটা হলো। কত সেমি বাকি?",45,"90 ÷ 3 = 30; 90 − 30 − 15 = 45")
+),
+listOf(
+WordProblem("S6Q01","A number is multiplied by 4, then 8 is subtracted. The result is 36. What is the number?","একটি সংখ্যাকে ৪ দিয়ে গুণ করে ৮ বিয়োগ করলে ৩৬ হয়। সংখ্যাটি কত?",11,"4 × 11 − 8 = 36"),
+WordProblem("S6Q02","A farmer has chickens and goats. There are 8 animals and 24 legs altogether. How many goats are there?","একজন কৃষকের মুরগি ও ছাগল মিলিয়ে ৮টি প্রাণী। মোট ২৪টি পা। ছাগল কতটি?",4,"8 chickens would have 16 legs; 8 extra legs means 4 goats"),
+WordProblem("S6Q03","Three numbers are 5 apart from each other: 10, 15, 20. Their sum is 45. If each is increased by 3, what is the new total?","তিনটি সংখ্যা ৫ করে বাড়ে: ১০, ১৫, ২০। যোগ ৪৫। প্রতিটিতে ৩ যোগ করলে নতুন যোগফল কত?",54,"Adding 3 to each of 3 numbers adds 9; 45 + 9 = 54"),
+WordProblem("S6Q04","A shop has 120 pencils. It packs them equally into boxes of 8. Then 5 boxes are sold. How many pencils remain?","দোকানে ১২০টি পেন্সিল। ৮টি করে বাক্সে ভরা হলো। ৫টি বাক্স বিক্রি হলো। কত পেন্সিল বাকি?",80,"120 ÷ 8 = 15 boxes; 15 − 5 = 10; 10 × 8 = 80"),
+WordProblem("S6Q05","The pattern is 2, 6, 12, 20, 30, __. What comes next?","ধারা ২, ৬, ১২, ২০, ৩০, __। পরের সংখ্যা?",42,"Add 4, 6, 8, 10, then 12"),
+WordProblem("S6Q06","A bus has 45 passengers. At the first stop 17 get off and 9 get on. At the second stop 8 get off and 6 get on. How many passengers now?","বাসে ৪৫ জন। প্রথম স্টপে ১৭ জন নামল ও ৯ জন উঠল। দ্বিতীয় স্টপে ৮ জন নামল ও ৬ জন উঠল। এখন কতজন?",35,"45 − 17 + 9 − 8 + 6 = 35"),
+WordProblem("S6Q07","Two numbers have a total of 64. One number is 3 times the other. What is the smaller number?","দুটি সংখ্যার যোগ ৬৪। একটি অন্যটির ৩ গুণ। ছোট সংখ্যা কত?",16,"16 + 48 = 64"),
+WordProblem("S6Q08","A 3-digit number has digits adding to 15. The hundreds digit is 2 more than the tens digit, and the ones digit is 1 more than the tens digit. What is the number?","৩ অঙ্কের সংখ্যার অঙ্কগুলির যোগ ১৫। শতকের অঙ্ক দশকের চেয়ে ২ বেশি এবং এককের অঙ্ক দশকের চেয়ে ১ বেশি। সংখ্যাটি কত?",654,"5 + 4 + 6 = 15; 5 = 4 + 1 and 6 = 4 + 2"),
+WordProblem("S6Q09","A square has 4 equal sides. If its perimeter is 36 cm, what is the length of one side?","একটি বর্গের ৪টি সমান বাহু। পরিসীমা ৩৬ সেমি হলে এক বাহুর দৈর্ঘ্য কত?",9,"36 ÷ 4 = 9 cm"),
+WordProblem("S6Q10","Arifa thinks of a number. She adds 7, doubles the result, then subtracts 4 to get 30. What is her number?","আরিফা একটি সংখ্যা ভাবল। ৭ যোগ করে ফলকে দ্বিগুণ করল, তারপর ৪ বিয়োগ করে ৩০ পেল। সংখ্যাটি কত?",10,"2 × (number + 7) − 4 = 30; number = 10")
 )
 )
 
@@ -103,7 +139,14 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
             Text("🧠 Advanced Maths", fontSize=30.sp, fontWeight=FontWeight.ExtraBold, color=Color(0xFF2457A6))
             Text("Build thinking agility!", fontSize=18.sp, fontWeight=FontWeight.Bold)
             Spacer(Modifier.height(22.dp))
-            listOf("SET 1" to "Warm-up Thinking", "SET 2" to "Multi-Step Thinking", "SET 3" to "Challenge Thinking").forEachIndexed { i, pair ->
+            listOf(
+                "SET 1" to "Warm-up Thinking",
+                "SET 2" to "Multi-Step Thinking",
+                "SET 3" to "Challenge Thinking",
+                "SET 4" to "Logic & Multi-Step",
+                "SET 5" to "Reasoning Challenge",
+                "SET 6" to "Brain Challenge"
+            ).forEachIndexed { i, pair ->
                 val attempted = isAttempted(i)
                 val unlocked = isUnlocked(i)
                 val title = when {
@@ -162,7 +205,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
             Text(if(bengali) q.bengali else q.english, Modifier.padding(20.dp), fontSize=20.sp, fontWeight=FontWeight.Bold, lineHeight=30.sp)
         }
         Spacer(Modifier.height(18.dp))
-        OutlinedTextField(value=answer, onValueChange={if(!checked) answer=it.filter(Char::isDigit)}, enabled=!checked, modifier=Modifier.fillMaxWidth(), label={Text(if(bengali) "উত্তর লিখুন" else "Write your answer")}, placeholder={Text("e.g. 42")}, keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number), singleLine=true, textStyle=LocalTextStyle.current.copy(fontSize=24.sp,fontWeight=FontWeight.Bold,textAlign=TextAlign.Center))
+        OutlinedTextField(value=answer, onValueChange={if(!checked) answer=it.filter(Char::isDigit)}, enabled=!checked, modifier=Modifier.fillMaxWidth(), label={Text(if(bengali) "উত্তর লিখুন" else "Write your answer")}, keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number), singleLine=true, textStyle=LocalTextStyle.current.copy(fontSize=24.sp,fontWeight=FontWeight.Bold,textAlign=TextAlign.Center))
         Spacer(Modifier.height(12.dp))
         if(!checked) {
             Button(onClick={correct=answer.toIntOrNull()==q.answer; checked=true; if(correct) score++}, enabled=answer.isNotBlank(), modifier=Modifier.fillMaxWidth().height(54.dp)) { Text(if(bengali) "✓ উত্তর যাচাই করুন" else "✓ Check Answer", fontSize=17.sp, fontWeight=FontWeight.Bold) }
