@@ -102,15 +102,40 @@ private fun NextQuiz(title: String, emoji: String, color: Color, pale: Color, qu
                         chosen && option==q.answer -> Color(0xFF20B957)
                         chosen -> Color(0xFFE94055)
                         option==q.answer -> Color(0xFF20B957)
+                        answered -> Color(0xFFE9EDF2)
                         else -> Color.White
                     },
                     contentColor=if(answered && (chosen || option==q.answer)) Color.White else Color(0xFF26354A)
                 )
-            ){ Text(option, fontSize=18.sp, fontWeight=FontWeight.SemiBold) }
+            ){
+                Row(Modifier.fillMaxWidth(), verticalAlignment=Alignment.CenterVertically){
+                    Text(
+                        when {
+                            answered && chosen && option==q.answer -> "✓"
+                            answered && chosen -> "✕"
+                            answered && option==q.answer -> "✓"
+                            else -> ""
+                        },
+                        fontSize=23.sp,
+                        fontWeight=FontWeight.ExtraBold,
+                        modifier=Modifier.width(30.dp)
+                    )
+                    Text(option, fontSize=18.sp, fontWeight=FontWeight.Bold)
+                }
+            }
         }
         if(answered){
             Spacer(Modifier.height(8.dp))
-            Text(if(selected==q.answer) "🎉 Correct! +5 XP +5 Coins" else "💡 Answer: "+q.answer, fontWeight=FontWeight.Bold)
+            Card(
+                Modifier.fillMaxWidth(),
+                shape=RoundedCornerShape(20.dp),
+                colors=CardDefaults.cardColors(containerColor=if(selected==q.answer) Color(0xFFE4F8EA) else Color(0xFFFFE5E8))
+            ){
+                Column(Modifier.fillMaxWidth().padding(16.dp),horizontalAlignment=Alignment.CenterHorizontally){
+                    Text(if(selected==q.answer) "🎉 CORRECT!" else "❌ WRONG ANSWER",fontSize=23.sp,fontWeight=FontWeight.ExtraBold,color=if(selected==q.answer) Color(0xFF138A40) else Color(0xFFD52E45))
+                    Text(if(selected==q.answer) "+5 XP  •  +5 Coins" else "Correct answer: "+q.answer,fontWeight=FontWeight.Bold,color=if(selected==q.answer) Color(0xFF138A40) else Color(0xFFD52E45))
+                }
+            }
             Spacer(Modifier.height(7.dp))
             Button(onClick={if(index==questions.lastIndex) done=true else {index++;selected=null;answered=false}}, modifier=Modifier.fillMaxWidth(), shape=RoundedCornerShape(18.dp)){
                 Text(if(index==questions.lastIndex) "🏆 Finish" else "Next →")
