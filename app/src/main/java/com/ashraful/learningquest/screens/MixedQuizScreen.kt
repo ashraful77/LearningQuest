@@ -237,30 +237,6 @@ fun MixedQuizScreen(onBack: () -> Unit) {
             }
             Spacer(Modifier.height(12.dp))
         }
-
-        if (answered && correct) MixedCelebrationOverlay()
-    }
-}
-
-@Composable
-private fun MixedCelebrationOverlay() {
-    var visible by remember { mutableStateOf(true) }
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(800)
-        visible = false
-    }
-    if (!visible) return
-
-    Box(
-        Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFF6A1B9A), Color(0xFFFF4081), Color(0xFFFFC107)))
-        ),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("🎉", fontSize = 78.sp)
-            Text("CORRECT!", fontSize = 44.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
-            Text("⭐ +5 XP   🪙 +5 Coins ⭐", fontSize = 19.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        }
+ 
     }
 }
