@@ -116,7 +116,13 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
                 Card(Modifier.fillMaxWidth(),colors=CardDefaults.cardColors(Color(0xFFFFE8E8))) {
                     Column(Modifier.fillMaxWidth().padding(18.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                         Text("❌",fontSize=32.sp)
-                        Text(if(bengali) "ভুল উত্তর। আবার চেষ্টা করো!" else "Wrong answer. Try again!",fontSize=19.sp,fontWeight=FontWeight.ExtraBold,color=Color(0xFFC62828))
+                        Text(if(bengali) "❌ ভুল উত্তর" else "❌ WRONG ANSWER",fontSize=22.sp,fontWeight=FontWeight.ExtraBold,color=Color(0xFFC62828))
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            if(bengali) "সঠিক উত্তর: " + q.answer else "Correct answer: " + q.answer,
+                            fontSize=18.sp,fontWeight=FontWeight.Bold,color=Color(0xFF23754A)
+                        )
+                        Text(q.explanation,Modifier.padding(top=6.dp),fontWeight=FontWeight.Bold)
                     }
                 }
                 Spacer(Modifier.height(12.dp))
