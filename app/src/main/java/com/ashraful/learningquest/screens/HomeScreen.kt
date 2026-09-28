@@ -25,9 +25,35 @@ import com.ashraful.learningquest.data.GameDataStore
 fun HomeScreen() {
     var profile by rememberSaveable { mutableStateOf<String?>(null) }
     var screen by rememberSaveable { mutableStateOf("home") }
+    var backStack by rememberSaveable { mutableStateOf("") }
+
+    fun navigate(route: String) {
+        if (route == "switch_to_abid") {
+            profile = "abid"
+            screen = "home"
+            backStack = ""
+        } else if (route == "switch_to_arifa") {
+            profile = "arifa"
+            screen = "home"
+            backStack = ""
+        } else if (route != screen) {
+            backStack = listOf(backStack, screen).filter { it.isNotBlank() }.joinToString(",")
+            screen = route
+        }
+    }
+
+    fun goBack() {
+        val stack = backStack.split(",").filter { it.isNotBlank() }
+        if (stack.isNotEmpty()) {
+            screen = stack.last()
+            backStack = stack.dropLast(1).joinToString(",")
+        } else {
+            screen = "home"
+        }
+    }
 
     BackHandler(enabled = profile != null && screen != "home") {
-        screen = "home"
+        goBack()
     }
 
     if (profile == null) {
@@ -40,13 +66,9 @@ fun HomeScreen() {
 
     if (screen == "home") {
         if (profile == "arifa") {
-            HomeContent { route ->
-                if (route == "switch_to_abid") profile = "abid" else screen = route
-            }
+            HomeContent { route -> navigate(route) }
         } else {
-            AbidHomeScreen { route ->
-                if (route == "switch_to_arifa") profile = "arifa" else screen = route
-            }
+            AbidHomeScreen { route -> navigate(route) }
         }
         return
     }
@@ -54,45 +76,45 @@ fun HomeScreen() {
     // One persistent in-app Home/Back button for every learning screen.
     Box(Modifier.fillMaxSize()) {
         when (screen) {
-            "math" -> MathScreen { screen = "home" }
-            "english" -> EnglishScreen { screen = "home" }
-            "science" -> ScienceScreen { screen = "home" }
-            "puzzle" -> PuzzleScreen { screen = "home" }
-            "mixed" -> MixedQuizScreen { screen = "home" }
-            "arifa_learning_hub" -> ArifaLearningHubTestScreen { screen = "home" }
-            "arifa_review_mistakes" -> ArifaReviewMistakesScreen { screen = "home" }
-            "arifa_topic_practice" -> ArifaTopicPracticeScreen { screen = "home" }
-            "arifa_brain" -> ArifaBrainGamesScreen { screen = "home" }
-            "arifa_reading" -> ArifaReadingAdventureScreen { screen = "home" }
-            "arifa_writing" -> ArifaWritingPracticeScreen { screen = "home" }
-            "arifa_advanced_math" -> ArifaAdvancedMathScreen { screen = "home" }
-            "arifa_world" -> ArifaWorldExplorerScreen { screen = "home" }
-            "arifa_visual" -> ArifaVisualPuzzlesScreen { screen = "home" }
-            "arifa_speaking" -> ArifaEnglishSpeakingScreen { screen = "home" }
-            "arifa_daily" -> ArifaDailyChallengeScreen { screen = "home" }
-            "arifa_achievements2" -> ArifaAchievements2Screen { screen = "home" }
-            "arifa_path" -> ArifaLearningPathScreen { screen = "home" }
-            "abid_letters" -> AbidLettersScreen { screen = "home" }
-            "abid_write_letters" -> AbidWriteLettersScreen { screen = "home" }
-            "abid_bengali_letters" -> AbidBengaliLettersScreen { screen = "home" }
-            "abid_bengali_practice" -> AbidBengaliPracticeScreen { screen = "home" }
-            "abid_bengali_picture_match" -> AbidBengaliPictureMatchScreen { screen = "home" }
-            "abid_bengali_tracing" -> AbidBengaliTracingScreen { screen = "home" }
-            "abid_numbers" -> AbidNumbersScreen { screen = "home" }
-            "abid_shapes" -> AbidShapesScreen { screen = "home" }
-            "abid_colors" -> AbidColorsScreen { screen = "home" }
-            "abid_color_match" -> AbidColorMatchScreen { screen = "home" }
-            "abid_memory" -> AbidMemoryPairsScreen { screen = "home" }
-            "abid_letter_sounds" -> AbidLetterSoundsScreen { screen = "home" }
-            "abid_picture_match" -> AbidLetterPictureMatchScreen { screen = "home" }
-            "abid_simple_math" -> AbidSimpleMathScreen { screen = "home" }
-            "abid_shape_match" -> AbidShapeMatchScreen { screen = "home" }
-            "abid_animals" -> AbidAnimalSoundsScreen { screen = "home" }
-            "abid_fruits" -> AbidFruitsScreen { screen = "home" }
-            "abid_memory2" -> AbidMemoryGameScreen { screen = "home" }
-            "abid_achievements" -> AbidAchievementsScreen { screen = "home" }
-            "abid_match_letters" -> AbidMatchLettersScreen { screen = "home" }
-            "abid_number_match" -> AbidNumberMatchScreen { screen = "home" }
+            "math" -> MathScreen { goBack() }
+            "english" -> EnglishScreen { goBack() }
+            "science" -> ScienceScreen { goBack() }
+            "puzzle" -> PuzzleScreen { goBack() }
+            "mixed" -> MixedQuizScreen { goBack() }
+            "arifa_learning_hub" -> ArifaLearningHubTestScreen { goBack() }
+            "arifa_review_mistakes" -> ArifaReviewMistakesScreen { goBack() }
+            "arifa_topic_practice" -> ArifaTopicPracticeScreen { goBack() }
+            "arifa_brain" -> ArifaBrainGamesScreen { goBack() }
+            "arifa_reading" -> ArifaReadingAdventureScreen { goBack() }
+            "arifa_writing" -> ArifaWritingPracticeScreen { goBack() }
+            "arifa_advanced_math" -> ArifaAdvancedMathScreen { goBack() }
+            "arifa_world" -> ArifaWorldExplorerScreen { goBack() }
+            "arifa_visual" -> ArifaVisualPuzzlesScreen { goBack() }
+            "arifa_speaking" -> ArifaEnglishSpeakingScreen { goBack() }
+            "arifa_daily" -> ArifaDailyChallengeScreen { goBack() }
+            "arifa_achievements2" -> ArifaAchievements2Screen { goBack() }
+            "arifa_path" -> ArifaLearningPathScreen { goBack() }
+            "abid_letters" -> AbidLettersScreen { goBack() }
+            "abid_write_letters" -> AbidWriteLettersScreen { goBack() }
+            "abid_bengali_letters" -> AbidBengaliLettersScreen { goBack() }
+            "abid_bengali_practice" -> AbidBengaliPracticeScreen { goBack() }
+            "abid_bengali_picture_match" -> AbidBengaliPictureMatchScreen { goBack() }
+            "abid_bengali_tracing" -> AbidBengaliTracingScreen { goBack() }
+            "abid_numbers" -> AbidNumbersScreen { goBack() }
+            "abid_shapes" -> AbidShapesScreen { goBack() }
+            "abid_colors" -> AbidColorsScreen { goBack() }
+            "abid_color_match" -> AbidColorMatchScreen { goBack() }
+            "abid_memory" -> AbidMemoryPairsScreen { goBack() }
+            "abid_letter_sounds" -> AbidLetterSoundsScreen { goBack() }
+            "abid_picture_match" -> AbidLetterPictureMatchScreen { goBack() }
+            "abid_simple_math" -> AbidSimpleMathScreen { goBack() }
+            "abid_shape_match" -> AbidShapeMatchScreen { goBack() }
+            "abid_animals" -> AbidAnimalSoundsScreen { goBack() }
+            "abid_fruits" -> AbidFruitsScreen { goBack() }
+            "abid_memory2" -> AbidMemoryGameScreen { goBack() }
+            "abid_achievements" -> AbidAchievementsScreen { goBack() }
+            "abid_match_letters" -> AbidMatchLettersScreen { goBack() }
+            "abid_number_match" -> AbidNumberMatchScreen { goBack() }
         }
 
         Surface(
@@ -104,10 +126,10 @@ fun HomeScreen() {
             shadowElevation = 5.dp
         ) {
             TextButton(
-                onClick = { screen = "home" },
+                onClick = { goBack() },
                 contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
             ) {
-                Text("‹  Home", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Text("‹  Back", fontSize = 15.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
