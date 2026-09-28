@@ -1,5 +1,10 @@
 package com.ashraful.learningquest.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,12 +26,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import com.ashraful.learningquest.data.GameDataStore
 import com.ashraful.learningquest.data.giftCatalog
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen() {
     var profile by rememberSaveable { mutableStateOf<String?>(null) }
     var screen by rememberSaveable { mutableStateOf("home") }
     var backStack by rememberSaveable { mutableStateOf("") }
+    var lastKnownCoins by rememberSaveable { mutableIntStateOf(-1) }
+    var rewardDelta by rememberSaveable { mutableIntStateOf(0) }
+    var showReward by rememberSaveable { mutableStateOf(false) }
 
     fun navigate(route: String) {
         if (route == "switch_to_abid") {
@@ -67,7 +76,13 @@ fun HomeScreen() {
 
     if (screen == "home") {
         if (profile == "arifa") {
-            HomeContent { route -> navigate(route) }
+            HomeContent(onNavigate = { route -> navigate(route) }, onCoinsChanged = { coins ->
+                if (lastKnownCoins >= 0 && coins > lastKnownCoins) {
+                    rewardDelta = coins - lastKnownCoins
+                    showReward = true
+                }
+                lastKnownCoins = coins
+            })
         } else {
             AbidHomeScreen { route -> navigate(route) }
         }
@@ -138,12 +153,20 @@ fun HomeScreen() {
 }
 
 @Composable
-private fun HomeContent(onNavigate: (String) -> Unit) {
+private fun HomeContent(onNavigate: (String) -> Unit, onCoinsChanged: (Int) -> Unit) {
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val data by store.gameData.collectAsState(initial = null)
     val equippedGiftId by store.equippedGiftId.collectAsState(initial = null)
     val equippedGift = giftCatalog.firstOrNull { it.id == equippedGiftId }
+    val currentCoins = data?.coins ?: 0
+    LaunchedEffect(currentCoins) { onCoinsChanged(currentCoins) }
+    LaunchedEffect(showReward) {
+        if (showReward) {
+            delay(1400)
+            showReward = false
+        }
+    }
     var showMore by rememberSaveable { mutableStateOf(false) }
 
     val scores = listOf(
@@ -366,6 +389,27 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
 
             Spacer(Modifier.height(18.dp))
             Text("Learn • Play • Grow 🚀", Modifier.fillMaxWidth().padding(bottom = 12.dp), fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF8A96A8))
+        }
+
+        AnimatedVisibility(
+            visible = showReward,
+            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 76.dp)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = Color(0xFFFFF3D4),
+                shadowElevation = 8.dp
+            ) {
+                Text(
+                    "+$rewardDelta 🪙 Coins earned!",
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 11.dp),
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFF8B5B00)
+                )
+            }
         }
     }
 }
