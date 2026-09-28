@@ -56,6 +56,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                                 dragStart = nearest.second
                                 dragCurrent = offset
                                 wrong = false
+                                wrongSource = null
                             }
                         },
                         onDrag = { change, _ ->
@@ -71,8 +72,10 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                                 if (target != null && distanceSquared(target.second, dragCurrent) < 7000f && target.first == source.uppercaseChar()) {
                                     matched = matched + target.first
                                     wrong = false
+                                    wrongSource = null
                                 } else {
                                     wrong = true
+                                    wrongSource = source
                                 }
                             }
                             dragging = null
@@ -120,7 +123,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
                 Button(onClick = { round++; matched = emptySet(); wrong = false }, modifier = Modifier.fillMaxWidth().height(54.dp)) { Text("🔄 Next Round", fontSize = 20.sp) }
             } else {
                 Text("Matched: ${matched.size} / 5", fontSize = 21.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF40516A))
-                if (wrong) Text("Try again! 😊", color = Color(0xFFD52E45), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                if (wrong) Text("❌ WRONG MATCH — Correct: " + (wrongSource?.toString() ?: "") + " → " + (wrongSource?.uppercaseChar()?.toString() ?: ""), color = Color(0xFFD52E45), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
             }
         }
