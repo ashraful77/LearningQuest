@@ -28,6 +28,7 @@ fun AbidMatchLettersScreen(onBack: () -> Unit) {
     var dragStart by remember { mutableStateOf(Offset.Unspecified) }
     var dragCurrent by remember { mutableStateOf(Offset.Unspecified) }
     var wrong by remember { mutableStateOf(false) }
+    var wrongSource by remember { mutableStateOf<Char?>(null) }
 
     fun pointFor(index: Int, width: Float, height: Float, right: Boolean): Offset {
         val x = if (right) width * 0.75f else width * 0.25f
