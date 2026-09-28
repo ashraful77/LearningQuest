@@ -402,7 +402,184 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
         }
     }
-    }\n}\n\n@Composable\nprivate fun RealTestScreen(\n    progress: Map<String, QuestionProgress>,\n    onBackToHub: () -> Unit\n) {\n    val context = LocalContext.current\n    val gameStore = remember { GameDataStore(context) }\n    val scope = rememberCoroutineScope()\n    var count by rememberSaveable { mutableIntStateOf(10) }\n    var subject by rememberSaveable { mutableStateOf("Mixed") }\n    var ids by rememberSaveable { mutableStateOf("") }\n    val questions = remember(ids) { ids.split(",").filter { it.isNotBlank() }.mapNotNull(QuestionBank::findById) }\n    var index by rememberSaveable { mutableIntStateOf(0) }\n    var finished by rememberSaveable { mutableStateOf(false) }\n    var startedAt by rememberSaveable { mutableLongStateOf(0L) }\n    var elapsed by rememberSaveable { mutableLongStateOf(0L) }\n    var showSubmit by rememberSaveable { mutableStateOf(false) }\n    var review by rememberSaveable { mutableStateOf(false) }\n    val answers = remember { mutableStateMapOf<Int, Int>() }\n\n    LaunchedEffect(startedAt, finished) {\n        if (startedAt > 0L && !finished) {\n            while (true) {\n                elapsed = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)\n                kotlinx.coroutines.delay(1000)\n            }\n        }\n    }\n\n    fun timeText(value: Long): String {\n        val m = value / 60\n        val s = value % 60\n        return "%02d:%02d".format(m, s)\n    }\n\n    fun startTest() {\n        val pool = if (subject == "Mixed") QuestionBank.all else QuestionBank.bySubject(subject)\n        val chosen = pool.shuffled().take(minOf(count, pool.size))\n        ids = chosen.joinToString(",") { it.id }\n        answers.clear()\n        index = 0\n        finished = false\n        review = false\n        showSubmit = false\n        elapsed = 0L\n        startedAt = System.currentTimeMillis()\n    }\n\n    fun submitTest() {\n        elapsed = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)\n        finished = true\n        startedAt = 0L\n        showSubmit = false\n    }\n\n    if (finished) {\n        val correct = questions.indices.count { answers[it] == questions[it].correctIndex }\n        val unanswered = questions.indices.count { !answers.containsKey(it) }\n        val wrong = questions.size - correct - unanswered\n        val percent = if (questions.isEmpty()) 0 else correct * 100 / questions.size\n        if (!review) {\n            Text("🏆 TEST COMPLETE", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)\n            Spacer(Modifier.height(12.dp))\n            Text(correct.toString() + " / " + questions.size, fontSize = 50.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))\n            Text(percent.toString() + "%", fontSize = 25.sp, fontWeight = FontWeight.Bold)\n            Spacer(Modifier.height(14.dp))\n            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n                DashboardStat("✅", "Correct", correct.toString(), Modifier.weight(1f))\n                DashboardStat("❌", "Wrong", wrong.toString(), Modifier.weight(1f))\n                DashboardStat("⭕", "Unanswered", unanswered.toString(), Modifier.weight(1f))\n            }\n            Spacer(Modifier.height(12.dp))\n            Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = Color.White, tonalElevation = 2.dp) {\n                Column(Modifier.padding(16.dp)) {\n                    Text("Test Summary", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)\n                    Text("Subject: " + subject, fontWeight = FontWeight.Bold)\n                    Text("Questions: " + questions.size)\n                    Text("Time taken: " + timeText(elapsed))\n                }\n            }\n            Spacer(Modifier.height(14.dp))\n            Button(onClick = { review = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) { Text("📝 REVIEW ANSWERS") }\n            OutlinedButton(onClick = { startTest() }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) { Text("🔄 NEW TEST") }\n            OutlinedButton(onClick = onBackToHub, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) { Text("‹ Learning Hub") }\n        } else {\n            Text("📝 REVIEW ANSWERS", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)\n            Text(correct.toString() + "/" + questions.size + " correct • " + timeText(elapsed), fontSize = 13.sp, color = Color(0xFF68778C))\n            Spacer(Modifier.height(10.dp))\n            questions.forEachIndexed { i, q ->\n                val a = answers[i]\n                Surface(Modifier.fillMaxWidth().padding(vertical = 5.dp), shape = RoundedCornerShape(16.dp), color = if (a == q.correctIndex) Color(0xFFE8F8EE) else Color(0xFFFFECEC)) {\n                    Column(Modifier.padding(14.dp)) {\n                        Text("Q" + (i + 1) + ". " + q.prompt, fontSize = 16.sp, fontWeight = FontWeight.Bold)\n                        Text(if (a == null) "⭕ Not answered" else "Your answer: " + q.options[a] + if (a == q.correctIndex) " ✓" else " ✕", fontSize = 14.sp, modifier = Modifier.padding(top = 6.dp))\n                        if (a != q.correctIndex) {\n                            Text("Correct answer: " + q.correctAnswer + " ✓", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF138A43), modifier = Modifier.padding(top = 4.dp))\n                            if (q.explanation.isNotBlank()) Text(q.explanation, fontSize = 12.sp, color = Color(0xFF65738A), modifier = Modifier.padding(top = 3.dp))\n                        }\n                    }\n                }\n            }\n            Button(onClick = onBackToHub, modifier = Modifier.fillMaxWidth().padding(top = 10.dp), shape = RoundedCornerShape(18.dp)) { Text("‹ Back to Learning Hub") }\n        }\n    } else if (questions.isEmpty()) {\n        Text("📋 REAL TEST", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)\n        Text("Choose the test size and subject, then start.", fontSize = 14.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)\n        Spacer(Modifier.height(18.dp))\n        Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {\n            Column(Modifier.padding(18.dp)) {\n                Text("Number of Questions", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)\n                Spacer(Modifier.height(8.dp))\n                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n                    listOf(10, 20, 30).forEach { n -> FilterChip(selected = count == n, onClick = { count = n }, label = { Text(n.toString(), fontWeight = FontWeight.Bold) }, modifier = Modifier.weight(1f)) }\n                }\n                Spacer(Modifier.height(16.dp))\n                Text("Subject", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)\n                Spacer(Modifier.height(8.dp))\n                listOf("Mixed", "Math", "English", "Science").chunked(2).forEach { row ->\n                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n                        row.forEach { s -> FilterChip(selected = subject == s, onClick = { subject = s }, label = { Text(if (s == "Mixed") "🔀 Mixed" else s, fontWeight = FontWeight.Bold) }, modifier = Modifier.weight(1f)) }\n                        if (row.size == 1) Spacer(Modifier.weight(1f))\n                    }\n                    Spacer(Modifier.height(5.dp))\n                }\n            }\n        }\n        val available = if (subject == "Mixed") QuestionBank.all.size else QuestionBank.bySubject(subject).size\n        Spacer(Modifier.height(12.dp))\n        Text("Available: " + available + " questions • fresh random selection each test", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)\n        Spacer(Modifier.height(12.dp))\n        Button(onClick = ::startTest, enabled = available >= count, modifier = Modifier.fillMaxWidth().height(56.dp), shape = RoundedCornerShape(18.dp)) { Text("🚀 START REAL TEST", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold) }\n        Spacer(Modifier.height(8.dp))\n        Text("Answers, marks and explanations stay hidden until submission.", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)\n    } else {\n        val q = questions[index]\n        val order = remember(index, q.id) { q.options.indices.shuffled() }\n        val current = answers[index]\n        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {\n            Text("REAL TEST", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))\n            Text("⏱ " + timeText(elapsed), fontWeight = FontWeight.Bold, color = Color(0xFF68778C))\n        }\n        Text("Question " + (index + 1) + " / " + questions.size, fontSize = 17.sp, fontWeight = FontWeight.Bold)\n        Spacer(Modifier.height(7.dp))\n        LinearProgressIndicator(progress = { (index + 1) / questions.size.toFloat() }, Modifier.fillMaxWidth().height(8.dp))\n        Spacer(Modifier.height(14.dp))\n        Surface(shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {\n            Column(Modifier.fillMaxWidth().padding(20.dp)) {\n                Text(q.subject + " • " + q.topic, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))\n                Spacer(Modifier.height(10.dp))\n                Text(q.prompt, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())\n            }\n        }\n        Spacer(Modifier.height(12.dp))\n        order.forEach { optionIndex ->\n            Button(onClick = { answers[index] = optionIndex }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(q.options[optionIndex], fontSize = 18.sp, fontWeight = FontWeight.Bold) }\n        }\n        Spacer(Modifier.height(8.dp))\n        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n            OutlinedButton(onClick = { if (index > 0) index-- }, enabled = index > 0, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text("← Previous") }\n            Button(onClick = { if (index < questions.lastIndex) index++ else showSubmit = true }, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text(if (index == questions.lastIndex) "SUBMIT TEST" else "Next →") }\n        }\n        Spacer(Modifier.height(8.dp))\n        Text(answers.size.toString() + " answered • " + (questions.size - answers.size) + " unanswered", fontSize = 12.sp, color = Color(0xFF68778C))\n    }\n\n    if (showSubmit) {\n        AlertDialog(onDismissRequest = { showSubmit = false }, title = { Text("Submit Real Test?") }, text = {\n            val unanswered = questions.count { !answers.containsKey(it) }\n            Text(if (unanswered == 0) "You have answered all questions. Submit now?" else unanswered.toString() + " question(s) are unanswered. Submit anyway?")\n        }, confirmButton = { Button(onClick = ::submitTest) { Text("SUBMIT") } }, dismissButton = { OutlinedButton(onClick = { showSubmit = false }) { Text("CONTINUE") } })\n    }\n}\n\n@Composable\nprivate fun SubjectProgressCard(
+    }
+}
+
+@Composable
+private fun RealTestScreen(
+    progress: Map<String, QuestionProgress>,
+    onBackToHub: () -> Unit
+) {
+    val context = LocalContext.current
+    val gameStore = remember { GameDataStore(context) }
+    val scope = rememberCoroutineScope()
+    var count by rememberSaveable { mutableIntStateOf(10) }
+    var subject by rememberSaveable { mutableStateOf("Mixed") }
+    var ids by rememberSaveable { mutableStateOf("") }
+    val questions = remember(ids) { ids.split(",").filter { it.isNotBlank() }.mapNotNull(QuestionBank::findById) }
+    var index by rememberSaveable { mutableIntStateOf(0) }
+    var finished by rememberSaveable { mutableStateOf(false) }
+    var startedAt by rememberSaveable { mutableLongStateOf(0L) }
+    var elapsed by rememberSaveable { mutableLongStateOf(0L) }
+    var showSubmit by rememberSaveable { mutableStateOf(false) }
+    var review by rememberSaveable { mutableStateOf(false) }
+    val answers = remember { mutableStateMapOf<Int, Int>() }
+
+    LaunchedEffect(startedAt, finished) {
+        if (startedAt > 0L && !finished) {
+            while (true) {
+                elapsed = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)
+                kotlinx.coroutines.delay(1000)
+            }
+        }
+    }
+
+    fun timeText(value: Long): String {
+        val m = value / 60
+        val s = value % 60
+        return "%02d:%02d".format(m, s)
+    }
+
+    fun startTest() {
+        val pool = if (subject == "Mixed") QuestionBank.all else QuestionBank.bySubject(subject)
+        val chosen = pool.shuffled().take(minOf(count, pool.size))
+        ids = chosen.joinToString(",") { it.id }
+        answers.clear()
+        index = 0
+        finished = false
+        review = false
+        showSubmit = false
+        elapsed = 0L
+        startedAt = System.currentTimeMillis()
+    }
+
+    fun submitTest() {
+        elapsed = ((System.currentTimeMillis() - startedAt) / 1000L).coerceAtLeast(0L)
+        finished = true
+        startedAt = 0L
+        showSubmit = false
+    }
+
+    if (finished) {
+        val correct = questions.indices.count { answers[it] == questions[it].correctIndex }
+        val unanswered = questions.indices.count { !answers.containsKey(it) }
+        val wrong = questions.size - correct - unanswered
+        val percent = if (questions.isEmpty()) 0 else correct * 100 / questions.size
+        if (!review) {
+            Text("🏆 TEST COMPLETE", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+            Spacer(Modifier.height(12.dp))
+            Text(correct.toString() + " / " + questions.size, fontSize = 50.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+            Text(percent.toString() + "%", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(14.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DashboardStat("✅", "Correct", correct.toString(), Modifier.weight(1f))
+                DashboardStat("❌", "Wrong", wrong.toString(), Modifier.weight(1f))
+                DashboardStat("⭕", "Unanswered", unanswered.toString(), Modifier.weight(1f))
+            }
+            Spacer(Modifier.height(12.dp))
+            Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = Color.White, tonalElevation = 2.dp) {
+                Column(Modifier.padding(16.dp)) {
+                    Text("Test Summary", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Subject: " + subject, fontWeight = FontWeight.Bold)
+                    Text("Questions: " + questions.size)
+                    Text("Time taken: " + timeText(elapsed))
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            Button(onClick = { review = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) { Text("📝 REVIEW ANSWERS") }
+            OutlinedButton(onClick = { startTest() }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) { Text("🔄 NEW TEST") }
+            OutlinedButton(onClick = onBackToHub, modifier = Modifier.fillMaxWidth().padding(top = 8.dp), shape = RoundedCornerShape(18.dp)) { Text("‹ Learning Hub") }
+        } else {
+            Text("📝 REVIEW ANSWERS", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)
+            Text(correct.toString() + "/" + questions.size + " correct • " + timeText(elapsed), fontSize = 13.sp, color = Color(0xFF68778C))
+            Spacer(Modifier.height(10.dp))
+            questions.forEachIndexed { i, q ->
+                val a = answers[i]
+                Surface(Modifier.fillMaxWidth().padding(vertical = 5.dp), shape = RoundedCornerShape(16.dp), color = if (a == q.correctIndex) Color(0xFFE8F8EE) else Color(0xFFFFECEC)) {
+                    Column(Modifier.padding(14.dp)) {
+                        Text("Q" + (i + 1) + ". " + q.prompt, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(if (a == null) "⭕ Not answered" else "Your answer: " + q.options[a] + if (a == q.correctIndex) " ✓" else " ✕", fontSize = 14.sp, modifier = Modifier.padding(top = 6.dp))
+                        if (a != q.correctIndex) {
+                            Text("Correct answer: " + q.correctAnswer + " ✓", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF138A43), modifier = Modifier.padding(top = 4.dp))
+                            if (q.explanation.isNotBlank()) Text(q.explanation, fontSize = 12.sp, color = Color(0xFF65738A), modifier = Modifier.padding(top = 3.dp))
+                        }
+                    }
+                }
+            }
+            Button(onClick = onBackToHub, modifier = Modifier.fillMaxWidth().padding(top = 10.dp), shape = RoundedCornerShape(18.dp)) { Text("‹ Back to Learning Hub") }
+        }
+    } else if (questions.isEmpty()) {
+        Text("📋 REAL TEST", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+        Text("Choose the test size and subject, then start.", fontSize = 14.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+        Spacer(Modifier.height(18.dp))
+        Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {
+            Column(Modifier.padding(18.dp)) {
+                Text("Number of Questions", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(10, 20, 30).forEach { n -> FilterChip(selected = count == n, onClick = { count = n }, label = { Text(n.toString(), fontWeight = FontWeight.Bold) }, modifier = Modifier.weight(1f)) }
+                }
+                Spacer(Modifier.height(16.dp))
+                Text("Subject", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
+                Spacer(Modifier.height(8.dp))
+                listOf("Mixed", "Math", "English", "Science").chunked(2).forEach { row ->
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        row.forEach { s -> FilterChip(selected = subject == s, onClick = { subject = s }, label = { Text(if (s == "Mixed") "🔀 Mixed" else s, fontWeight = FontWeight.Bold) }, modifier = Modifier.weight(1f)) }
+                        if (row.size == 1) Spacer(Modifier.weight(1f))
+                    }
+                    Spacer(Modifier.height(5.dp))
+                }
+            }
+        }
+        val available = if (subject == "Mixed") QuestionBank.all.size else QuestionBank.bySubject(subject).size
+        Spacer(Modifier.height(12.dp))
+        Text("Available: " + available + " questions • fresh random selection each test", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+        Spacer(Modifier.height(12.dp))
+        Button(onClick = ::startTest, enabled = available >= count, modifier = Modifier.fillMaxWidth().height(56.dp), shape = RoundedCornerShape(18.dp)) { Text("🚀 START REAL TEST", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold) }
+        Spacer(Modifier.height(8.dp))
+        Text("Answers, marks and explanations stay hidden until submission.", fontSize = 12.sp, color = Color(0xFF68778C), textAlign = TextAlign.Center)
+    } else {
+        val q = questions[index]
+        val order = remember(index, q.id) { q.options.indices.shuffled() }
+        val current = answers[index]
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text("REAL TEST", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+            Text("⏱ " + timeText(elapsed), fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
+        }
+        Text("Question " + (index + 1) + " / " + questions.size, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(7.dp))
+        LinearProgressIndicator(progress = { (index + 1) / questions.size.toFloat() }, Modifier.fillMaxWidth().height(8.dp))
+        Spacer(Modifier.height(14.dp))
+        Surface(shape = RoundedCornerShape(20.dp), color = Color.White, tonalElevation = 2.dp) {
+            Column(Modifier.fillMaxWidth().padding(20.dp)) {
+                Text(q.subject + " • " + q.topic, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
+                Spacer(Modifier.height(10.dp))
+                Text(q.prompt, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+        order.forEach { optionIndex ->
+            Button(onClick = { answers[index] = optionIndex }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(q.options[optionIndex], fontSize = 18.sp, fontWeight = FontWeight.Bold) }
+        }
+        Spacer(Modifier.height(8.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = { if (index > 0) index-- }, enabled = index > 0, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text("← Previous") }
+            Button(onClick = { if (index < questions.lastIndex) index++ else showSubmit = true }, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text(if (index == questions.lastIndex) "SUBMIT TEST" else "Next →") }
+        }
+        Spacer(Modifier.height(8.dp))
+        Text(answers.size.toString() + " answered • " + (questions.size - answers.size) + " unanswered", fontSize = 12.sp, color = Color(0xFF68778C))
+    }
+
+    if (showSubmit) {
+        AlertDialog(onDismissRequest = { showSubmit = false }, title = { Text("Submit Real Test?") }, text = {
+            val unanswered = questions.count { !answers.containsKey(it) }
+            Text(if (unanswered == 0) "You have answered all questions. Submit now?" else unanswered.toString() + " question(s) are unanswered. Submit anyway?")
+        }, confirmButton = { Button(onClick = ::submitTest) { Text("SUBMIT") } }, dismissButton = { OutlinedButton(onClick = { showSubmit = false }) { Text("CONTINUE") } })
+    }
+}
+
+@Composable
+private fun SubjectProgressCard(
     subject: String,
     accuracy: Int,
     mastered: Int,
