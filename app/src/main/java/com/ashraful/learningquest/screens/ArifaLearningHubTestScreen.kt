@@ -382,6 +382,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 ) {
                     Text(if (index == questions.lastIndex) "🏆 Finish" else "Next →")
                 }
+            }
 
             Spacer(Modifier.weight(1f))
             Text("Score: $score", fontWeight = FontWeight.Bold, color = Color(0xFF68778C))
