@@ -589,7 +589,7 @@ private fun RealTestScreen(
 
     if (showSubmit) {
         AlertDialog(onDismissRequest = { showSubmit = false }, title = { Text("Submit Real Test?") }, text = {
-            val unanswered = questions.count { !answers.containsKey(it) }
+            val unanswered = questions.indices.count { !answers.containsKey(it) }
             Text(if (unanswered == 0) "You have answered all questions. Submit now?" else unanswered.toString() + " question(s) are unanswered. Submit anyway?")
         }, confirmButton = { Button(onClick = ::submitTest) { Text("SUBMIT") } }, dismissButton = { OutlinedButton(onClick = { showSubmit = false }) { Text("CONTINUE") } })
     }
