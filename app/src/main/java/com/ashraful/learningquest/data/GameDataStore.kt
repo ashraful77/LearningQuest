@@ -34,6 +34,7 @@ class GameDataStore(private val context: Context) {
         val CORRECT_ANSWERS = intPreferencesKey("correct_answers")
         val OWNED_GIFTS = stringPreferencesKey("owned_gifts")
         val EQUIPPED_GIFT = stringPreferencesKey("equipped_gift")
+        val SEEN_GIFTS = stringPreferencesKey("seen_gifts")
     }
 
     val profile: Flow<String?> =
@@ -50,6 +51,15 @@ class GameDataStore(private val context: Context) {
 
     val equippedGiftId: Flow<String?> =
         context.gameDataStore.data.map { it[Keys.EQUIPPED_GIFT] }
+
+    fun newGiftIds(): Flow<Set<String>> =
+        context.gameDataStore.data.map { preferences ->
+            val owned = preferences[Keys.OWNED_GIFTS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
+            val seen = preferences[Keys.SEEN_GIFTS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
+            owned - seen
+        }
 
     suspend fun saveProfile(value: String) {
         context.gameDataStore.edit { it[Keys.PROFILE] = value }
@@ -86,6 +96,17 @@ class GameDataStore(private val context: Context) {
             if (giftId in owned) {
                 preferences[Keys.EQUIPPED_GIFT] = giftId
             }
+        }
+    }
+
+    suspend fun markGiftsSeen(giftIds: Set<String>) {
+        if (giftIds.isEmpty()) return
+        context.gameDataStore.edit { preferences ->
+            val seen = preferences[Keys.SEEN_GIFTS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toMutableSet()
+                ?: mutableSetOf()
+            seen.addAll(giftIds)
+            preferences[Keys.SEEN_GIFTS] = seen.joinToString(",")
         }
     }
 
