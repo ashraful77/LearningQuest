@@ -234,12 +234,15 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
             Spacer(Modifier.height(6.dp))
 
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                CompactSubject("➗", "Math", Color(0xFFEAF2FF), Color(0xFF2457A6), Modifier.weight(1f)) { onNavigate("math") }
-                CompactSubject("🔤", "English", Color(0xFFF3ECFF), Color(0xFF7043A8), Modifier.weight(1f)) { onNavigate("english") }
+                CompactSubject("➗", "Maths", Color(0xFFEAF2FF), Color(0xFF2457A6), Modifier.weight(1f)) { onNavigate("math") }
+                CompactSubject("🔢", "Advanced Maths", Color(0xFFE8F0FF), Color(0xFF315FBA), Modifier.weight(1f)) { onNavigate("arifa_advanced_math") }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                CompactSubject("🔤", "English", Color(0xFFF3ECFF), Color(0xFF7043A8), Modifier.weight(1f)) { onNavigate("english") }
                 CompactSubject("🔬", "Science", Color(0xFFE8F8EF), Color(0xFF23754A), Modifier.weight(1f)) { onNavigate("science") }
-                CompactSubject("🧩", "Puzzles", Color(0xFFFFF1DE), Color(0xFF9A5A00), Modifier.weight(1f)) { onNavigate("puzzle") }
+            }
+            Row(Modifier.fillMaxWidth()) {
+                CompactSubject("🧩", "Puzzles", Color(0xFFFFF1DE), Color(0xFF9A5A00), Modifier.fillMaxWidth()) { onNavigate("puzzle") }
             }
 
             Spacer(Modifier.height(10.dp))
@@ -294,7 +297,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 SubjectCard("🧠", "Brain Games", "Logic, patterns & thinking", Color(0xFFF3E5FF), Color(0xFF6A1B9A)) { onNavigate("arifa_brain") }
                 SubjectCard("📖", "Reading Adventure", "Stories & comprehension", Color(0xFFE3F2FD), Color(0xFF1565C0)) { onNavigate("arifa_reading") }
                 SubjectCard("✍️", "Writing Practice", "Spelling & sentences", Color(0xFFE0F7F4), Color(0xFF00897B)) { onNavigate("arifa_writing") }
-                SubjectCard("🔢", "Advanced Maths", "Multiplication, fractions & money", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("arifa_advanced_math") }
+                SubjectCard("📝", "Written Maths", "Solve word problems and write your answer", Color(0xFFE8F0FF), Color(0xFF315FBA)) { onNavigate("arifa_advanced_math") }
                 SubjectCard("🌍", "World Explorer", "India, science & our world", Color(0xFFFFF1DE), Color(0xFFE67E22)) { onNavigate("arifa_world") }
                 SubjectCard("🧩", "Visual Puzzles", "Patterns & sequences", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("arifa_visual") }
                 SubjectCard("🗣️", "English Speaking", "Listen and practise", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("arifa_speaking") }
