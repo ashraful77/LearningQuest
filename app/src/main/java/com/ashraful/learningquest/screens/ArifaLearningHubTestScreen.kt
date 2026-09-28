@@ -86,17 +86,20 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
             .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            OutlinedButton(onClick = onBack, shape = RoundedCornerShape(16.dp)) {
-                Text("‹ Home")
-            }
-            Spacer(Modifier.width(10.dp))
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 "🧠 Learning Hub",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color(0xFF315FBA)
             )
+            OutlinedButton(onClick = onBack, shape = RoundedCornerShape(16.dp)) {
+                Text("‹ Home")
+            }
         }
 
         Spacer(Modifier.height(16.dp))
