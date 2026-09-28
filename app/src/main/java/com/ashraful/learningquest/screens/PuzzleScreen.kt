@@ -631,7 +631,7 @@ private fun PuzzleQuizScreen(
             }
         }
 
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(16.dp))
 
         Text(
             "Score: $score / 10",
