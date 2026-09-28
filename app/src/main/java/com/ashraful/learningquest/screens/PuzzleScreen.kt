@@ -485,18 +485,11 @@ private fun PuzzleQuizScreen(
             val isSelected = option == selected
 
             val buttonColor = when {
-
                 !answered -> Color.White
-
-                isSelected && correct ->
-                    Color(0xFF20B957)
-
-                isSelected && !correct ->
-                    Color(0xFFE94055)
-
-                option == question.answer && answered ->
-                    Color(0xFF20B957)
-
+                isSelected && correct -> Color(0xFF20B957)
+                isSelected && !correct -> Color(0xFFE94055)
+                option == question.answer && answered -> Color(0xFF20B957)
+                answered -> Color(0xFFE9EDF2)
                 else -> Color.White
             }
 
@@ -535,11 +528,7 @@ private fun PuzzleQuizScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonColor,
                     contentColor =
-                        if (
-                            answered &&
-                            (isSelected ||
-                                    option == question.answer)
-                        ) {
+                        if (answered && (isSelected || option == question.answer)) {
                             Color.White
                         } else {
                             Color(0xFF704300)
@@ -547,11 +536,28 @@ private fun PuzzleQuizScreen(
                 )
             ) {
 
-                Text(
-                    option,
-                    fontSize = 19.sp,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        when {
+                            answered && isSelected && correct -> "✓"
+                            answered && isSelected && !correct -> "✕"
+                            answered && option == question.answer -> "✓"
+                            else -> ""
+                        },
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.width(30.dp)
+                    )
+                    Text(
+                        option,
+                        fontSize = 19.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         }
 
@@ -559,28 +565,40 @@ private fun PuzzleQuizScreen(
 
         AnimatedVisibility(visible = answered) {
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(
-                    if (correct) {
-                        "Correct! +10 Coins +10 XP"
-                    } else {
-                        "Correct answer: ${question.answer}"
-                    },
-                    fontSize = 17.sp,
-                    color =
-                        if (correct) {
-                            Color(0xFF159447)
-                        } else {
-                            Color(0xFFD52E45)
-                        }
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (correct) Color(0xFFE4F8EA) else Color(0xFFFFE5E8)
                 )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        if (correct) "🎉 CORRECT!" else "❌ WRONG ANSWER",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (correct) Color(0xFF138A40) else Color(0xFFD52E45)
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    Text(
+                        if (correct) "+10 Coins  •  +10 XP" else "Correct answer: ${question.answer}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (correct) Color(0xFF138A40) else Color(0xFFD52E45)
+                    )
+                }
+            }
 
-                Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-                Button(
+            Button(
                     onClick = {
 
                         if (index == section.questions.lastIndex) {
