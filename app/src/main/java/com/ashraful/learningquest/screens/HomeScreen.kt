@@ -5,6 +5,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -167,6 +174,26 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
             showReward = false
         }
     }
+
+    val giftAnimation = rememberInfiniteTransition(label = "gift_reward")
+    val giftPulse by giftAnimation.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.12f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(420, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "gift_pulse"
+    )
+    val giftRotation by giftAnimation.animateFloat(
+        initialValue = -4f,
+        targetValue = 4f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(520, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "gift_rotation"
+    )
     var showMore by rememberSaveable { mutableStateOf(false) }
 
     val scores = listOf(
@@ -428,7 +455,15 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                     modifier = Modifier.padding(horizontal = 22.dp, vertical = 11.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(rewardEffect, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                    val effectModifier = when (equippedGift?.id) {
+                        "rocket" -> Modifier.offset(y = (-10).dp).graphicsLayer { scaleX = giftPulse; scaleY = giftPulse }
+                        "balloon" -> Modifier.offset(y = (-6).dp).graphicsLayer { scaleX = giftPulse; scaleY = giftPulse }
+                        "rainbow", "star", "diamond", "lightning" -> Modifier.graphicsLayer { scaleX = giftPulse; scaleY = giftPulse; rotationZ = giftRotation }
+                        "crown", "trophy" -> Modifier.graphicsLayer { scaleX = giftPulse; scaleY = giftPulse; rotationZ = giftRotation / 2f }
+                        "ufo", "skateboard" -> Modifier.graphicsLayer { rotationZ = giftRotation }
+                        else -> Modifier.graphicsLayer { scaleX = giftPulse; scaleY = giftPulse }
+                    }
+                    Text(rewardEffect, modifier = effectModifier, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
                     Text("+$rewardDelta 🪙 Coins earned!", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
                 }
             }
