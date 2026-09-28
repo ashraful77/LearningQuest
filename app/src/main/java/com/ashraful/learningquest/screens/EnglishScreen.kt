@@ -532,73 +532,38 @@ private fun EnglishQuizScreen(
             Modifier.height(15.dp)
         )
 
-        AnimatedVisibility(
-            visible = answered
-        ) {
-
-            Column(
-                horizontalAlignment =
-                    Alignment.CenterHorizontally
+        AnimatedVisibility(visible = answered) {
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp).scale(if (correct) celebrationScale else 1f),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = if (correct) Color(0xFFEAF9EF) else Color(0xFFFFE9ED))
             ) {
-
-                Text(
-                    text =
-                        if (correct) {
-                            "Correct! +10 Coins +10 XP"
-                        } else {
-                            "Correct answer: ${question.answer}"
-                        },
-                    fontSize = 17.sp,
-                    color =
-                        if (correct) {
-                            Color(0xFF159447)
-                        } else {
-                            Color(0xFFD52E45)
-                        }
-                )
-
-                Spacer(
-                    Modifier.height(12.dp)
-                )
-
-                Button(
-                    onClick = {
-
-                        if (
-                            index ==
-                            section.questions.lastIndex
-                        ) {
-
-                            finished = true
-
-                        } else {
-
-                            index++
-                            answered = false
-                            selected = null
-                            correct = false
-                        }
-                    },
-                    shape =
-                        RoundedCornerShape(18.dp)
-                ) {
-
+                Column(Modifier.fillMaxWidth().padding(15.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text =
-                            if (
-                                index ==
-                                section.questions.lastIndex
-                            ) {
-                                "See Result"
-                            } else {
-                                "Next Question >"
-                            },
-                        fontSize = 17.sp
+                        text = if (correct) "🎉 CORRECT!" else "❌ WRONG ANSWER",
+                        fontSize = 24.sp, fontWeight = FontWeight.ExtraBold,
+                        color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
                     )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = if (correct) "+10 Coins  •  +10 XP" else "Correct answer: " + question.answer,
+                        fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                        color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Button(
+                        onClick = {
+                            if (index == section.questions.lastIndex) finished = true
+                            else { index++; answered = false; selected = null; correct = false }
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (correct) Color(0xFF19B957) else Color(0xFF315FBA))
+                    ) {
+                        Text(if (index == section.questions.lastIndex) "See Result  ›" else "Next Question  ›", fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
-
         Spacer(
             Modifier.weight(1f)
         )
