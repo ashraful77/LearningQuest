@@ -22,7 +22,8 @@ data class AbidProgress(
     val shapes: Int = 0,
     val world: Int = 0,
     val games: Int = 0,
-    val todayActivities: Int = 0
+    val todayActivities: Int = 0,
+    val dailyBonusClaimed: Boolean = false
 ) {
     val level: Int get() = (xp / 50) + 1
     val overallProgress: Int
@@ -43,6 +44,7 @@ class AbidProgressStore(private val context: Context) {
         val GAMES = intPreferencesKey("games")
         val TODAY = intPreferencesKey("today_activities")
         val LAST_DAY = intPreferencesKey("last_day")
+        val DAILY_BONUS_DAY = intPreferencesKey("daily_bonus_day")
     }
 
     val progress: Flow<AbidProgress> = context.abidProgressStore.data.map { p ->
@@ -59,7 +61,8 @@ class AbidProgressStore(private val context: Context) {
             shapes = p[Keys.SHAPES] ?: 0,
             world = p[Keys.WORLD] ?: 0,
             games = p[Keys.GAMES] ?: 0,
-            todayActivities = if (lastDay == today) p[Keys.TODAY] ?: 0 else 0
+            todayActivities = if (lastDay == today) p[Keys.TODAY] ?: 0 else 0,
+            dailyBonusClaimed = (p[Keys.DAILY_BONUS_DAY] ?: 0) == today
         )
     }
 
@@ -77,7 +80,13 @@ class AbidProgressStore(private val context: Context) {
             p[Keys.XP] = (p[Keys.XP] ?: 0) + xp
             p[Keys.STREAK] = newStreak
             p[Keys.TOTAL] = (p[Keys.TOTAL] ?: 0) + 1
-            p[Keys.TODAY] = (todayCount + 1).coerceAtMost(5)
+            val newTodayCount = (todayCount + 1).coerceAtMost(5)
+            p[Keys.TODAY] = newTodayCount
+            if (newTodayCount == 3 && (p[Keys.DAILY_BONUS_DAY] ?: 0) != today) {
+                p[Keys.STARS] = (p[Keys.STARS] ?: 0) + 3
+                p[Keys.XP] = (p[Keys.XP] ?: 0) + 10
+                p[Keys.DAILY_BONUS_DAY] = today
+            }
             p[Keys.LAST_DAY] = today
 
             val key = when (category.lowercase()) {
