@@ -35,6 +35,7 @@ class GameDataStore(private val context: Context) {
         val OWNED_GIFTS = stringPreferencesKey("owned_gifts")
         val EQUIPPED_GIFT = stringPreferencesKey("equipped_gift")
         val SEEN_GIFTS = stringPreferencesKey("seen_gifts")
+        val REAL_TEST_HISTORY = stringPreferencesKey("real_test_history")
     }
 
     val profile: Flow<String?> =
@@ -60,6 +61,23 @@ class GameDataStore(private val context: Context) {
                 ?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
             owned - seen
         }
+
+    val realTestHistory: Flow<List<String>> =
+        context.gameDataStore.data.map { preferences ->
+            preferences[Keys.REAL_TEST_HISTORY]
+                ?.split("||")?.filter { it.isNotBlank() } ?: emptyList()
+        }
+
+    suspend fun recordRealTest(subject: String, score: Int, total: Int, seconds: Long) {
+        context.gameDataStore.edit { preferences ->
+            val old = preferences[Keys.REAL_TEST_HISTORY]
+                ?.split("||")?.filter { it.isNotBlank() }?.toMutableList()
+                ?: mutableListOf()
+            val entry = subject + "|" + score + "|" + total + "|" + seconds + "|" + System.currentTimeMillis()
+            old.add(0, entry)
+            preferences[Keys.REAL_TEST_HISTORY] = old.take(10).joinToString("||")
+        }
+    }
 
     suspend fun saveProfile(value: String) {
         context.gameDataStore.edit { it[Keys.PROFILE] = value }
