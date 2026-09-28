@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -73,6 +74,29 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
     var bengali by rememberSaveable { mutableStateOf(false) }
     var score by rememberSaveable { mutableIntStateOf(0) }
     var finished by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("advanced_math_progress", 0) }
+
+    fun isAttempted(setIndex: Int): Boolean =
+        prefs.getBoolean("set_${setIndex + 1}_attempted", false)
+
+    fun latestScore(setIndex: Int): Int =
+        prefs.getInt("set_${setIndex + 1}_score", 0)
+
+    fun isUnlocked(setIndex: Int): Boolean =
+        setIndex == 0 || isAttempted(setIndex - 1)
+
+    fun startSet(setIndex: Int) {
+        selectedSet=setIndex; index=0; score=0; answer=""; checked=false; correct=false; bengali=false; finished=false
+    }
+
+    fun completeSet() {
+        prefs.edit()
+            .putBoolean("set_${selectedSet + 1}_attempted", true)
+            .putInt("set_${selectedSet + 1}_score", score)
+            .apply()
+        finished=true
+    }
 
     if (selectedSet == -1) {
         Column(Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()), horizontalAlignment=Alignment.CenterHorizontally, verticalArrangement=Arrangement.Center) {
@@ -80,10 +104,26 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
             Text("Build thinking agility!", fontSize=18.sp, fontWeight=FontWeight.Bold)
             Spacer(Modifier.height(22.dp))
             listOf("SET 1" to "Warm-up Thinking", "SET 2" to "Multi-Step Thinking", "SET 3" to "Challenge Thinking").forEachIndexed { i, pair ->
-                Button(onClick={selectedSet=i; index=0; score=0; answer=""; checked=false; correct=false; bengali=false; finished=false}, modifier=Modifier.fillMaxWidth().height(68.dp).padding(vertical=5.dp)) {
+                val attempted = isAttempted(i)
+                val unlocked = isUnlocked(i)
+                val title = when {
+                    !unlocked -> "🔒 " + pair.first
+                    attempted -> "✅ " + pair.first
+                    else -> "▶ " + pair.first
+                }
+                Button(
+                    onClick={if(unlocked) startSet(i)},
+                    enabled=unlocked,
+                    modifier=Modifier.fillMaxWidth().height(78.dp).padding(vertical=5.dp)
+                ) {
                     Column(horizontalAlignment=Alignment.CenterHorizontally) {
-                        Text(pair.first, fontSize=20.sp, fontWeight=FontWeight.ExtraBold)
-                        Text(pair.second + " • 10 Questions", fontSize=12.sp)
+                        Text(title, fontSize=20.sp, fontWeight=FontWeight.ExtraBold)
+                        Text(
+                            if(!unlocked) "Complete previous set first"
+                            else pair.second + " • 10 Questions" + if(attempted) " • Score " + latestScore(i) + "/10" else "",
+                            fontSize=12.sp
+                        )
+                        if(attempted) Text("↻ Retest available", fontSize=12.sp, fontWeight=FontWeight.Bold)
                     }
                 }
             }
@@ -103,7 +143,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
             Text(score.toString() + " / 10 correct", fontSize=22.sp, fontWeight=FontWeight.Bold)
             Text(if(score >= 8) "Excellent thinking! 🧠" else "Good effort! Try again and beat your score!", fontSize=17.sp, fontWeight=FontWeight.Bold, textAlign=TextAlign.Center)
             Spacer(Modifier.height(18.dp))
-            Button(onClick={index=0; score=0; answer=""; checked=false; correct=false; finished=false}, modifier=Modifier.fillMaxWidth()) { Text("Try Set Again") }
+            Button(onClick={startSet(selectedSet)}, modifier=Modifier.fillMaxWidth()) { Text("↻ Retest Set", fontWeight=FontWeight.Bold) }
             OutlinedButton(onClick={selectedSet=-1; finished=false}, modifier=Modifier.fillMaxWidth()) { Text("Choose Another Set") }
             OutlinedButton(onClick=onBack, modifier=Modifier.fillMaxWidth()) { Text("Back") }
         }
@@ -135,7 +175,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(12.dp))
-            Button(onClick={if(index==questions.lastIndex) finished=true else {index++;answer="";checked=false;correct=false;bengali=false}}, modifier=Modifier.fillMaxWidth().height(52.dp)) { Text(if(index==questions.lastIndex) "🏆 Finish Set" else "Next Question →",fontWeight=FontWeight.Bold,fontSize=17.sp) }
+            Button(onClick={if(index==questions.lastIndex) completeSet() else {index++;answer="";checked=false;correct=false;bengali=false}}, modifier=Modifier.fillMaxWidth().height(52.dp)) { Text(if(index==questions.lastIndex) "🏆 Finish Set" else "Next Question →",fontWeight=FontWeight.Bold,fontSize=17.sp) }
         } else {
             Card(Modifier.fillMaxWidth(), colors=CardDefaults.cardColors(Color(0xFFFFE8E8))) {
                 Column(Modifier.fillMaxWidth().padding(18.dp),horizontalAlignment=Alignment.CenterHorizontally) {
