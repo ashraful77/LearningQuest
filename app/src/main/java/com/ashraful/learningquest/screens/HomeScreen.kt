@@ -33,9 +33,6 @@ fun HomeScreen() {
     var profile by rememberSaveable { mutableStateOf<String?>(null) }
     var screen by rememberSaveable { mutableStateOf("home") }
     var backStack by rememberSaveable { mutableStateOf("") }
-    var lastKnownCoins by rememberSaveable { mutableIntStateOf(-1) }
-    var rewardDelta by rememberSaveable { mutableIntStateOf(0) }
-    var showReward by rememberSaveable { mutableStateOf(false) }
 
     fun navigate(route: String) {
         if (route == "switch_to_abid") {
@@ -76,13 +73,7 @@ fun HomeScreen() {
 
     if (screen == "home") {
         if (profile == "arifa") {
-            HomeContent(onNavigate = { route -> navigate(route) }, onCoinsChanged = { coins ->
-                if (lastKnownCoins >= 0 && coins > lastKnownCoins) {
-                    rewardDelta = coins - lastKnownCoins
-                    showReward = true
-                }
-                lastKnownCoins = coins
-            })
+            HomeContent(onNavigate = { route -> navigate(route) })
         } else {
             AbidHomeScreen { route -> navigate(route) }
         }
@@ -153,7 +144,7 @@ fun HomeScreen() {
 }
 
 @Composable
-private fun HomeContent(onNavigate: (String) -> Unit, onCoinsChanged: (Int) -> Unit) {
+private fun HomeContent(onNavigate: (String) -> Unit) {
     var showReward by rememberSaveable { mutableStateOf(false) }
     var rewardDelta by rememberSaveable { mutableIntStateOf(0) }
     val context = LocalContext.current
@@ -162,7 +153,16 @@ private fun HomeContent(onNavigate: (String) -> Unit, onCoinsChanged: (Int) -> U
     val equippedGiftId by store.equippedGiftId.collectAsState(initial = null)
     val equippedGift = giftCatalog.firstOrNull { it.id == equippedGiftId }
     val currentCoins = data?.coins ?: 0
-    LaunchedEffect(currentCoins) { onCoinsChanged(currentCoins) }
+    var lastKnownCoins by rememberSaveable { mutableIntStateOf(-1) }
+    var rewardDelta by rememberSaveable { mutableIntStateOf(0) }
+    var showReward by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(currentCoins) {
+        if (lastKnownCoins >= 0 && currentCoins > lastKnownCoins) {
+            rewardDelta = currentCoins - lastKnownCoins
+            showReward = true
+        }
+        lastKnownCoins = currentCoins
+    }
     LaunchedEffect(showReward) {
         if (showReward) {
             delay(1400)
