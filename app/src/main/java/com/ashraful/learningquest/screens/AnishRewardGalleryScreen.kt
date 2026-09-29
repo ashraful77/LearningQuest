@@ -36,6 +36,8 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val petScale = when (petLevel) { 1 -> 0.92f; 2 -> 0.98f; 3 -> 1.04f; 4 -> 1.10f; else -> 1.16f }
     val petRotation = when (petLevel) { 1 -> 2f; 2 -> 4f; 3 -> 7f; 4 -> 10f; else -> 14f }
     val petAura = when (petLevel) { 1 -> "🌱"; 2 -> "✨"; 3 -> "💫"; 4 -> "🔥"; else -> "👑" }
+    val ability = when (selectedPet) { "🐼" -> if (petLevel >= 3) "ZEN BOOST 🧘" else "Calm Friend"; "🐱" -> if (petLevel >= 3) "LUCKY PAW 🍀" else "Quick Friend"; "🐶" -> if (petLevel >= 3) "CHEER BOOST 🎉" else "Happy Friend"; else -> if (petLevel >= 3) "FOX FOCUS 🦊" else "Clever Friend" }
+    val abilityMessage = when (selectedPet) { "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"; "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"; "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"; else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!" }
     var selectedPet by remember { mutableStateOf("🐼") }
     var petTapCount by remember { mutableIntStateOf(0) }
     var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
@@ -220,6 +222,21 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF23754A)
                     )
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = Color(0xFFF3F8FF)
+                    ) {
+                        Column(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("⚡ $ability", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                            Text(
+                                if (petLevel >= 3) abilityMessage else "Level 3-এ এই ability unlock হবে!",
+                                fontSize = 10.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color(0xFF60758A)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(6.dp))
                     Text(petReaction, fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF315FBA))
                     Text("পেটকে ট্যাপ করো • $petTapCount বার খেলেছো 🐾", fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
                     Text("প্রশ্ন সমাধান করলে পেট XP পাবে এবং নতুন লেভেলে উঠবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
