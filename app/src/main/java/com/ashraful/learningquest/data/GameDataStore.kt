@@ -233,6 +233,8 @@ class GameDataStore(private val context: Context) {
                 ?: mutableSetOf()
 
             firstEver = answered.add(questionId)
+
+            // Track the question for set progression, but NEVER award diamonds for a wrong answer.
             if (firstEver) {
                 val total = (preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0) + 1
                 val correctTotal = (preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0) +
@@ -241,11 +243,14 @@ class GameDataStore(private val context: Context) {
                     ?.split(",")?.filter { it.isNotBlank() }?.mapNotNull { it.toIntOrNull() }?.toMutableSet()
                     ?: mutableSetOf()
 
-                val milestones = listOf(5 to 10, 20 to 25, 50 to 50, 100 to 100)
-                for ((threshold, bonus) in milestones) {
-                    if (total >= threshold && threshold !in achieved) {
-                        achieved.add(threshold)
-                        milestoneBonus += bonus
+                // Milestones are learning rewards, so they require a first-ever correct answer.
+                if (correct) {
+                    val milestones = listOf(5 to 10, 20 to 25, 50 to 50, 100 to 100)
+                    for ((threshold, bonus) in milestones) {
+                        if (correctTotal >= threshold && threshold !in achieved) {
+                            achieved.add(threshold)
+                            milestoneBonus += bonus
+                        }
                     }
                 }
 
@@ -264,7 +269,8 @@ class GameDataStore(private val context: Context) {
                 mutableSetOf()
             }
 
-            if (questionId !in rewardedToday) {
+            // +5 diamonds only for a CORRECT answer, once per question per calendar day.
+            if (correct && questionId !in rewardedToday) {
                 rewardedToday.add(questionId)
                 preferences[Keys.ANISH_DAILY_REWARD_DATE] = today
                 preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = rewardedToday.joinToString(",")
@@ -273,7 +279,7 @@ class GameDataStore(private val context: Context) {
                 dailyRewarded = true
             } else if (savedDate != today) {
                 preferences[Keys.ANISH_DAILY_REWARD_DATE] = today
-                preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = ""
+                preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = rewardedToday.joinToString(",")
             }
 
             if (milestoneBonus > 0) {
