@@ -29,6 +29,7 @@ fun AnishSetSelectionScreen(
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val answeredIds by store.anishAnsweredQuestionIds().collectAsState(initial = emptySet())
+    val gameData by store.gameData.collectAsState(initial = null)
     val questions = remember(subject) {
         anishQuestionsFor(subject).take(MAX_SETS * SET_SIZE)
     }
@@ -48,7 +49,9 @@ fun AnishSetSelectionScreen(
             val setNumber = index + 1
             val answeredCount = setQuestions.count { it.id in answeredIds }
             val completed = answeredCount == setQuestions.size
+            val allSet1sCompleted = (gameData?.anishTotalQuestions ?: 0) >= 120
             val unlocked = setNumber == 1 ||
+                (setNumber == 2 && allSet1sCompleted) ||
                 sets.getOrNull(index - 1)?.all { it.id in answeredIds } == true
 
             Card(
