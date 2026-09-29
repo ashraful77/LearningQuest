@@ -82,6 +82,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
         private lateinit var sphere: Mesh
         private lateinit var cone: Mesh
         private lateinit var cube: Mesh
+        private lateinit var cylinder: Mesh
 
         @Volatile var pet: String = "🐼"
         var userYaw = 0f
@@ -103,6 +104,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             sphere = makeSphere(1f, 24, 16)
             cone = makeCone(1f, 1.7f, 18)
             cube = makeCube()
+            cylinder = makeCylinder(1f, 1f, 20)
             lastTime = System.nanoTime()
         }
 
@@ -141,6 +143,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             Matrix.translateM(model, 0, 0f, jump, 0f)
             Matrix.rotateM(model, 0, userPitch, 1f, 0f, 0f)
             Matrix.rotateM(model, 0, userYaw, 0f, 1f, 0f)
+            drawEnvironment(vp, now)
             drawPet(model, vp, now)
         }
 
@@ -148,6 +151,77 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             lastInteractionAt = System.currentTimeMillis()
             reactionUntil = System.currentTimeMillis() + 420
             onTap?.invoke()
+        }
+
+        private fun drawEnvironment(vp: FloatArray, now: Long) {
+            val identity = FloatArray(16)
+            Matrix.setIdentityM(identity, 0)
+
+            // Soft 3D play mat under the buddy.
+            cubePart(vp, 0f, -1.22f, -0.05f, 3.25f, 0.10f, 2.35f, floatArrayOf(0.72f, 0.86f, 0.68f), identity)
+
+            // Small stones around the play area.
+            val stone = floatArrayOf(0.58f, 0.66f, 0.62f)
+            cubePart(vp, -2.15f, -1.02f, 0.30f, 0.30f, 0.20f, 0.42f, stone, identity, rz = -10f)
+            cubePart(vp, 2.05f, -1.04f, -0.10f, 0.36f, 0.18f, 0.34f, stone, identity, rz = 14f)
+            cubePart(vp, -1.85f, -1.07f, -0.70f, 0.24f, 0.15f, 0.28f, stone, identity)
+
+            // Bamboo on both sides gives the Panda a small living habitat.
+            val bamboo = floatArrayOf(0.18f, 0.55f, 0.28f)
+            val bambooLight = floatArrayOf(0.30f, 0.70f, 0.35f)
+            cylinderPart(vp, -2.35f, 0.20f, -0.40f, 0.16f, 2.65f, bamboo, identity)
+            cylinderPart(vp, -2.05f, 0.55f, -0.20f, 0.13f, 2.10f, bambooLight, identity, rz = -7f)
+            cylinderPart(vp, 2.35f, 0.18f, -0.35f, 0.16f, 2.70f, bamboo, identity)
+            cylinderPart(vp, 2.05f, 0.50f, -0.10f, 0.13f, 2.15f, bambooLight, identity, rz = 7f)
+
+            // Rounded leaves, gently moving with the idle animation.
+            val leaf = floatArrayOf(0.20f, 0.62f, 0.28f)
+            val leaf2 = floatArrayOf(0.28f, 0.72f, 0.32f)
+            val sway = sin(now / 900_000_000.0).toFloat() * 4f
+            cubePart(vp, -2.55f, 1.48f, -0.25f, 0.58f, 0.16f, 0.24f, leaf, identity, rz = -25f + sway)
+            cubePart(vp, -1.90f, 1.25f, -0.18f, 0.52f, 0.14f, 0.22f, leaf2, identity, rz = 22f + sway)
+            cubePart(vp, 2.55f, 1.52f, -0.25f, 0.58f, 0.16f, 0.24f, leaf, identity, rz = 25f - sway)
+            cubePart(vp, 1.92f, 1.28f, -0.18f, 0.52f, 0.14f, 0.22f, leaf2, identity, rz = -22f - sway)
+        }
+
+        private fun cubePart(
+            vp: FloatArray,
+            x: Float, y: Float, z: Float,
+            sx: Float, sy: Float, sz: Float,
+            color: FloatArray,
+            base: FloatArray,
+            rx: Float = 0f, ry: Float = 0f, rz: Float = 0f
+        ) {
+            val m = FloatArray(16)
+            Matrix.setIdentityM(m, 0)
+            Matrix.multiplyMM(m, 0, base, 0, m, 0)
+            Matrix.translateM(m, 0, x, y, z)
+            Matrix.rotateM(m, 0, rx, 1f, 0f, 0f)
+            Matrix.rotateM(m, 0, ry, 0f, 1f, 0f)
+            Matrix.rotateM(m, 0, rz, 0f, 0f, 1f)
+            Matrix.scaleM(m, 0, sx, sy, sz)
+            val mvp = FloatArray(16)
+            Matrix.multiplyMM(mvp, 0, vp, 0, m, 0)
+            shader.draw(cube, mvp, m, color)
+        }
+
+        private fun cylinderPart(
+            vp: FloatArray,
+            x: Float, y: Float, z: Float,
+            radius: Float, height: Float,
+            color: FloatArray,
+            base: FloatArray,
+            rz: Float = 0f
+        ) {
+            val m = FloatArray(16)
+            Matrix.setIdentityM(m, 0)
+            Matrix.multiplyMM(m, 0, base, 0, m, 0)
+            Matrix.translateM(m, 0, x, y, z)
+            Matrix.rotateM(m, 0, rz, 0f, 0f, 1f)
+            Matrix.scaleM(m, 0, radius, height, radius)
+            val mvp = FloatArray(16)
+            Matrix.multiplyMM(mvp, 0, vp, 0, m, 0)
+            shader.draw(cylinder, mvp, m, color)
         }
 
         private fun drawPet(base: FloatArray, vp: FloatArray, now: Long) {
@@ -483,6 +557,34 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             add(x0, -half, z0, n0[0], n0[1], n0[2])
             add(x1, -half, z1, n1[0], n1[1], n1[2])
             add(0f, half, 0f, 0f, 1f, 0f)
+        }
+        return Mesh(toBuffer(data), data.size / 6)
+    }
+
+    private fun makeCylinder(radius: Float, height: Float, slices: Int): Mesh {
+        val data = ArrayList<Float>()
+        fun add(x: Float, y: Float, z: Float, nx: Float, ny: Float, nz: Float) {
+            data.add(x); data.add(y); data.add(z)
+            data.add(nx); data.add(ny); data.add(nz)
+        }
+        val half = height / 2f
+        for (i in 0 until slices) {
+            val a0 = i * Math.PI * 2 / slices
+            val a1 = (i + 1) * Math.PI * 2 / slices
+            val x0 = cos(a0).toFloat() * radius
+            val z0 = sin(a0).toFloat() * radius
+            val x1 = cos(a1).toFloat() * radius
+            val z1 = sin(a1).toFloat() * radius
+            val n0x = cos(a0).toFloat()
+            val n0z = sin(a0).toFloat()
+            val n1x = cos(a1).toFloat()
+            val n1z = sin(a1).toFloat()
+            add(x0, -half, z0, n0x, 0f, n0z)
+            add(x1, -half, z1, n1x, 0f, n1z)
+            add(x1, half, z1, n1x, 0f, n1z)
+            add(x0, -half, z0, n0x, 0f, n0z)
+            add(x1, half, z1, n1x, 0f, n1z)
+            add(x0, half, z0, n0x, 0f, n0z)
         }
         return Mesh(toBuffer(data), data.size / 6)
     }
