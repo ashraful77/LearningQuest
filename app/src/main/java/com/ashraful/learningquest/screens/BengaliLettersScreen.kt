@@ -129,17 +129,11 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
     val letters = listOf(
-        "অ" to "অ — অজগর", "আ" to "আ — আম", "ই" to "ই — ইলিশ", "ঈ" to "ঈ — ঈগল",
-        "উ" to "উ — উট", "ঊ" to "ঊ — ঊষা", "ঋ" to "ঋ — ঋষি", "এ" to "এ — এক",
-        "ঐ" to "ঐ — ঐক্য", "ও" to "ও — ওল", "ঔ" to "ঔ — ঔষধ",
-        "ক" to "ক — কলা", "খ" to "খ — খরগোশ", "গ" to "গ — গরু", "ঘ" to "ঘ — ঘড়ি", "ঙ" to "ঙ",
-        "চ" to "চ — চাঁদ", "ছ" to "ছ — ছাতা", "জ" to "জ — জল", "ঝ" to "ঝ — ঝুড়ি", "ঞ" to "ঞ",
-        "ট" to "ট — টিয়া", "ঠ" to "ঠ — ঠেলা", "ড" to "ড — ডাব", "ঢ" to "ঢ — ঢাক", "ণ" to "ণ",
-        "ত" to "ত — তাল", "থ" to "থ — থালা", "দ" to "দ — দই", "ধ" to "ধ — ধনুক", "ন" to "ন — নদী",
-        "প" to "প — পাখি", "ফ" to "ফ — ফুল", "ব" to "ব — বই", "ভ" to "ভ — ভাত", "ম" to "ম — মাছ",
-        "য" to "য — যাত্রা", "র" to "র — রথ", "ল" to "ল — লতা", "শ" to "শ — শাপলা",
-        "ষ" to "ষ — ষাঁড়", "স" to "স — সাপ", "হ" to "হ — হাতি",
-        "ড়" to "ড় — বড়", "ঢ়" to "ঢ় — আষাঢ়", "য়" to "য় — বয়স"
+        "অ","আ","ই","ঈ","উ","ঊ","ঋ","এ","ঐ","ও","ঔ",
+        "ক","খ","গ","ঘ","ঙ","চ","ছ","জ","ঝ","ঞ",
+        "ট","ঠ","ড","ঢ","ণ","ত","থ","দ","ধ","ন",
+        "প","ফ","ব","ভ","ম","য","র","ল","শ","ষ","স","হ",
+        "ড়","ঢ়","য়"
     )
 
     val tts = remember(context) {
@@ -150,94 +144,68 @@ fun AbidBengaliLettersScreen(onBack: () -> Unit) {
                 ttsReady = result == TextToSpeech.LANG_AVAILABLE ||
                     result == TextToSpeech.LANG_COUNTRY_AVAILABLE ||
                     result == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE
-            } else {
-                ttsReady = false
             }
         }
         engine
     }
 
-    DisposableEffect(Unit) {
-        onDispose { tts.shutdown() }
-    }
-
-    val current = letters[index]
-
-    fun speakLetter(targetIndex: Int) {
-        if (ttsReady) {
-            tts.speak(letters[targetIndex].second, TextToSpeech.QUEUE_FLUSH, null, "bengali_letter_" + targetIndex)
-        }
-    }
+    DisposableEffect(Unit) { onDispose { tts.shutdown() } }
 
     fun speakCurrent() {
         if (ttsReady) {
-            speakLetter(index)
+            tts.speak(letters[index], TextToSpeech.QUEUE_FLUSH, null, "bengali_letter_" + index)
         }
     }
 
     Column(
-        Modifier
-            .fillMaxSize()
+        Modifier.fillMaxSize()
             .background(Brush.verticalGradient(listOf(Color(0xFFFFF4E5), Color.White, Color(0xFFEAF7FF))))
-            .padding(20.dp),
+            .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onBack) {
-                Text("‹ Home", fontSize = 19.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            IconButton(onClick = onBack) {
+                Text("‹", fontSize = 42.sp, color = Color(0xFF7043A8), fontWeight = FontWeight.Bold)
             }
-            Text("🔤 বাংলা বর্ণমালা", fontSize = 27.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFFB05A00))
+            Text((index + 1).toString() + "/" + letters.size, fontSize = 18.sp, color = Color(0xFF60758A))
+            Spacer(Modifier.size(48.dp))
         }
 
-        Spacer(Modifier.height(22.dp))
-        Text((index + 1).toString() + " / " + letters.size, fontSize = 18.sp, color = Color(0xFF60758A))
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.weight(1f))
 
         Card(
-            Modifier.fillMaxWidth().height(340.dp),
-            shape = RoundedCornerShape(32.dp),
+            onClick = { speakCurrent() },
+            modifier = Modifier.size(310.dp),
+            shape = RoundedCornerShape(36.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF1D6)),
-            elevation = CardDefaults.cardElevation(4.dp)
+            elevation = CardDefaults.cardElevation(5.dp)
         ) {
-            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                Text("বাংলা", fontSize = 28.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFFB05A00))
-                Spacer(Modifier.height(4.dp))
-                Text(current.first, fontSize = 130.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
-                Text(current.second.substringAfter(" — "), fontSize = 23.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF60758A))
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(letters[index], fontSize = 150.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1769AA))
             }
         }
 
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = { speakCurrent() },
-            enabled = ttsReady,
-            modifier = Modifier.fillMaxWidth().height(58.dp),
-            shape = RoundedCornerShape(18.dp)
-        ) {
-            Text("🔊 উচ্চারণ শুনি", fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Spacer(Modifier.height(28.dp))
+
+        IconButton(onClick = { speakCurrent() }, enabled = ttsReady, modifier = Modifier.size(70.dp)) {
+            Text("🔊", fontSize = 42.sp)
         }
 
-        Spacer(Modifier.height(10.dp))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            OutlinedButton(
-                onClick = {
-                    val newIndex = (index - 1 + letters.size) % letters.size
-                    index = newIndex
-                    speakLetter(newIndex)
-                },
-                modifier = Modifier.weight(1f).height(58.dp),
-                shape = RoundedCornerShape(18.dp)
-            ) { Text("← আগের", fontSize = 18.sp) }
+        Spacer(Modifier.weight(1f))
 
-            Button(
-                onClick = {
-                    val newIndex = (index + 1) % letters.size
-                    index = newIndex
-                    speakLetter(newIndex)
-                },
-                modifier = Modifier.weight(1f).height(58.dp),
-                shape = RoundedCornerShape(18.dp)
-            ) { Text(if (index == letters.lastIndex) "🔄 আবার" else "পরের →", fontSize = 18.sp) }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            IconButton(onClick = {
+                index = (index - 1 + letters.size) % letters.size
+                speakCurrent()
+            }, modifier = Modifier.size(64.dp)) {
+                Text("←", fontSize = 38.sp, color = Color(0xFF7043A8))
+            }
+            IconButton(onClick = {
+                index = (index + 1) % letters.size
+                speakCurrent()
+            }, modifier = Modifier.size(64.dp)) {
+                Text("→", fontSize = 38.sp, color = Color(0xFF7043A8))
+            }
         }
     }
 }
