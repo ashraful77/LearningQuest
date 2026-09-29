@@ -273,6 +273,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         Spacer(Modifier.height(12.dp))
 
         Card(
+            onClick = { onNavigate("anish_model_test") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(22.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F0FF)),
@@ -287,10 +288,12 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "Subject-wise and mixed tests will be added here.",
+                    "20 mixed questions • 15 minutes • real test mode",
                     fontSize = 13.sp,
                     color = Color(0xFF60758A)
                 )
+                Spacer(Modifier.height(10.dp))
+                Text("▶ START MODEL TEST", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
             }
         }
 
