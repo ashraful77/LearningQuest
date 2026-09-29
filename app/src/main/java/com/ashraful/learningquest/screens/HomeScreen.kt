@@ -135,6 +135,12 @@ fun HomeScreen() {
             "abid_match_letters" -> AbidMatchLettersScreen { goBack() }
             "abid_number_match" -> AbidNumberMatchScreen { goBack() }
             "abid_challenge" -> AbidMiniChallengeScreen { goBack() }
+            "anish_bengali" -> AnishSubjectQuizScreen("বাংলা") { goBack() }
+            "anish_math" -> AnishSubjectQuizScreen("গণিত") { goBack() }
+            "anish_science" -> AnishSubjectQuizScreen("বিজ্ঞান") { goBack() }
+            "anish_history" -> AnishSubjectQuizScreen("ইতিহাস ও ভূগোল") { goBack() }
+            "anish_english" -> AnishSubjectQuizScreen("ইংরেজি") { goBack() }
+            "anish_gk" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান") { goBack() }
         }
 
         Surface(
