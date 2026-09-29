@@ -209,7 +209,8 @@ class GameDataStore(private val context: Context) {
     data class AnishAttemptResult(
         val dailyRewarded: Boolean,
         val firstEver: Boolean,
-        val milestoneBonus: Int
+        val milestoneBonus: Int,
+        val alreadyRewardedToday: Boolean
     )
 
     fun anishAnsweredQuestionIds(): Flow<Set<String>> =
@@ -225,6 +226,7 @@ class GameDataStore(private val context: Context) {
         var dailyRewarded = false
         var firstEver = false
         var milestoneBonus = 0
+        var alreadyRewardedToday = false
         val today = LocalDate.now(ZoneId.systemDefault()).toString()
 
         context.gameDataStore.edit { preferences ->
@@ -269,8 +271,10 @@ class GameDataStore(private val context: Context) {
                 mutableSetOf()
             }
 
+            alreadyRewardedToday = questionId in rewardedToday
+
             // +5 diamonds only for a CORRECT answer, once per question per calendar day.
-            if (correct && questionId !in rewardedToday) {
+            if (correct && !alreadyRewardedToday) {
                 rewardedToday.add(questionId)
                 preferences[Keys.ANISH_DAILY_REWARD_DATE] = today
                 preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = rewardedToday.joinToString(",")
@@ -287,7 +291,7 @@ class GameDataStore(private val context: Context) {
                     (preferences[Keys.ANISH_DIAMONDS] ?: 0) + milestoneBonus
             }
         }
-        return AnishAttemptResult(dailyRewarded, firstEver, milestoneBonus)
+        return AnishAttemptResult(dailyRewarded, firstEver, milestoneBonus, alreadyRewardedToday)
     }
 
 
