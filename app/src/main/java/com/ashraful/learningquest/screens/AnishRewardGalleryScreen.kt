@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
 import com.ashraful.learningquest.data.GameDataStore
 
 @Composable
@@ -178,36 +179,47 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(Color(0xFFE8F8EE))
             ) {
-                Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Surface(
-                        onClick = {
-                            petTapCount++
-                            petBounce = true
-                            petReaction = petReactions[selectedPet]?.get(petTapCount % 3) ?: "চলো শিখি! 🐾"
-                        },
-                        shape = RoundedCornerShape(32.dp),
-                        color = Color.White
+                        shape = RoundedCornerShape(14.dp),
+                        color = Color(0xFFEAF2FF)
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(petAura, fontSize = 30.sp)
-                            Text(
-                                selectedPet,
-                                fontSize = (86 * petScale).sp,
-                                modifier = Modifier.padding(horizontal = 26.dp, vertical = 4.dp).graphicsLayer {
-                                    scaleX = pulse * bounce
-                                    scaleY = pulse * bounce
-                                    rotationY = spin * petRotation
-                                }
-                            )
-                        }
+                        Text(
+                            "✨ LIVE 3D PET • DRAG TO ROTATE • TAP TO INTERACT",
+                            Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color(0xFF315FBA),
+                            textAlign = TextAlign.Center
+                        )
                     }
+                    Spacer(Modifier.height(8.dp))
+                    AndroidView(
+                        factory = { ctx ->
+                            AnishPet3DView(ctx).apply {
+                                setPet(selectedPet)
+                                setOnPetTap {
+                                    post {
+                                        petTapCount++
+                                        petBounce = true
+                                        petReaction = petReactions[selectedPet]?.get(petTapCount % 3) ?: "Learn with me! 🐾"
+                                    }
+                                }
+                            }
+                        },
+                        update = { view ->
+                            view.setPet(selectedPet)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(285.dp)
+                    )
                     LaunchedEffect(petBounce) {
                         if (petBounce) {
-                            kotlinx.coroutines.delay(280)
+                            kotlinx.coroutines.delay(420)
                             petBounce = false
                         }
                     }
-                    Spacer(Modifier.height(6.dp))
                     Text("Your Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
                     Text("$petAura PET LEVEL $petLevel • $petXp / 50 XP", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                     Text(
