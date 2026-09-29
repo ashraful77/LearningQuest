@@ -85,7 +85,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
         private lateinit var cylinder: Mesh
 
         @Volatile var pet: String = "🐼"
-        var userYaw = 0f
+        var userYaw = -10f
         var userPitch = 4f
         var onTap: (() -> Unit)? = null
 
@@ -311,8 +311,8 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0f, -1.08f, 0.08f, 1.25f, 0.10f, 0.62f, floatArrayOf(0.55f, 0.62f, 0.60f))
 
             // Rounded body and soft belly.
-            part(base, vp, 0f, 0.02f, 0f, 1.10f, 1.40f * breath, 0.84f, white, rz = idleSway * 0.20f)
-            part(base, vp, 0f, -0.10f, 0.79f, 0.60f, 0.82f, 0.16f, floatArrayOf(0.86f, 0.86f, 0.83f))
+            part(base, vp, 0f, 0.02f, 0f, 1.00f, 1.28f * breath, 0.78f, white, rz = idleSway * 0.20f)
+            part(base, vp, 0f, -0.10f, 0.76f, 0.56f, 0.78f, 0.16f, floatArrayOf(0.88f, 0.88f, 0.85f))
 
             // Black arms with rounded paws; the right paw waves on tap.
             part(base, vp, -0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = -15f)
@@ -330,14 +330,14 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black, rz = tailWag)
 
             // Big rounded head with a slightly shorter, friendlier profile.
-            part(base, vp, 0f, 1.56f + headBob, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f + happyTilt)
+            part(base, vp, 0f, 1.58f + headBob, 0f, 1.18f, 1.08f, 1.08f, white, rz = idleSway * 0.10f + happyTilt)
             // Rounded ears gently wiggle during interaction.
-            part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = -earWiggle)
-            part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = earWiggle)
+            part(base, vp, -0.82f, 2.23f + headBob, -0.02f, 0.43f, 0.43f, 0.36f, black, rz = -earWiggle)
+            part(base, vp, 0.82f, 2.23f + headBob, -0.02f, 0.43f, 0.43f, 0.36f, black, rz = earWiggle)
 
             // Classic panda eye patches.
-            part(base, vp, -0.43f, 1.62f, 0.90f, 0.32f, 0.43f, 0.13f, black, ry = -22f, rz = 10f)
-            part(base, vp, 0.43f, 1.62f, 0.90f, 0.32f, 0.43f, 0.13f, black, ry = 22f, rz = -10f)
+            part(base, vp, -0.47f, 1.64f + headBob, 0.96f, 0.36f, 0.46f, 0.14f, black, ry = -22f, rz = 10f)
+            part(base, vp, 0.47f, 1.64f + headBob, 0.96f, 0.36f, 0.46f, 0.14f, black, ry = 22f, rz = -10f)
 
             // Bright eyes + tiny catchlights.
             if (now / 1_000_000L - lastBlinkAt > 3200L) {
@@ -347,13 +347,13 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val blink = now / 1_000_000L < blinkUntil
             val eyeHeight = if (blink) 0.025f else if (reaction) 0.12f else 0.14f
             val eyeWidth = if (reaction) 0.115f else 0.125f
-            part(base, vp, -0.43f, 1.62f + headBob, 1.015f, eyeWidth, eyeHeight, 0.075f, black)
-            part(base, vp, 0.43f, 1.62f + headBob, 1.015f, eyeWidth, eyeHeight, 0.075f, black)
+            part(base, vp, -0.47f, 1.64f + headBob, 1.075f, eyeWidth * 1.10f, eyeHeight * 1.08f, 0.080f, black)
+            part(base, vp, 0.47f, 1.64f + headBob, 1.075f, eyeWidth * 1.10f, eyeHeight * 1.08f, 0.080f, black)
             if (!blink) {
                 // Large glossy catchlights give the Panda a more expressive toy-like gaze.
                 val glint = 0.040f + sin(now / 420_000_000.0).toFloat() * 0.006f
-                part(base, vp, -0.40f, 1.68f + headBob, 1.085f, glint, glint * 1.30f, 0.020f, white)
-                part(base, vp, 0.46f, 1.68f + headBob, 1.085f, glint, glint * 1.30f, 0.020f, white)
+                part(base, vp, -0.44f, 1.70f + headBob, 1.145f, glint * 1.12f, glint * 1.42f, 0.022f, white)
+                part(base, vp, 0.50f, 1.70f + headBob, 1.145f, glint * 1.12f, glint * 1.42f, 0.022f, white)
                 // A tiny secondary highlight adds depth without changing the model.
                 val tiny = floatArrayOf(0.78f, 0.80f, 0.82f)
                 part(base, vp, -0.37f, 1.59f + headBob, 1.086f, 0.014f, 0.018f, 0.010f, tiny)
@@ -361,19 +361,19 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             }
 
             // Soft cheek highlights, white muzzle, black nose and smiling mouth.
-            part(base, vp, -0.62f, 1.31f, 0.84f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
+            part(base, vp, -0.62f, 1.31f + headBob, 0.90f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
             part(base, vp, 0.62f, 1.31f, 0.84f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
-            part(base, vp, -0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
-            part(base, vp, 0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
-            part(base, vp, 0f, 1.35f, 1.105f, 0.20f, 0.14f, 0.12f, black)
-            part(base, vp, 0f, 1.19f, 1.075f, 0.08f, 0.16f, 0.06f, black)
-            part(base, vp, -0.11f, 1.12f, 1.07f, 0.07f, 0.13f, 0.055f, black, rz = 22f)
+            part(base, vp, -0.25f, 1.28f + headBob, 0.96f, 0.43f, 0.32f, 0.27f, white)
+            part(base, vp, 0.25f, 1.28f + headBob, 0.96f, 0.43f, 0.32f, 0.27f, white)
+            part(base, vp, 0f, 1.35f + headBob, 1.17f, 0.22f, 0.15f, 0.13f, black)
+            part(base, vp, 0f, 1.19f + headBob, 1.145f, 0.08f, 0.16f, 0.06f, black)
+            part(base, vp, -0.11f, 1.12f + headBob, 1.14f, 0.07f, 0.13f, 0.055f, black, rz = 22f)
             part(base, vp, 0.11f, 1.12f, 1.07f, 0.07f, 0.13f, 0.055f, black, rz = -22f)
 
             // Soft paw pads make the seated panda feel more tactile and toy-like.
             val pawPad = floatArrayOf(0.28f, 0.17f, 0.15f)
-            part(base, vp, -0.58f, -1.03f, 0.58f, 0.23f, 0.16f, 0.055f, pawPad)
-            part(base, vp, 0.58f, -1.03f, 0.58f, 0.23f, 0.16f, 0.055f, pawPad)
+            part(base, vp, -0.58f, -1.03f, 0.61f, 0.27f, 0.18f, 0.060f, pawPad)
+            part(base, vp, 0.58f, -1.03f, 0.61f, 0.27f, 0.18f, 0.060f, pawPad)
             part(base, vp, -0.73f, -1.00f, 0.53f, 0.075f, 0.075f, 0.035f, pawPad)
             part(base, vp, -0.48f, -1.00f, 0.56f, 0.075f, 0.075f, 0.035f, pawPad)
             part(base, vp, 0.73f, -1.00f, 0.53f, 0.075f, 0.075f, 0.035f, pawPad)
@@ -381,13 +381,13 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
 
             // A subtle warm highlight on the cheeks.
             val cheek = floatArrayOf(0.98f, 0.93f, 0.91f)
-            part(base, vp, -0.70f, 1.38f, 0.87f, 0.18f, 0.13f, 0.055f, cheek)
+            part(base, vp, -0.70f, 1.38f + headBob, 0.90f, 0.18f, 0.13f, 0.055f, cheek)
             part(base, vp, 0.70f, 1.38f, 0.87f, 0.18f, 0.13f, 0.055f, cheek)
 
             // Soft blush appears briefly when the Panda is tapped.
             if (reaction) {
                 val blush = floatArrayOf(1.0f, 0.48f, 0.55f)
-                part(base, vp, -0.68f, 1.27f, 0.94f, 0.13f, 0.075f, 0.035f, blush)
+                part(base, vp, -0.68f, 1.27f + headBob, 0.99f, 0.13f, 0.075f, 0.035f, blush)
                 part(base, vp, 0.68f, 1.27f, 0.94f, 0.13f, 0.075f, 0.035f, blush)
 
                 // Tiny pink tongue on tap.
