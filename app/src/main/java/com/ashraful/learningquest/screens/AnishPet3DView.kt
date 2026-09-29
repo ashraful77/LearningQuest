@@ -302,6 +302,8 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val idleSway = sin(now / 1_350_000_000.0).toFloat() * 2.2f
             val reaction = System.currentTimeMillis() < reactionUntil
             val wave = if (reaction) sin((now / 75_000_000.0)).toFloat() * 24f else 0f
+            val happyTilt = if (reaction) sin(now / 95_000_000.0).toFloat() * 3.5f else 0f
+            val earWiggle = if (reaction) sin(now / 80_000_000.0).toFloat() * 8f else sin(now / 1_700_000_000.0).toFloat() * 1.5f
 
             // Soft ground shadow.
             part(base, vp, 0f, -1.08f, 0.08f, 1.25f, 0.10f, 0.62f, floatArrayOf(0.55f, 0.62f, 0.60f))
@@ -326,10 +328,10 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black)
 
             // Big rounded head with a slightly shorter, friendlier profile.
-            part(base, vp, 0f, 1.56f, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f)
-            // Ears are rounded, not cones.
-            part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
-            part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
+            part(base, vp, 0f, 1.56f, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f + happyTilt)
+            // Rounded ears gently wiggle during interaction.
+            part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = -earWiggle)
+            part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = earWiggle)
 
             // Classic panda eye patches.
             part(base, vp, -0.43f, 1.62f, 0.90f, 0.32f, 0.43f, 0.13f, black, ry = -22f, rz = 10f)
@@ -456,9 +458,13 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                     vec3 viewDir = normalize(vec3(0.0, 1.0, 7.2) - vPos);
                     vec3 halfDir = normalize(lightDir + viewDir);
                     float diffuse = max(dot(n, lightDir), 0.0);
-                    float specular = pow(max(dot(n, halfDir), 0.0), 28.0);
+                    float specular = pow(max(dot(n, halfDir), 0.0), 42.0);
                     float rim = pow(1.0 - max(dot(n, viewDir), 0.0), 2.2);
-                    vec3 lit = uColor * (0.30 + 0.62 * diffuse) + vec3(0.10) * rim + vec3(0.34) * specular;
+                    float grain = fract(sin(dot(vPos.xy, vec2(127.1, 311.7))) * 43758.5453);
+                    float fur = 0.965 + grain * 0.035;
+                    vec3 lit = uColor * (0.32 + 0.60 * diffuse) * fur
+                              + vec3(0.09) * rim
+                              + vec3(0.16) * specular;
                     gl_FragColor = vec4(lit, 1.0);
                 }
             """.trimIndent()
