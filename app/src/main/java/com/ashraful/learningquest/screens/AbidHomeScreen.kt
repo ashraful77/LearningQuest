@@ -37,43 +37,24 @@ fun AbidHomeScreen(
             .padding(horizontal = 18.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("👦 Abid's Learning Zone", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1769AA), textAlign = TextAlign.Center)
-        Spacer(Modifier.height(5.dp))
-        Text("LKG • Fun Learning", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF7043A8))
-        Text("Learn • Play • Practise • Grow 🚀", fontSize = 13.sp, color = Color(0xFF60758A), textAlign = TextAlign.Center)
-
-        Spacer(Modifier.height(14.dp))
-        OutlinedButton(onClick = { onNavigate("switch_to_arifa") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) { Text("👧 Switch to Arifa", fontWeight = FontWeight.Bold) }
+        Text("👦 Abid's Learning Zone", fontSize = 25.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1769AA), maxLines = 1, textAlign = TextAlign.Center)
+        Text("LKG • Fun Learning", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF7043A8))
         Spacer(Modifier.height(8.dp))
-        OutlinedButton(onClick = { onNavigate("switch_to_anish") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) { Text("🧑 Switch to Anish", fontWeight = FontWeight.Bold) }
-
-        Spacer(Modifier.height(14.dp))
-        AbidProgressCard(progress)
-        Spacer(Modifier.height(14.dp))
-        DailyMissionCard(progress)
-        Spacer(Modifier.height(14.dp))
-
-        Card(onClick = { onNavigate("abid_achievements") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(2.dp)) {
-            Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("🏆", fontSize = 30.sp)
-                    Spacer(Modifier.width(10.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text("My Rewards", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFFB05A00))
-                        Text("Stars • Badges • Achievements", fontSize = 12.sp, color = Color(0xFF60758A))
-                    }
-                    Text("›", fontSize = 28.sp, color = Color(0xFFB05A00))
+        Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(1.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                TextButton(onClick = { onNavigate("switch_to_arifa") }, modifier = Modifier.weight(1f)) {
+                    Text("👧 Arifa", fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
                 }
-                Spacer(Modifier.height(12.dp))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AbidRewardStat("⭐", progress.stars.toString(), "Stars", Modifier.weight(1f))
-                    AbidRewardStat("🏅", progress.level.toString(), "Level", Modifier.weight(1f))
-                    AbidRewardStat("🔥", progress.streak.toString(), "Streak", Modifier.weight(1f))
+                VerticalDivider(modifier = Modifier.height(28.dp), color = Color(0xFFD9E0EA))
+                TextButton(onClick = { onNavigate("switch_to_anish") }, modifier = Modifier.weight(1f)) {
+                    Text("🧑 Anish", fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
                 }
             }
         }
+        Spacer(Modifier.height(8.dp))
+        DailyMissionCompact(progress)
+        Spacer(Modifier.height(12.dp))
 
-        Spacer(Modifier.height(18.dp))
         Text("📚 My Learning", modifier = Modifier.fillMaxWidth(), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
         Text("Choose a subject to learn today", modifier = Modifier.fillMaxWidth(), fontSize = 12.sp, color = Color(0xFF60758A))
         Spacer(Modifier.height(8.dp))
@@ -206,26 +187,18 @@ private fun AbidRewardStat(icon: String, value: String, label: String, modifier:
 }
 
 @Composable
-private fun DailyMissionCard(progress: AbidProgress) {
+private fun DailyMissionCompact(progress: AbidProgress) {
     val completed = progress.todayActivities.coerceAtMost(3)
     val missionDone = progress.dailyBonusClaimed
-    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = if (missionDone) Color(0xFFE8F8EF) else Color(0xFFFFF4D8)), elevation = CardDefaults.cardElevation(2.dp)) {
-        Column(Modifier.fillMaxWidth().padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(if (missionDone) "🎉" else "🎯", fontSize = 30.sp)
-                Spacer(Modifier.width(10.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(if (missionDone) "Daily Mission Complete!" else "Daily Learning Mission", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = if (missionDone) Color(0xFF23754A) else Color(0xFF9A5A00))
-                    Text(if (missionDone) "Great job! +3 ⭐ bonus earned" else "Complete 3 activities today", fontSize = 12.sp, color = Color(0xFF60758A))
-                }
-                Text("$completed/3", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+    Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp), colors = CardDefaults.cardColors(if (missionDone) Color(0xFFE8F8EF) else Color(0xFFFFF4D8)), elevation = CardDefaults.cardElevation(1.dp)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(if (missionDone) "🎉" else "🎯", fontSize = 22.sp)
+            Spacer(Modifier.width(8.dp))
+            Column(Modifier.weight(1f)) {
+                Text(if (missionDone) "Daily Goal Complete!" else "Daily Goal", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = if (missionDone) Color(0xFF23754A) else Color(0xFF9A5A00))
+                Text(if (missionDone) "+3 ⭐ and +10 XP earned" else "Complete 3 activities • +3 ⭐ +10 XP", fontSize = 10.sp, color = Color(0xFF60758A))
             }
-            if (!missionDone) {
-                Spacer(Modifier.height(9.dp))
-                LinearProgressIndicator(progress = { completed / 3f }, modifier = Modifier.fillMaxWidth().height(8.dp), color = Color(0xFFFFA000), trackColor = Color.White)
-                Spacer(Modifier.height(6.dp))
-                Text("🎁 Finish 3 activities to earn +3 ⭐ and +10 XP!", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8B5B00))
-            }
+            Text("$"+"completed/3", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
