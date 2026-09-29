@@ -123,7 +123,8 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(18.dp))
 
-        Text(\n            "📖 আমার বিষয়সমূহ",
+        Text(
+            "📖 আমার বিষয়সমূহ",
             modifier = Modifier.fillMaxWidth(),
             fontSize = 17.sp,
             fontWeight = FontWeight.ExtraBold,
