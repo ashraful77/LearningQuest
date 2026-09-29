@@ -54,7 +54,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             .padding(16.dp)
     ) {
         Text(
-            "📚 অনিশ • \${subject}",
+            "📚 অনিশ • ${subject}",
             fontSize = 25.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA)
@@ -75,12 +75,12 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     Text("🎉 পরীক্ষা শেষ!", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(Modifier.height(10.dp))
                     Text(
-                        "\${score} / \${questions.size}",
+                        "${score} / ${questions.size}",
                         fontSize = 40.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF315FBA)
                     )
-                    Text("সঠিক উত্তর: \${score}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("সঠিক উত্তর: ${score}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(18.dp))
                     Button(onClick = {
                         currentIndex = 0
@@ -97,7 +97,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         val question = questions[currentIndex]
 
         Text(
-            "প্রশ্ন \${currentIndex + 1} / \${questions.size}",
+            "প্রশ্ন ${currentIndex + 1} / ${questions.size}",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF60758A)
@@ -112,13 +112,13 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         ) {
             Column(Modifier.padding(18.dp)) {
                 Text(
-                    "ID: \${question.id}",
+                    "ID: ${question.id}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF8A96A8)
                 )
                 Text(
-                    "বিষয়: \${question.topic}",
+                    "বিষয়: ${question.topic}",
                     fontSize = 12.sp,
                     color = Color(0xFF7043A8)
                 )
@@ -168,7 +168,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "\${('A'.code + index).toChar()}.",
+                        "${('A'.code + index).toChar()}.",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF315FBA)
@@ -219,7 +219,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             Spacer(Modifier.height(10.dp))
             Text(
                 if (selected == question.correctAnswer) "🎉 সঠিক উত্তর!"
-                else "💡 সঠিক উত্তর: \${question.options[question.correctAnswer]}",
+                else "💡 সঠিক উত্তর: ${question.options[question.correctAnswer]}",
                 Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
@@ -243,7 +243,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
 
         Spacer(Modifier.height(12.dp))
         Text(
-            "প্রশ্ন ID: \${question.id}",
+            "প্রশ্ন ID: ${question.id}",
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontSize = 11.sp,
