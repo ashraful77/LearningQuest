@@ -25,11 +25,32 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+      - name: Restore signing keystore
+        env:
+          LEARNINGQUEST_KEYSTORE_BASE64: ${{ secrets.LEARNINGQUEST_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$LEARNINGQUEST_KEYSTORE_BASE64" ]; then
+            echo "ERROR: LEARNINGQUEST_KEYSTORE_BASE64 GitHub secret is not configured."
+            exit 1
+          fi
+          echo "$LEARNINGQUEST_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/learningquest-release.jks"
+          test -s "$RUNNER_TEMP/learningquest-release.jks"
 
-      - name: Upload Debug APK
+      - name: Build signed Release APK
+        env:
+          LEARNINGQUEST_KEYSTORE_PATH: ${{ runner.temp }}/learningquest-release.jks
+          LEARNINGQUEST_KEYSTORE_PASSWORD: ${{ secrets.LEARNINGQUEST_KEYSTORE_PASSWORD }}
+          LEARNINGQUEST_KEY_ALIAS: ${{ secrets.LEARNINGQUEST_KEY_ALIAS }}
+          LEARNINGQUEST_KEY_PASSWORD: ${{ secrets.LEARNINGQUEST_KEY_PASSWORD }}
+        run: |
+          if [ -z "$LEARNINGQUEST_KEYSTORE_PASSWORD" ] || [ -z "$LEARNINGQUEST_KEY_ALIAS" ] || [ -z "$LEARNINGQUEST_KEY_PASSWORD" ]; then
+            echo "ERROR: Signing secrets are not fully configured."
+            exit 1
+          fi
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Upload signed Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: LearningQuest-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: LearningQuest-release-signed
+          path: app/build/outputs/apk/release/app-release.apk
