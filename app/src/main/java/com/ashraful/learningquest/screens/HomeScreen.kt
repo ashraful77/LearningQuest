@@ -125,6 +125,7 @@ fun HomeScreen() {
             "abid_color_match" -> AbidColorMatchScreen { goBack() }
             "abid_memory" -> AbidMemoryPairsScreen { goBack() }
             "abid_letter_sounds" -> AbidLetterSoundsScreen { goBack() }
+            "abid_listen_choose" -> AbidListenAndChooseScreen { goBack() }
             "abid_picture_match" -> AbidLetterPictureMatchScreen { goBack() }
             "abid_simple_math" -> AbidSimpleMathScreen { goBack() }
             "abid_shape_match" -> AbidShapeMatchScreen { goBack() }
