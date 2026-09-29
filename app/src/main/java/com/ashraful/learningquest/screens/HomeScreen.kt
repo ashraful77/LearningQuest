@@ -14,6 +14,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +38,10 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen() {
+    val arifaHomeScrollState = rememberScrollState()
+    val abidHomeScrollState = rememberScrollState()
+    val anishHomeScrollState = rememberScrollState()
+
     var profile by rememberSaveable { mutableStateOf<String?>(null) }
     var screen by rememberSaveable { mutableStateOf("home") }
     var backStack by rememberSaveable { mutableStateOf("") }
@@ -84,9 +89,18 @@ fun HomeScreen() {
 
     if (screen == "home") {
         when (profile) {
-            "arifa" -> HomeContent(onNavigate = { route -> navigate(route) })
-            "anish" -> AnishHomeScreen { route -> navigate(route) }
-            else -> AbidHomeScreen { route -> navigate(route) }
+            "arifa" -> HomeContent(
+                scrollState = arifaHomeScrollState,
+                onNavigate = { route -> navigate(route) }
+            )
+            "anish" -> AnishHomeScreen(
+                scrollState = anishHomeScrollState,
+                onNavigate = { route -> navigate(route) }
+            )
+            else -> AbidHomeScreen(
+                scrollState = abidHomeScrollState,
+                onNavigate = { route -> navigate(route) }
+            )
         }
         return
     }
@@ -191,7 +205,10 @@ fun HomeScreen() {
 }
 
 @Composable
-private fun HomeContent(onNavigate: (String) -> Unit) {
+private fun HomeContent(
+    scrollState: ScrollState,
+    onNavigate: (String) -> Unit
+) {
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val data by store.gameData.collectAsState(initial = null)
@@ -258,7 +275,7 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
     ) {
         Column(
             Modifier.fillMaxWidth().widthIn(max = 920.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .padding(horizontal = 18.dp)
         ) {
             Spacer(Modifier.height(12.dp))
