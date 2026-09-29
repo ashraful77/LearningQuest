@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,7 +25,7 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
     val context = LocalContext.current
     val progressStore = remember(context) { AbidProgressStore(context) }
     val progress by progressStore.progress.collectAsState(initial = AbidProgress())
-    var expandedSection by remember { mutableStateOf<String?>(null) }
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState())
@@ -70,34 +71,75 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(18.dp))
         Text("📚 My Learning", modifier = Modifier.fillMaxWidth(), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
-        Text("Choose what you want to learn today", modifier = Modifier.fillMaxWidth(), fontSize = 12.sp, color = Color(0xFF60758A))
+        Text("Choose a subject to learn today", modifier = Modifier.fillMaxWidth(), fontSize = 12.sp, color = Color(0xFF60758A))
+        Spacer(Modifier.height(8.dp))
 
-        AbidLearningSection("🔤", "Letters & Language", "Letters, sounds, Bengali and matching", "9 activities", Color(0xFF1769AA), expandedSection == "language", { expandedSection = if (expandedSection == "language") null else "language" }) {
-            LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_letters") }
-            LearningCard("🔊", "Letter Sounds", "Hear letters and phonics!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_letter_sounds") }
-            LearningCard("🖼️", "Letter → Picture", "Match letters with pictures!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_picture_match") }
-            LearningCard("✍️", "Write Letters", "Practice writing A, B, C and more!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_write_letters") }
-            LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_letters") }
-            LearningCard("🎯", "বাংলা বর্ণমালা অনুশীলন", "১০টি প্রশ্নে বর্ণ চিনে অনুশীলন করি!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_bengali_practice") }
-            LearningCard("🖼️", "বাংলা বর্ণ → ছবি", "বর্ণ দেখে সঠিক ছবি খুঁজি!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_bengali_picture_match") }
-            LearningCard("✍️", "বাংলা বর্ণ লেখা", "আঙুল দিয়ে বর্ণ অনুসরণ করে লিখি!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_tracing") }
-            LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_match_letters") }
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Column(Modifier.fillMaxWidth()) {
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF1769AA)
+                ) {
+                    Tab(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        text = { Text("🔤 English", fontWeight = FontWeight.ExtraBold) }
+                    )
+                    Tab(
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        text = { Text("অ বাংলা", fontWeight = FontWeight.ExtraBold) }
+                    )
+                    Tab(
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        text = { Text("🔢 Maths", fontWeight = FontWeight.ExtraBold) }
+                    )
+                }
+
+                Column(Modifier.fillMaxWidth().padding(12.dp)) {
+                    when (selectedTab) {
+                        0 -> {
+                            LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_letters") }
+                            LearningCard("🔊", "Letter Sounds", "Hear letters and phonics!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_letter_sounds") }
+                            LearningCard("🖼️", "Letter → Picture", "Match letters with pictures!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_picture_match") }
+                            LearningCard("✍️", "Write Letters", "Practice writing A, B, C and more!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_write_letters") }
+                            LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_match_letters") }
+                        }
+
+                        1 -> {
+                            LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_letters") }
+                            LearningCard("🎯", "বাংলা বর্ণমালা অনুশীলন", "১০টি প্রশ্নে বর্ণ চিনে অনুশীলন করি!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_bengali_practice") }
+                            LearningCard("🖼️", "বাংলা বর্ণ → ছবি", "বর্ণ দেখে সঠিক ছবি খুঁজি!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_bengali_picture_match") }
+                            LearningCard("✍️", "বাংলা বর্ণ লেখা", "আঙুল দিয়ে বর্ণ অনুসরণ করে লিখি!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_tracing") }
+                        }
+
+                        else -> {
+                            LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) { onNavigate("abid_numbers") }
+                            LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_number_match") }
+                            LearningCard("➕", "Little Maths", "Practice easy addition!", Color(0xFFFFF3D9), Color(0xFF9A5A00)) { onNavigate("abid_simple_math") }
+                        }
+                    }
+                }
+            }
         }
 
-        AbidLearningSection("🔢", "Numbers & Maths", "Numbers, counting and simple maths", "3 activities", Color(0xFF9A5A00), expandedSection == "maths", { expandedSection = if (expandedSection == "maths") null else "maths" }) {
-            LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) { onNavigate("abid_numbers") }
-            LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_number_match") }
-            LearningCard("➕", "Little Maths", "Practice easy addition!", Color(0xFFFFF3D9), Color(0xFF9A5A00)) { onNavigate("abid_simple_math") }
-        }
-
-        AbidLearningSection("🎨", "Colors & Shapes", "Shapes, colours and matching", "4 activities", Color(0xFFB02A7A), expandedSection == "colors", { expandedSection = if (expandedSection == "colors") null else "colors" }) {
+        Spacer(Modifier.height(12.dp))
+        Text("🎨 More Learning", modifier = Modifier.fillMaxWidth(), fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
+        AbidLearningSection("🎨", "Colors & Shapes", "Shapes, colours and matching", "4 activities", Color(0xFFB02A7A), false, { }) {
             LearningCard("🔷", "Shapes", "Learn 2D and 3D shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_shapes") }
             LearningCard("🔷", "Shape Match", "Identify the correct shape!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_shape_match") }
             LearningCard("🎨", "Colors", "Learn red, blue, green and more!", Color(0xFFFFE8F5), Color(0xFFB02A7A)) { onNavigate("abid_colors") }
             LearningCard("🎯", "Match Colors", "Find the name of the color!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_color_match") }
         }
 
-        AbidLearningSection("🌍", "Explore the World", "Animals, fruits and everyday learning", "2 activities", Color(0xFF23754A), expandedSection == "world", { expandedSection = if (expandedSection == "world") null else "world" }) {
+        AbidLearningSection("🌍", "Explore the World", "Animals, fruits and everyday learning", "2 activities", Color(0xFF23754A), false, { }) {
             LearningCard("🐾", "Animal Sounds", "Learn animals and their sounds!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_animals") }
             LearningCard("🍎", "Fruits & Veggies", "Learn healthy foods!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_fruits") }
         }
