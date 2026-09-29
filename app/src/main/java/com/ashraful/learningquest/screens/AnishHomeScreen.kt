@@ -95,7 +95,31 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             }
         }
 
-        Card(\n            onClick = { onNavigate("anish_store") },\n            modifier = Modifier.fillMaxWidth(),\n            shape = RoundedCornerShape(22.dp),\n            colors = CardDefaults.cardColors(containerColor = Color.White),\n            elevation = CardDefaults.cardElevation(2.dp)\n        ) {\n            Column(Modifier.fillMaxWidth().padding(16.dp)) {\n                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {\n                    Text("🏆", fontSize = 30.sp)\n                    Spacer(Modifier.width(10.dp))\n                    Column(Modifier.weight(1f)) {\n                        Text("আমার রিওয়ার্ডস", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))\n                        Text("ডায়মন্ড • সংগ্রহ • মাইলস্টোন", fontSize = 12.sp, color = Color(0xFF60758A))\n                    }\n                    Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))\n                }\n                Spacer(Modifier.height(12.dp))\n                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n                    AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "ডায়মন্ড", Modifier.weight(1f))\n                    AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "সংগ্রহ", Modifier.weight(1f))\n                    AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "রিওয়ার্ড", Modifier.weight(1f))\n                }\n            }\n        }\n\n        Spacer(Modifier.height(18.dp))\n\n        Text(\n            "📖 আমার বিষয়সমূহ",
+        Card(
+            onClick = { onNavigate("anish_store") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text("🏆", fontSize = 30.sp)
+                    Spacer(Modifier.width(10.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("আমার রিওয়ার্ডস", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                        Text("ডায়মন্ড • সংগ্রহ • মাইলস্টোন", fontSize = 12.sp, color = Color(0xFF60758A))
+                    }
+                    Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))
+                }
+                Spacer(Modifier.height(12.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "ডায়মন্ড", Modifier.weight(1f))
+                    AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "সংগ্রহ", Modifier.weight(1f))
+                    AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "রিওয়ার্ড", Modifier.weight(1f))
+                }
+            }
+        }\n\n        Spacer(Modifier.height(18.dp))\n\n        Text(\n            "📖 আমার বিষয়সমূহ",
             modifier = Modifier.fillMaxWidth(),
             fontSize = 17.sp,
             fontWeight = FontWeight.ExtraBold,
