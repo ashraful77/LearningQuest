@@ -121,6 +121,59 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             }
         }
 
+        Spacer(Modifier.height(14.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                Text(
+                    "🏆 আমার মাইলস্টোন",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFF7043A8)
+                )
+                Text(
+                    "প্রশ্নের সংখ্যা বাড়াও, নতুন ব্যাজ আনলক করো",
+                    fontSize = 12.sp,
+                    color = Color(0xFF60758A)
+                )
+                Spacer(Modifier.height(10.dp))
+                val milestones = listOf(
+                    5 to "🥉 ব্রোঞ্জ",
+                    20 to "🥈 সিলভার",
+                    50 to "🥇 গোল্ড",
+                    100 to "🏆 মাস্টার"
+                )
+                milestones.forEach { (target, title) ->
+                    val unlocked = target in (data?.anishAchievements ?: emptySet())
+                    val current = data?.anishTotalQuestions ?: 0
+                    val progress = minOf(current, target)
+                    Row(
+                        Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            if (unlocked) "✅" else "🔒",
+                            fontSize = 20.sp
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(
+                                "$progress / $target প্রশ্ন",
+                                fontSize = 11.sp,
+                                color = Color(0xFF60758A)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.height(18.dp))
 
         Text(
