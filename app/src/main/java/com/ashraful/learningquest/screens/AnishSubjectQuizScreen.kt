@@ -40,7 +40,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
 
     if (questions.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("কোনও প্রশ্ন পাওয়া যায়নি।", fontSize = 20.sp)
+            Text("No questions found.", fontSize = 20.sp)
         }
         return
     }
@@ -54,7 +54,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             .padding(16.dp)
     ) {
         Text(
-            "📚 অনিশ • ${subject}",
+            "📚 Anish • ${subject}",
             fontSize = 25.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA)
@@ -94,7 +94,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     Modifier.fillMaxWidth().padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("🎉 পরীক্ষা শেষ!", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("🎉 Quiz Complete!", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(Modifier.height(10.dp))
                     Text(
                         "${score} / ${questions.size}",
@@ -102,15 +102,15 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF315FBA)
                     )
-                    Text("সঠিক উত্তর: ${score}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Correct answers: ${score}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(18.dp))
                     Button(onClick = {
                         currentIndex = 0
                         selected = -1
                         score = 0
-                    }) { Text("আবার দিই") }
+                    }) { Text("Try Again") }
                     Spacer(Modifier.height(8.dp))
-                    OutlinedButton(onClick = onBack) { Text("বিষয়গুলিতে ফিরে যাই") }
+                    OutlinedButton(onClick = onBack) { Text("Back to Subjects") }
                 }
             }
             return@Column
@@ -119,7 +119,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         val question = questions[currentIndex]
 
         Text(
-            "প্রশ্ন ${currentIndex + 1} / ${questions.size}",
+            "Question ${currentIndex + 1} / ${questions.size}",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF60758A)
@@ -140,7 +140,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     color = Color(0xFF8A96A8)
                 )
                 Text(
-                    "বিষয়: ${question.topic}",
+                    "Topic: ${question.topic}",
                     fontSize = 12.sp,
                     color = Color(0xFF7043A8)
                 )
@@ -222,14 +222,14 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             ) {
                 Column(Modifier.fillMaxWidth().padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        if (answerCorrect) "🎉 দারুণ! সঠিক উত্তর!" else "💡 চেষ্টা চালিয়ে যাও!",
+                        if (answerCorrect) "🎉 Great job! Correct answer!" else "💡 Keep trying!",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = if (answerCorrect) Color(0xFF23754A) else Color(0xFFC62828)
                     )
                     if (!answerCorrect) {
                         Spacer(Modifier.height(4.dp))
-                        Text("সঠিক উত্তর: ${question.options[question.correctAnswer]}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF23754A), textAlign = TextAlign.Center)
+                        Text("Correct answer: ${question.options[question.correctAnswer]}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF23754A), textAlign = TextAlign.Center)
                     }
                 }
             }
@@ -252,7 +252,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                         rotationY = rewardRotation
                     })
                     Text(
-                        if (milestoneReward > 0) "🏆 +${milestoneReward} ডায়মন্ড!  •  নতুন মাইলস্টোন!" else "💎 +5 ডায়মন্ড!",
+                        if (milestoneReward > 0) "🏆 +${milestoneReward} diamonds! • New milestone!" else "💎 +5 diamonds!",
                         textAlign = TextAlign.Center,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -272,7 +272,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                 },
                 Modifier.fillMaxWidth()
             ) {
-                Text(if (currentIndex == questions.lastIndex) "ফলাফল দেখুন" else "পরের প্রশ্ন →")
+                Text(if (currentIndex == questions.lastIndex) "See Results" else "Next Question →")
             }
         }
 
