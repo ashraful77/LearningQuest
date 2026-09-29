@@ -476,14 +476,29 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                     vec3 lightDir = normalize(vec3(-0.45, 0.85, 0.65));
                     vec3 viewDir = normalize(vec3(0.0, 1.0, 7.2) - vPos);
                     vec3 halfDir = normalize(lightDir + viewDir);
-                    float diffuse = max(dot(n, lightDir), 0.0);
-                    float specular = pow(max(dot(n, halfDir), 0.0), 42.0);
-                    float rim = pow(1.0 - max(dot(n, viewDir), 0.0), 2.2);
-                    float grain = fract(sin(dot(vPos.xy, vec2(127.1, 311.7))) * 43758.5453);
-                    float fur = 0.965 + grain * 0.035;
-                    vec3 lit = uColor * (0.32 + 0.60 * diffuse) * fur
-                              + vec3(0.09) * rim
-                              + vec3(0.16) * specular;
+
+                    // Procedural micro-fur: layered noise perturbs the lighting and
+                    // creates tiny directional highlights without external textures.
+                    float n1 = fract(sin(dot(vPos * 18.0, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+                    float n2 = fract(sin(dot(vPos * 42.0, vec3(39.346, 11.135, 83.155))) * 24634.6345);
+                    float fiber = (n1 * 0.55 + n2 * 0.45) - 0.5;
+                    vec3 furNormal = normalize(n + vec3(fiber * 0.075, fiber * 0.045, fiber * 0.075));
+
+                    float diffuse = max(dot(furNormal, lightDir), 0.0);
+                    float specular = pow(max(dot(furNormal, halfDir), 0.0), 48.0);
+                    float rimBase = pow(1.0 - max(dot(furNormal, viewDir), 0.0), 2.0);
+                    float rimFuzz = rimBase * (0.82 + n2 * 0.38);
+
+                    // Fine tonal variation breaks the perfectly smooth plastic look.
+                    float furTone = 0.945 + n1 * 0.055;
+                    vec3 lit = uColor * (0.31 + 0.61 * diffuse) * furTone
+                              + vec3(0.075) * rimFuzz
+                              + vec3(0.13) * specular;
+
+                    // Very soft outer fur glow at the silhouette.
+                    float edge = smoothstep(0.78, 1.0, rimBase) * (0.35 + n2 * 0.65);
+                    lit += uColor * edge * 0.035;
+
                     gl_FragColor = vec4(lit, 1.0);
                 }
             """.trimIndent()
