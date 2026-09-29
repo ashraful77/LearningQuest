@@ -32,29 +32,44 @@ private fun AbidGameFrame(title: String, color: Color, onBack: () -> Unit, conte
 
 @Composable
 fun AbidLetterSoundsScreen(onBack: () -> Unit) {
-    val letters = listOf(
-        "A" to "A says /æ/ — Apple 🍎", "B" to "B says /b/ — Ball ⚽",
-        "C" to "C says /k/ — Cat 🐱", "D" to "D says /d/ — Dog 🐶",
-        "E" to "E says /e/ — Egg 🥚", "F" to "F says /f/ — Fish 🐟",
-        "G" to "G says /g/ — Goat 🐐", "H" to "H says /h/ — Hat 🎩",
-        "I" to "I says /i/ — Igloo 🏠", "J" to "J says /j/ — Jam 🍓"
-    )
+    val letters = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
     var index by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
-    val tts = remember(context) { TextToSpeech(context) { }.apply { language = Locale.US } }
-    DisposableEffect(Unit) { onDispose { tts.shutdown() } }
+    val tts = remember(context) {
+        TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                it.language = Locale("en", "IN")
+            }
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose { tts.shutdown() }
+    }
     val current = letters[index]
+
     AbidGameFrame("🔊 Letter Sounds", Color(0xFF1769AA), onBack) {
-        Text("Letter ${index + 1} of ${letters.size}", fontSize = 17.sp, color = Color(0xFF60758A))
+        Text("Letter " + (index + 1) + " of " + letters.size, fontSize = 17.sp, color = Color(0xFF60758A))
+        Spacer(Modifier.height(28.dp))
+        Card(
+            onClick = {
+                tts.language = Locale("en", "IN")
+                tts.speak(current, TextToSpeech.QUEUE_FLUSH, null, "letter")
+            },
+            modifier = Modifier.fillMaxWidth().height(300.dp),
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F4FF)),
+            elevation = CardDefaults.cardElevation(3.dp)
+        ) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(current, fontSize = 150.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
+            }
+        }
+        Spacer(Modifier.height(18.dp))
+        Text("👆 Tap the letter to hear it", fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF60758A))
         Spacer(Modifier.height(20.dp))
-        Text(current.first, fontSize = 110.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF1769AA))
-        Text(current.second, fontSize = 23.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFF34495E))
-        Spacer(Modifier.height(25.dp))
-        Button(onClick = { tts.speak(current.second.replace("—", ""), TextToSpeech.QUEUE_FLUSH, null, "letter") }, modifier = Modifier.fillMaxWidth().height(58.dp)) { Text("🔊 Hear It", fontSize = 20.sp) }
-        Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            OutlinedButton(onClick = { index = (index - 1).coerceAtLeast(0) }, Modifier.weight(1f).height(56.dp), enabled = index > 0) { Text("← Previous") }
-            Button(onClick = { index = (index + 1) % letters.size }, Modifier.weight(1f).height(56.dp)) { Text(if (index == letters.lastIndex) "🔄 Again" else "Next →") }
+            OutlinedButton(onClick = { index = (index - 1).coerceAtLeast(0) }, modifier = Modifier.weight(1f).height(56.dp), enabled = index > 0) { Text("← Previous") }
+            Button(onClick = { index = (index + 1) % letters.size }, modifier = Modifier.weight(1f).height(56.dp)) { Text(if (index == letters.lastIndex) "🔄 Again" else "Next →") }
         }
     }
 }
