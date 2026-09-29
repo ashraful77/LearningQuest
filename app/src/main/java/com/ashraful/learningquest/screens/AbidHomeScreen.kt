@@ -132,17 +132,12 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(12.dp))
         Text("🎨 More Learning", modifier = Modifier.fillMaxWidth(), fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
-        AbidLearningSection("🎨", "Colors & Shapes", "Shapes, colours and matching", "4 activities", Color(0xFFB02A7A), false, { }) {
-            LearningCard("🔷", "Shapes", "Learn 2D and 3D shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_shapes") }
-            LearningCard("🔷", "Shape Match", "Identify the correct shape!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_shape_match") }
-            LearningCard("🎨", "Colors", "Learn red, blue, green and more!", Color(0xFFFFE8F5), Color(0xFFB02A7A)) { onNavigate("abid_colors") }
-            LearningCard("🎯", "Match Colors", "Find the name of the color!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_color_match") }
-        }
-
-        AbidLearningSection("🌍", "Explore the World", "Animals, fruits and everyday learning", "2 activities", Color(0xFF23754A), false, { }) {
-            LearningCard("🐾", "Animal Sounds", "Learn animals and their sounds!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_animals") }
-            LearningCard("🍎", "Fruits & Veggies", "Learn healthy foods!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_fruits") }
-        }
+        LearningCard("🔷", "Shapes", "Learn 2D and 3D shapes!", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_shapes") }
+        LearningCard("🔷", "Shape Match", "Identify the correct shape!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_shape_match") }
+        LearningCard("🎨", "Colors", "Learn red, blue, green and more!", Color(0xFFFFE8F5), Color(0xFFB02A7A)) { onNavigate("abid_colors") }
+        LearningCard("🎯", "Match Colors", "Find the name of the color!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_color_match") }
+        LearningCard("🐾", "Animal Sounds", "Learn animals and their sounds!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_animals") }
+        LearningCard("🍎", "Fruits & Veggies", "Learn healthy foods!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_fruits") }
 
         Spacer(Modifier.height(6.dp))
         SimpleFeatureCard("🏆", "Little Challenge", "5 fun questions • Letters, numbers, colors & shapes", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_challenge") }
