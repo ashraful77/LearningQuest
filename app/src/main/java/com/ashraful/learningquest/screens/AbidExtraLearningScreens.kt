@@ -36,10 +36,8 @@ fun AbidLetterSoundsScreen(onBack: () -> Unit) {
     var index by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     val tts = remember(context) {
-        TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                it.language = Locale("en", "IN")
-            }
+        TextToSpeech(context) { }.apply {
+            language = Locale("en", "IN")
         }
     }
     DisposableEffect(Unit) {
