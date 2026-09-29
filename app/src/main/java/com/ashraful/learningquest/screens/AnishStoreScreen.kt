@@ -39,6 +39,12 @@ private val anishGiftTiers = listOf(
         AnishStoreItem("anish_diamond","💎","Diamond Trophy","A very special collectible",300),
         AnishStoreItem("anish_grand_trophy","🏆","Grand Champion Trophy","The ultimate collection gift",500)
     ))
+,    AnishGiftTier("LEGENDARY GIFTS", "🌟", listOf(
+        AnishStoreItem("anish_legend_star","🌟","Legendary Star","For a truly dedicated learner",1000),
+        AnishStoreItem("anish_royal_trophy","🏆","Royal Champion Trophy","A major long-term achievement gift",2500),
+        AnishStoreItem("anish_diamond_crown","💎","Diamond Crown","A rare high-value collection gift",5000),
+        AnishStoreItem("anish_ultimate_crown","👑","Ultimate Learning Crown","The ultimate long-term gift",10000)
+    ))
 )
 
 @Composable
