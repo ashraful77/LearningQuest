@@ -180,7 +180,7 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                             )
                             milestoneReward = result.milestoneBonus
                             rewardPulse = result.dailyRewarded
-                            rewardShown = result.dailyRewarded || result.milestoneBonus > 0
+                            rewardShown = true
                         }
                     }
                 },
@@ -250,19 +250,28 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                     label = "diamondRotation"
                 )
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("💎", fontSize = 48.sp, modifier = Modifier.graphicsLayer {
-                        scaleX = rewardScale
-                        scaleY = rewardScale
-                        rotationY = rewardRotation
-                    })
                     Text(
-                        if (milestoneReward > 0) "🏆 +${milestoneReward} diamonds! • New milestone!" else "💎 +5 diamonds!",
-                        textAlign = TextAlign.Center,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF315FBA)
+                        if (rewardPulse) "💎" else if (milestoneReward > 0) "🏆" else "ℹ️",
+                        fontSize = 48.sp,
+                        modifier = Modifier.graphicsLayer {
+                            scaleX = rewardScale
+                            scaleY = rewardScale
+                            rotationY = rewardRotation
+                        }
                     )
-                }
+                    Text(
+                        when {
+                            milestoneReward > 0 && rewardPulse -> "💎 +5 + 🏆 " + milestoneReward + " bonus diamonds!"
+                            milestoneReward > 0 -> "🏆 +" + milestoneReward + " milestone diamonds!"
+                            rewardPulse -> "💎 +5 diamonds!"
+                            else -> "আজ এই প্রশ্নের ডায়মন্ড ইতিমধ্যে পাওয়া হয়েছে"
+                        },
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (rewardPulse || milestoneReward > 0) Color(0xFF315FBA) else Color(0xFF7A8798)
+                    )
+                }}
             }
             Spacer(Modifier.height(10.dp))
             Spacer(Modifier.height(10.dp))
