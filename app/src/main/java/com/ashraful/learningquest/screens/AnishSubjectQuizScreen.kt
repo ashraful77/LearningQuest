@@ -36,6 +36,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
     var score by rememberSaveable(subject) { mutableIntStateOf(0) }
     var rewardShown by rememberSaveable(subject) { mutableStateOf(false) }
     var rewardPulse by rememberSaveable(subject) { mutableStateOf(false) }
+    var milestoneReward by rememberSaveable(subject) { mutableIntStateOf(0) }
 
     if (questions.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -150,7 +151,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                         if (index == question.correctAnswer) score++
                         scope.launch {
                             store.addAnishDiamonds(5)
-                            if ((currentIndex + 1) % 5 == 0) store.addAnishDiamonds(5)
+                            milestoneReward = store.recordAnishAnswer(index == question.correctAnswer)
                         }
                         rewardPulse = false
                         rewardShown = true
@@ -207,7 +208,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                         rotationY = rewardRotation
                     })
                     Text(
-                        if ((currentIndex + 1) % 5 == 0) "✨ +10 ডায়মন্ড!  •  5 প্রশ্নের মাইলস্টোন" else "💎 +5 ডায়মন্ড!",
+                        if (milestoneReward > 0) "🏆 +${milestoneReward} ডায়মন্ড!  •  নতুন মাইলস্টোন!" else "💎 +5 ডায়মন্ড!",
                         textAlign = TextAlign.Center,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -232,6 +233,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     selected = -1
                     rewardShown = false
                     rewardPulse = false
+                    milestoneReward = 0
                 },
                 Modifier.fillMaxWidth()
             ) {
