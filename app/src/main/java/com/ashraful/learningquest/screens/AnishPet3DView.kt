@@ -315,9 +315,6 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = 15f + wave)
             part(base, vp, -1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = -12f)
             part(base, vp, 1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = 12f + wave)
-            val pawPad = floatArrayOf(0.20f, 0.22f, 0.21f)
-            part(base, vp, -1.02f, -0.10f, 0.59f, 0.15f, 0.16f, 0.05f, pawPad)
-            part(base, vp, 1.02f, -0.10f, 0.59f, 0.15f, 0.16f, 0.05f, pawPad)
 
             // Black legs and little paws.
             part(base, vp, -0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
