@@ -7,6 +7,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.ashraful.learningquest.data.GameDataStore
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -18,6 +23,11 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AnishHomeScreen(onNavigate: (String) -> Unit) {
+    val context = LocalContext.current
+    val store = remember { GameDataStore(context) }
+    val data by store.gameData.collectAsState(initial = null)
+    val ownedItems by store.anishOwnedItemIds().collectAsState(initial = emptySet())
+
     Column(
         Modifier
             .fillMaxSize()
@@ -85,10 +95,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             }
         }
 
-        Spacer(Modifier.height(18.dp))
-
-        Text(
-            "📖 আমার বিষয়সমূহ",
+        Card(\n            onClick = { onNavigate("anish_store") },\n            modifier = Modifier.fillMaxWidth(),\n            shape = RoundedCornerShape(22.dp),\n            colors = CardDefaults.cardColors(containerColor = Color.White),\n            elevation = CardDefaults.cardElevation(2.dp)\n        ) {\n            Column(Modifier.fillMaxWidth().padding(16.dp)) {\n                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {\n                    Text("🏆", fontSize = 30.sp)\n                    Spacer(Modifier.width(10.dp))\n                    Column(Modifier.weight(1f)) {\n                        Text("আমার রিওয়ার্ডস", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))\n                        Text("ডায়মন্ড • সংগ্রহ • মাইলস্টোন", fontSize = 12.sp, color = Color(0xFF60758A))\n                    }\n                    Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))\n                }\n                Spacer(Modifier.height(12.dp))\n                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n                    AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "ডায়মন্ড", Modifier.weight(1f))\n                    AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "সংগ্রহ", Modifier.weight(1f))\n                    AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "রিওয়ার্ড", Modifier.weight(1f))\n                }\n            }\n        }\n\n        Spacer(Modifier.height(18.dp))\n\n        Text(\n            "📖 আমার বিষয়সমূহ",
             modifier = Modifier.fillMaxWidth(),
             fontSize = 17.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -136,6 +143,17 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             textAlign = TextAlign.Center,
             color = Color(0xFF7A8798)
         )
+    }
+}
+
+@Composable
+private fun AnishRewardStat(icon: String, value: String, label: String, modifier: Modifier = Modifier) {
+    Surface(modifier = modifier, shape = RoundedCornerShape(14.dp), color = Color(0xFFF3F7FF)) {
+        Column(Modifier.padding(vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(icon, fontSize = 20.sp)
+            Text(value, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
+            Text(label, fontSize = 10.sp, color = Color(0xFF60758A))
+        }
     }
 }
 
