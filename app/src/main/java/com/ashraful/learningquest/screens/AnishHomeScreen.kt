@@ -148,6 +148,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         }
 
         Card(
+            onClick = { onNavigate("anish_rewards") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(
