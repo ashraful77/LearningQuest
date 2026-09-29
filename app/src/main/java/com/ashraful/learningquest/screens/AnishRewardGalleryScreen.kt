@@ -33,6 +33,9 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val petUnlocked = total >= 150
     val petLevel = if (petUnlocked) ((total - 150) / 50 + 1).coerceAtMost(5) else 0
     val petXp = if (petUnlocked) ((total - 150) % 50) else 0
+    val petScale = when (petLevel) { 1 -> 0.92f; 2 -> 0.98f; 3 -> 1.04f; 4 -> 1.10f; else -> 1.16f }
+    val petRotation = when (petLevel) { 1 -> 2f; 2 -> 4f; 3 -> 7f; 4 -> 10f; else -> 14f }
+    val petAura = when (petLevel) { 1 -> "🌱"; 2 -> "✨"; 3 -> "💫"; 4 -> "🔥"; else -> "👑" }
     var selectedPet by remember { mutableStateOf("🐼") }
     var petTapCount by remember { mutableIntStateOf(0) }
     var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
@@ -171,15 +174,18 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         shape = RoundedCornerShape(32.dp),
                         color = Color.White
                     ) {
-                        Text(
-                            selectedPet,
-                            fontSize = 86.sp,
-                            modifier = Modifier.padding(horizontal = 26.dp, vertical = 8.dp).graphicsLayer {
-                                scaleX = pulse * bounce
-                                scaleY = pulse * bounce
-                                rotationY = spin * 4f
-                            }
-                        )
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(petAura, fontSize = 30.sp)
+                            Text(
+                                selectedPet,
+                                fontSize = (86 * petScale).sp,
+                                modifier = Modifier.padding(horizontal = 26.dp, vertical = 4.dp).graphicsLayer {
+                                    scaleX = pulse * bounce
+                                    scaleY = pulse * bounce
+                                    rotationY = spin * petRotation
+                                }
+                            )
+                        }
                     }
                     LaunchedEffect(petBounce) {
                         if (petBounce) {
@@ -189,7 +195,19 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                     }
                     Spacer(Modifier.height(6.dp))
                     Text("তোমার Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
-                    Text("PET LEVEL $petLevel • $petXp / 50 XP", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text("$petAura PET LEVEL $petLevel • $petXp / 50 XP", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text(
+                        when (petLevel) {
+                            1 -> "BABY BUDDY 🌱"
+                            2 -> "HAPPY BUDDY ✨"
+                            3 -> "SUPER BUDDY 💫"
+                            4 -> "HERO BUDDY 🔥"
+                            else -> "LEGENDARY BUDDY 👑"
+                        },
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF23754A)
+                    )
                     LinearProgressIndicator(
                         progress = { petXp / 50f },
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 5.dp),
