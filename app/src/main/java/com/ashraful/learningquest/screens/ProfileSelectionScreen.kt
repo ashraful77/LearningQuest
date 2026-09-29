@@ -34,6 +34,8 @@ fun ProfileSelectionScreen(onSelected: (String) -> Unit) {
             ProfileButton("👦", "Abid", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onSelected("abid") }
             Spacer(Modifier.height(14.dp))
             ProfileButton("👧", "Arifa", Color(0xFFFFEAF4), Color(0xFFB12A73)) { onSelected("arifa") }
+            Spacer(Modifier.height(14.dp))
+            ProfileButton("🧑", "Anish • Class 5", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onSelected("anish") }
         }
     }
 }
