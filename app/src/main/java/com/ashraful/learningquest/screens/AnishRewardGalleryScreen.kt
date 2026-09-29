@@ -36,10 +36,19 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val petScale = when (petLevel) { 1 -> 0.92f; 2 -> 0.98f; 3 -> 1.04f; 4 -> 1.10f; else -> 1.16f }
     val petRotation = when (petLevel) { 1 -> 2f; 2 -> 4f; 3 -> 7f; 4 -> 10f; else -> 14f }
     val petAura = when (petLevel) { 1 -> "🌱"; 2 -> "✨"; 3 -> "💫"; 4 -> "🔥"; else -> "👑" }
-    val ability = when (selectedPet) { "🐼" -> if (petLevel >= 3) "ZEN BOOST 🧘" else "Calm Friend"; "🐱" -> if (petLevel >= 3) "LUCKY PAW 🍀" else "Quick Friend"; "🐶" -> if (petLevel >= 3) "CHEER BOOST 🎉" else "Happy Friend"; else -> if (petLevel >= 3) "FOX FOCUS 🦊" else "Clever Friend" }
-    val abilityMessage = when (selectedPet) { "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"; "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"; "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"; else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!" }
-    var selectedPet by remember { mutableStateOf("🐼") }    val abilityMessage = when (selectedPet) { "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"; "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"; "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"; else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!" }
     var selectedPet by remember { mutableStateOf("🐼") }
+    val ability = when (selectedPet) {
+        "🐼" -> if (petLevel >= 3) "ZEN BOOST 🧘" else "Calm Friend"
+        "🐱" -> if (petLevel >= 3) "LUCKY PAW 🍀" else "Quick Friend"
+        "🐶" -> if (petLevel >= 3) "CHEER BOOST 🎉" else "Happy Friend"
+        else -> if (petLevel >= 3) "FOX FOCUS 🦊" else "Clever Friend"
+    }
+    val abilityMessage = when (selectedPet) {
+        "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"
+        "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"
+        "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"
+        else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!"
+    }
     var petTapCount by remember { mutableStateOf(0) }
     var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
     var petBounce by remember { mutableStateOf(false) }
@@ -212,7 +221,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         color = Color(0xFF23754A)
                     )
                     LinearProgressIndicator(
-                        progress = { petXp / 50f },
+                        progress = petXp / 50f,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 5.dp),
                         color = Color(0xFF43A866),
                         trackColor = Color(0xFFD5EBDD)
