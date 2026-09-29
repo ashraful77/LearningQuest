@@ -25,6 +25,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
     private var downX = 0f
     private var downY = 0f
     private var moved = false
+    private var lastTouchAt = System.currentTimeMillis()
 
     init {
         setEGLContextClientVersion(2)
@@ -54,6 +55,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                 val dy = event.y - downY
                 if (kotlin.math.abs(dx) > 3f || kotlin.math.abs(dy) > 3f) moved = true
                 renderer.userYaw += dx * 0.55f
+                lastTouchAt = System.currentTimeMillis()
                 renderer.userPitch = (renderer.userPitch - dy * 0.25f).coerceIn(-24f, 28f)
                 downX = event.x
                 downY = event.y
@@ -88,6 +90,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
 
         private var reactionUntil = 0L
         private var lastTime = System.nanoTime()
+        private var lastInteractionAt = System.currentTimeMillis()
 
         override fun onSurfaceCreated(gl: javax.microedition.khronos.opengles.GL10?, config: javax.microedition.khronos.egl.EGLConfig?) {
             GLES20.glClearColor(0.92f, 0.97f, 0.94f, 1f)
@@ -110,7 +113,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val dt = ((now - lastTime) / 1_000_000_000f).coerceIn(0f, 0.05f)
             lastTime = now
 
-            if (kotlin.math.abs(userYaw) < 0.1f) userYaw += dt * 12f
+            if (System.currentTimeMillis() - lastInteractionAt > 1400L) userYaw += dt * 9f
 
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
 
@@ -140,6 +143,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
         }
 
         fun react() {
+            lastInteractionAt = System.currentTimeMillis()
             reactionUntil = System.currentTimeMillis() + 420
             onTap?.invoke()
         }
@@ -219,19 +223,25 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
         ) {
             // Gentle breathing keeps the buddy alive even when untouched.
             val breath = 1f + sin(now / 650_000_000.0).toFloat() * 0.018f
+            val idleSway = sin(now / 1_350_000_000.0).toFloat() * 2.2f
             val reaction = System.currentTimeMillis() < reactionUntil
             val wave = if (reaction) sin((now / 75_000_000.0)).toFloat() * 24f else 0f
 
             // Soft ground shadow.
             part(base, vp, 0f, -1.08f, 0.08f, 1.25f, 0.10f, 0.62f, floatArrayOf(0.55f, 0.62f, 0.60f))
 
-            // Rounded body and belly.
-            part(base, vp, 0f, 0.02f, 0f, 1.18f, 1.48f * breath, 0.88f, white)
-            part(base, vp, 0f, -0.05f, 0.79f, 0.67f, 0.88f, 0.16f, floatArrayOf(0.86f, 0.86f, 0.83f))
+            // Rounded body and soft belly.
+            part(base, vp, 0f, 0.02f, 0f, 1.10f, 1.40f * breath, 0.84f, white, rz = idleSway * 0.20f)
+            part(base, vp, 0f, -0.10f, 0.79f, 0.60f, 0.82f, 0.16f, floatArrayOf(0.86f, 0.86f, 0.83f))
 
-            // Black arms, one waves when tapped.
-            part(base, vp, -1.00f, 0.22f, 0.02f, 0.34f, 0.78f, 0.38f, black, rz = -12f)
-            part(base, vp, 1.00f, 0.22f, 0.02f, 0.34f, 0.78f, 0.38f, black, rz = 12f + wave)
+            // Black arms with rounded paws; the right paw waves on tap.
+            part(base, vp, -0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = -15f)
+            part(base, vp, 0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = 15f + wave)
+            part(base, vp, -1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = -12f)
+            part(base, vp, 1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = 12f + wave)
+            val pawPad = floatArrayOf(0.20f, 0.22f, 0.21f)
+            part(base, vp, -1.02f, -0.10f, 0.59f, 0.15f, 0.16f, 0.05f, pawPad)
+            part(base, vp, 1.02f, -0.10f, 0.59f, 0.15f, 0.16f, 0.05f, pawPad)
 
             // Black legs and little paws.
             part(base, vp, -0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
@@ -242,8 +252,8 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             // Small round black tail.
             part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black)
 
-            // Big rounded head.
-            part(base, vp, 0f, 1.55f, 0f, 1.13f, 1.00f, 1.00f, white)
+            // Big rounded head with a slightly shorter, friendlier profile.
+            part(base, vp, 0f, 1.56f, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f)
             // Ears are rounded, not cones.
             part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
             part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
@@ -262,7 +272,9 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                 part(base, vp, 0.47f, 1.67f, 1.085f, 0.030f, 0.040f, 0.018f, white)
             }
 
-            // White muzzle, black nose and smiling mouth.
+            // Soft cheek highlights, white muzzle, black nose and smiling mouth.
+            part(base, vp, -0.62f, 1.31f, 0.84f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
+            part(base, vp, 0.62f, 1.31f, 0.84f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
             part(base, vp, -0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
             part(base, vp, 0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
             part(base, vp, 0f, 1.35f, 1.105f, 0.18f, 0.13f, 0.11f, black)
@@ -350,9 +362,12 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                 void main() {
                     vec3 n = normalize(vNormal);
                     vec3 lightDir = normalize(vec3(-0.45, 0.85, 0.65));
+                    vec3 viewDir = normalize(vec3(0.0, 1.0, 7.2) - vPos);
+                    vec3 halfDir = normalize(lightDir + viewDir);
                     float diffuse = max(dot(n, lightDir), 0.0);
-                    float rim = pow(1.0 - max(dot(n, vec3(0.0, 0.0, 1.0)), 0.0), 2.0);
-                    vec3 lit = uColor * (0.34 + 0.66 * diffuse) + vec3(0.10) * rim;
+                    float specular = pow(max(dot(n, halfDir), 0.0), 28.0);
+                    float rim = pow(1.0 - max(dot(n, viewDir), 0.0), 2.2);
+                    vec3 lit = uColor * (0.30 + 0.62 * diffuse) + vec3(0.10) * rim + vec3(0.34) * specular;
                     gl_FragColor = vec4(lit, 1.0);
                 }
             """.trimIndent()
