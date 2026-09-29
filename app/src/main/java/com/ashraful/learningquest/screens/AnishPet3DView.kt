@@ -305,6 +305,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val happyTilt = if (reaction) sin(now / 95_000_000.0).toFloat() * 3.5f else 0f
             val headBob = sin(now / 1_050_000_000.0).toFloat() * 0.025f + if (reaction) sin(now / 110_000_000.0).toFloat() * 0.055f else 0f
             val earWiggle = if (reaction) sin(now / 80_000_000.0).toFloat() * 8f else sin(now / 1_700_000_000.0).toFloat() * 1.5f
+            val tailWag = if (reaction) sin(now / 70_000_000.0).toFloat() * 18f else sin(now / 1_300_000_000.0).toFloat() * 3f
 
             // Soft ground shadow.
             part(base, vp, 0f, -1.08f, 0.08f, 1.25f, 0.10f, 0.62f, floatArrayOf(0.55f, 0.62f, 0.60f))
@@ -325,8 +326,8 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, -0.58f, -1.02f, 0.55f, 0.44f, 0.22f, 0.30f, black)
             part(base, vp, 0.58f, -1.02f, 0.55f, 0.44f, 0.22f, 0.30f, black)
 
-            // Small round black tail.
-            part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black)
+            // Small round black tail gently wags during interaction.
+            part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black, rz = tailWag)
 
             // Big rounded head with a slightly shorter, friendlier profile.
             part(base, vp, 0f, 1.56f + headBob, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f + happyTilt)
