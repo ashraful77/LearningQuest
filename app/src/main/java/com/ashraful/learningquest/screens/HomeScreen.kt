@@ -50,6 +50,10 @@ fun HomeScreen() {
             profile = "arifa"
             screen = "home"
             backStack = ""
+        } else if (route == "switch_to_anish") {
+            profile = "anish"
+            screen = "home"
+            backStack = ""
         } else if (route != screen) {
             backStack = listOf(backStack, screen).filter { it.isNotBlank() }.joinToString(",")
             screen = route
@@ -79,10 +83,10 @@ fun HomeScreen() {
     }
 
     if (screen == "home") {
-        if (profile == "arifa") {
-            HomeContent(onNavigate = { route -> navigate(route) })
-        } else {
-            AbidHomeScreen { route -> navigate(route) }
+        when (profile) {
+            "arifa" -> HomeContent(onNavigate = { route -> navigate(route) })
+            "anish" -> AnishHomeScreen { route -> navigate(route) }
+            else -> AbidHomeScreen { route -> navigate(route) }
         }
         return
     }
