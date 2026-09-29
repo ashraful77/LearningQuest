@@ -236,6 +236,16 @@ private fun HomeContent(onNavigate: (String) -> Unit) {
                 Text("👦 Switch to Abid", fontWeight = FontWeight.Bold)
             }
 
+            Spacer(Modifier.height(8.dp))
+
+            OutlinedButton(
+                onClick = { onNavigate("switch_to_anish") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("🧑 Switch to Anish", fontWeight = FontWeight.Bold)
+            }
+
             Spacer(Modifier.height(10.dp))
 
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
