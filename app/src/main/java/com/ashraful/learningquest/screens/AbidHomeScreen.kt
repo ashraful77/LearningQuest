@@ -108,6 +108,7 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
                         0 -> {
                             LearningCard("🔤", "Letters", "Learn A, B, C and more!", Color(0xFFE8F4FF), Color(0xFF1769AA)) { onNavigate("abid_letters") }
                             LearningCard("🔊", "Letter Sounds", "Hear letters and phonics!", Color(0xFFEAF7FF), Color(0xFF1769AA)) { onNavigate("abid_letter_sounds") }
+            LearningCard("🎧", "Listen & Choose", "Hear a lowercase letter and choose it!", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_listen_choose") }
                             LearningCard("🖼️", "Letter → Picture", "Match letters with pictures!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_picture_match") }
                             LearningCard("✍️", "Write Letters", "Practice writing A, B, C and more!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_write_letters") }
                             LearningCard("🔗", "Match Letters", "Match small letters with CAPITAL letters!", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_match_letters") }
