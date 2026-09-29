@@ -71,6 +71,20 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             Text("👦 আবিদের স্ক্রিনে যাও", fontWeight = FontWeight.Bold)
         }
 
+        Spacer(Modifier.height(12.dp))
+
+        Card(onClick = { onNavigate("anish_store") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFE9F2FF))) {
+            Row(Modifier.fillMaxWidth().padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("💎", fontSize = 30.sp)
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("ডায়মন্ড স্টোর", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text("প্রশ্ন সমাধান করে ডায়মন্ড জমাও, পুরস্কার কিনো", fontSize = 12.sp, color = Color(0xFF60758A))
+                }
+                Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))
+            }
+        }
+
         Spacer(Modifier.height(18.dp))
 
         Text(
