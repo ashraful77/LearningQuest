@@ -314,11 +314,12 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0f, 0.02f, 0f, 1.00f, 1.28f * breath, 0.78f, white, rz = idleSway * 0.20f)
             part(base, vp, 0f, -0.10f, 0.76f, 0.56f, 0.78f, 0.16f, floatArrayOf(0.88f, 0.88f, 0.85f))
 
-            // Black arms with rounded paws; the right paw waves on tap.
-            part(base, vp, -0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = -15f)
-            part(base, vp, 0.93f, 0.25f, 0.02f, 0.31f, 0.72f, 0.35f, black, rz = 15f + wave)
-            part(base, vp, -1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = -12f)
-            part(base, vp, 1.02f, -0.08f, 0.28f, 0.30f, 0.30f, 0.34f, black, rz = 12f + wave)
+            // Soft seated pose: one paw is slightly raised like a friendly wave.
+            val greetingLift = if (reaction) sin(now / 75_000_000.0).toFloat() * 0.10f else 0f
+            part(base, vp, -0.92f, 0.36f + greetingLift, 0.08f, 0.30f, 0.68f, 0.34f, black, rz = -22f - wave * 0.22f)
+            part(base, vp, 0.86f, 0.18f, 0.10f, 0.31f, 0.70f, 0.35f, black, rz = 18f)
+            part(base, vp, -1.00f, 0.13f + greetingLift, 0.34f, 0.30f, 0.30f, 0.34f, black, rz = -18f - wave * 0.25f)
+            part(base, vp, 0.95f, -0.02f, 0.34f, 0.30f, 0.30f, 0.34f, black, rz = 10f)
 
             // Black legs and little paws.
             part(base, vp, -0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
@@ -372,12 +373,16 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
 
             // Soft paw pads make the seated panda feel more tactile and toy-like.
             val pawPad = floatArrayOf(0.28f, 0.17f, 0.15f)
+            val pawHighlight = floatArrayOf(0.42f, 0.30f, 0.28f)
             part(base, vp, -0.58f, -1.03f, 0.61f, 0.27f, 0.18f, 0.060f, pawPad)
             part(base, vp, 0.58f, -1.03f, 0.61f, 0.27f, 0.18f, 0.060f, pawPad)
             part(base, vp, -0.73f, -1.00f, 0.53f, 0.075f, 0.075f, 0.035f, pawPad)
             part(base, vp, -0.48f, -1.00f, 0.56f, 0.075f, 0.075f, 0.035f, pawPad)
             part(base, vp, 0.73f, -1.00f, 0.53f, 0.075f, 0.075f, 0.035f, pawPad)
             part(base, vp, 0.48f, -1.00f, 0.56f, 0.075f, 0.075f, 0.035f, pawPad)
+            // Tiny warm paw highlights catch the light like soft silicone pads.
+            part(base, vp, -1.00f, 0.13f + greetingLift, 0.61f, 0.11f, 0.10f, 0.025f, pawHighlight)
+            part(base, vp, 0.95f, -0.02f, 0.61f, 0.11f, 0.10f, 0.025f, pawHighlight)
 
             // A subtle warm highlight on the cheeks.
             val cheek = floatArrayOf(0.98f, 0.93f, 0.91f)
