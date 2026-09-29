@@ -83,12 +83,12 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(8.dp))
 
-        AnishSubjectCard("বাংলা", "পাঠ, ব্যাকরণ, শব্দার্থ ও অনুশীলন", "📖", Color(0xFFFFEAF4), Color(0xFFB12A73))
-        AnishSubjectCard("গণিত", "হিসাব, ভগ্নাংশ, জ্যামিতি ও সমস্যা সমাধান", "➗", Color(0xFFEAF2FF), Color(0xFF2457A6))
-        AnishSubjectCard("বিজ্ঞান", "জীবন, পদার্থ, শক্তি, পরিবেশ ও পরীক্ষা", "🔬", Color(0xFFE8F8EF), Color(0xFF23754A))
-        AnishSubjectCard("ইতিহাস ও ভূগোল", "ভারত, পৃথিবী, মানচিত্র ও গুরুত্বপূর্ণ ঘটনা", "🌍", Color(0xFFFFF1DE), Color(0xFF9A5A00))
-        AnishSubjectCard("ইংরেজি", "শব্দভাণ্ডার, ব্যাকরণ, পাঠ ও অনুশীলন", "🔤", Color(0xFFF3ECFF), Color(0xFF7043A8))
-        AnishSubjectCard("সাধারণ জ্ঞান", "দেশ, রাজ্য, বিজ্ঞান ও দৈনন্দিন জ্ঞান", "🧠", Color(0xFFFFF8E8), Color(0xFF8B6500))
+        AnishSubjectCard("বাংলা", "পাঠ, ব্যাকরণ, শব্দার্থ ও অনুশীলন", "📖", Color(0xFFFFEAF4), Color(0xFFB12A73)) { onNavigate("anish_bengali") }
+        AnishSubjectCard("গণিত", "হিসাব, ভগ্নাংশ, জ্যামিতি ও সমস্যা সমাধান", "➗", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("anish_math") }
+        AnishSubjectCard("বিজ্ঞান", "জীবন, পদার্থ, শক্তি, পরিবেশ ও পরীক্ষা", "🔬", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("anish_science") }
+        AnishSubjectCard("ইতিহাস ও ভূগোল", "ভারত, পৃথিবী, মানচিত্র ও গুরুত্বপূর্ণ ঘটনা", "🌍", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("anish_history") }
+        AnishSubjectCard("ইংরেজি", "শব্দভাণ্ডার, ব্যাকরণ, পাঠ ও অনুশীলন", "🔤", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("anish_english") }
+        AnishSubjectCard("সাধারণ জ্ঞান", "দেশ, রাজ্য, বিজ্ঞান ও দৈনন্দিন জ্ঞান", "🧠", Color(0xFFFFF8E8), Color(0xFF8B6500)) { onNavigate("anish_gk") }
 
         Spacer(Modifier.height(12.dp))
 
@@ -134,7 +134,7 @@ private fun AnishSubjectCard(
     accent: Color
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+        onClick = onClick,\n        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = background),
         elevation = CardDefaults.cardElevation(1.dp)
