@@ -271,7 +271,7 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                         fontWeight = FontWeight.ExtraBold,
                         color = if (rewardPulse || milestoneReward > 0) Color(0xFF315FBA) else Color(0xFF7A8798)
                     )
-                }}
+                }
             }
             Spacer(Modifier.height(10.dp))
             Spacer(Modifier.height(10.dp))
