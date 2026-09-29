@@ -23,6 +23,9 @@ class GameDataStore(private val context: Context) {
         val ANISH_TOTAL_QUESTIONS = intPreferencesKey("anish_total_questions")
         val ANISH_CORRECT_ANSWERS = intPreferencesKey("anish_correct_answers")
         val ANISH_ACHIEVEMENTS = stringPreferencesKey("anish_achievements")
+        val ANISH_ANSWERED_QUESTIONS = stringPreferencesKey("anish_answered_questions")
+        val ANISH_DAILY_REWARD_DATE = stringPreferencesKey("anish_daily_reward_date")
+        val ANISH_DAILY_REWARDED_QUESTIONS = stringPreferencesKey("anish_daily_rewarded_questions")
         val XP = intPreferencesKey("xp")
         val LEVEL = intPreferencesKey("level")
         val STREAK = intPreferencesKey("streak")
@@ -203,33 +206,84 @@ class GameDataStore(private val context: Context) {
         }
     }
 
-    suspend fun recordAnishAnswer(correct: Boolean): Int {
+    data class AnishAttemptResult(
+        val dailyRewarded: Boolean,
+        val firstEver: Boolean,
+        val milestoneBonus: Int
+    )
+
+    fun anishAnsweredQuestionIds(): Flow<Set<String>> =
+        context.gameDataStore.data.map { preferences ->
+            preferences[Keys.ANISH_ANSWERED_QUESTIONS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
+        }
+
+    suspend fun recordAnishQuestionAttempt(
+        questionId: String,
+        correct: Boolean
+    ): AnishAttemptResult {
+        var dailyRewarded = false
+        var firstEver = false
         var milestoneBonus = 0
+        val today = LocalDate.now(ZoneId.systemDefault()).toString()
+
         context.gameDataStore.edit { preferences ->
-            val total = (preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0) + 1
-            val correctTotal = (preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0) + if (correct) 1 else 0
-            val achieved = preferences[Keys.ANISH_ACHIEVEMENTS]
-                ?.split(",")?.filter { it.isNotBlank() }?.mapNotNull { it.toIntOrNull() }?.toMutableSet()
+            val answered = preferences[Keys.ANISH_ANSWERED_QUESTIONS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toMutableSet()
                 ?: mutableSetOf()
 
-            val milestones = listOf(5 to 10, 20 to 25, 50 to 50, 100 to 100)
-            for ((threshold, bonus) in milestones) {
-                if (total >= threshold && threshold !in achieved) {
-                    achieved.add(threshold)
-                    milestoneBonus += bonus
+            firstEver = answered.add(questionId)
+            if (firstEver) {
+                val total = (preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0) + 1
+                val correctTotal = (preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0) +
+                    if (correct) 1 else 0
+                val achieved = preferences[Keys.ANISH_ACHIEVEMENTS]
+                    ?.split(",")?.filter { it.isNotBlank() }?.mapNotNull { it.toIntOrNull() }?.toMutableSet()
+                    ?: mutableSetOf()
+
+                val milestones = listOf(5 to 10, 20 to 25, 50 to 50, 100 to 100)
+                for ((threshold, bonus) in milestones) {
+                    if (total >= threshold && threshold !in achieved) {
+                        achieved.add(threshold)
+                        milestoneBonus += bonus
+                    }
                 }
+
+                preferences[Keys.ANISH_TOTAL_QUESTIONS] = total
+                preferences[Keys.ANISH_CORRECT_ANSWERS] = correctTotal
+                preferences[Keys.ANISH_ACHIEVEMENTS] = achieved.joinToString(",")
+            }
+            preferences[Keys.ANISH_ANSWERED_QUESTIONS] = answered.joinToString(",")
+
+            val savedDate = preferences[Keys.ANISH_DAILY_REWARD_DATE]
+            val rewardedToday = if (savedDate == today) {
+                preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS]
+                    ?.split(",")?.filter { it.isNotBlank() }?.toMutableSet()
+                    ?: mutableSetOf()
+            } else {
+                mutableSetOf()
             }
 
-            preferences[Keys.ANISH_TOTAL_QUESTIONS] = total
-            preferences[Keys.ANISH_CORRECT_ANSWERS] = correctTotal
-            preferences[Keys.ANISH_ACHIEVEMENTS] = achieved.joinToString(",")
+            if (questionId !in rewardedToday) {
+                rewardedToday.add(questionId)
+                preferences[Keys.ANISH_DAILY_REWARD_DATE] = today
+                preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = rewardedToday.joinToString(",")
+                preferences[Keys.ANISH_DIAMONDS] =
+                    (preferences[Keys.ANISH_DIAMONDS] ?: 0) + 5
+                dailyRewarded = true
+            } else if (savedDate != today) {
+                preferences[Keys.ANISH_DAILY_REWARD_DATE] = today
+                preferences[Keys.ANISH_DAILY_REWARDED_QUESTIONS] = ""
+            }
+
             if (milestoneBonus > 0) {
                 preferences[Keys.ANISH_DIAMONDS] =
                     (preferences[Keys.ANISH_DIAMONDS] ?: 0) + milestoneBonus
             }
         }
-        return milestoneBonus
+        return AnishAttemptResult(dailyRewarded, firstEver, milestoneBonus)
     }
+
 
     suspend fun addAnishDiamonds(amount: Int) {
         if (amount <= 0) return
