@@ -18,6 +18,8 @@ class GameDataStore(private val context: Context) {
 
     private object Keys {
         val COINS = intPreferencesKey("coins")
+        val ANISH_DIAMONDS = intPreferencesKey("anish_diamonds")
+        val ANISH_OWNED_ITEMS = stringPreferencesKey("anish_owned_items")
         val XP = intPreferencesKey("xp")
         val LEVEL = intPreferencesKey("level")
         val STREAK = intPreferencesKey("streak")
@@ -171,6 +173,7 @@ class GameDataStore(private val context: Context) {
                 totalQuestions = totalQuestions,
                 correctAnswers = correctAnswers,
                 achievementCount = achievementCount,
+                diamonds = preferences[Keys.ANISH_DIAMONDS] ?: 0,
                 todayProgress =
                     if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == today) {
                         preferences[Keys.TODAY_PROGRESS] ?: 0
@@ -190,6 +193,36 @@ class GameDataStore(private val context: Context) {
                     (preferences[Keys.CORRECT_ANSWERS] ?: 0) + 1
             }
         }
+    }
+
+    suspend fun addAnishDiamonds(amount: Int) {
+        if (amount <= 0) return
+        context.gameDataStore.edit { preferences ->
+            preferences[Keys.ANISH_DIAMONDS] =
+                (preferences[Keys.ANISH_DIAMONDS] ?: 0) + amount
+        }
+    }
+
+    fun anishOwnedItemIds(): Flow<Set<String>> =
+        context.gameDataStore.data.map { preferences ->
+            preferences[Keys.ANISH_OWNED_ITEMS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
+        }
+
+    suspend fun buyAnishItem(itemId: String, price: Int): Boolean {
+        var purchased = false
+        context.gameDataStore.edit { preferences ->
+            val diamonds = preferences[Keys.ANISH_DIAMONDS] ?: 0
+            val owned = preferences[Keys.ANISH_OWNED_ITEMS]
+                ?.split(",")?.filter { it.isNotBlank() }?.toMutableSet() ?: mutableSetOf()
+            if (itemId !in owned && diamonds >= price) {
+                owned.add(itemId)
+                preferences[Keys.ANISH_DIAMONDS] = diamonds - price
+                preferences[Keys.ANISH_OWNED_ITEMS] = owned.joinToString(",")
+                purchased = true
+            }
+        }
+        return purchased
     }
 
     suspend fun addReward(coins: Int, xp: Int) {
