@@ -236,6 +236,11 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
                         Column(Modifier.weight(1f)) {
                             Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                             Text(
+                                if (unlocked) "আনলক হয়েছে • পুরস্কার পাওয়া গেছে" else "🔒 $target প্রশ্ন পূর্ণ হলে আনলক হবে",
+                                fontSize = 11.sp,
+                                color = if (unlocked) Color(0xFF23754A) else Color(0xFF8A96A8)
+                            )
+                            Text(
                                 "$progress / $target প্রশ্ন",
                                 fontSize = 11.sp,
                                 color = Color(0xFF60758A)
