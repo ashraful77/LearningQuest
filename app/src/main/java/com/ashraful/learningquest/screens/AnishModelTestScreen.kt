@@ -111,14 +111,14 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE9F2FF)) {
-                Text("💎 \${data?.diamonds ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                Text("💎 ${data?.diamonds ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
             }
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = if (secondsLeft <= 60) Color(0xFFFFE4E4) else Color(0xFFFFF3D4)
             ) {
                 Text(
-                    "⏱️ \${secondsLeft / 60}:\${(secondsLeft % 60).toString().padStart(2, '0')}",
+                    "⏱️ ${secondsLeft / 60}:${(secondsLeft % 60).toString().padStart(2, '0')}",
                     Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     fontWeight = FontWeight.ExtraBold,
                     color = if (secondsLeft <= 60) Color(0xFFC62828) else Color(0xFF8B6500)
@@ -134,7 +134,7 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
             trackColor = Color(0xFFDCE7F7)
         )
         Spacer(Modifier.height(8.dp))
-        Text("Question \${index + 1} / $MODEL_TEST_SIZE    •    Score: \${score}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A))
+        Text("Question ${index + 1} / $MODEL_TEST_SIZE    •    Score: ${score}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A))
 
         Spacer(Modifier.height(12.dp))
         val question = questions[index]
@@ -146,7 +146,7 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(Modifier.fillMaxWidth().padding(18.dp)) {
-                Text("\${question.subject} • \${question.topic}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF7043A8))
+                Text("${question.subject} • ${question.topic}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF7043A8))
                 Spacer(Modifier.height(10.dp))
                 Text(question.question, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
                 Spacer(Modifier.height(16.dp))
@@ -174,7 +174,7 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
                         elevation = CardDefaults.cardElevation(0.dp)
                     ) {
                         Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Text("\${('A'.code + optionIndex).toChar()}.", fontWeight = FontWeight.ExtraBold, color = textColor, fontSize = 16.sp)
+                            Text("${('A'.code + optionIndex).toChar()}.", fontWeight = FontWeight.ExtraBold, color = textColor, fontSize = 16.sp)
                             Spacer(Modifier.width(10.dp))
                             Text(option, fontSize = 16.sp, fontWeight = if (isSelected || (selected != -1 && isCorrect)) FontWeight.Bold else FontWeight.Normal, color = textColor)
                         }
@@ -236,11 +236,11 @@ private fun ModelTestResult(
             elevation = CardDefaults.cardElevation(3.dp)
         ) {
             Column(Modifier.fillMaxWidth().padding(22.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("\${score} / \${total}", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                Text("\${percent}% Score", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A))
+                Text("${score} / ${total}", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                Text("${percent}% Score", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A))
                 Spacer(Modifier.height(14.dp))
-                Text("💎 +\${total * 5} diamonds earned", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                Text("Current balance: \${diamonds} 💎", fontSize = 13.sp, color = Color(0xFF60758A))
+                Text("💎 +${total * 5} diamonds earned", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                Text("Current balance: ${diamonds} 💎", fontSize = 13.sp, color = Color(0xFF60758A))
             }
         }
 
