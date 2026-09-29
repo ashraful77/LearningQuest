@@ -216,7 +216,7 @@ private fun DailyMissionCompact(progress: AbidProgress) {
                 Text(if (missionDone) "Daily Goal Complete!" else "Daily Goal", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = if (missionDone) Color(0xFF23754A) else Color(0xFF9A5A00))
                 Text(if (missionDone) "+3 ⭐ and +10 XP earned" else "Complete 3 activities • +3 ⭐ +10 XP", fontSize = 10.sp, color = Color(0xFF60758A))
             }
-            Text("$"+"completed/3", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
+            Text("${completed}/3", fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
