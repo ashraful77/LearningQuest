@@ -15,13 +15,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashraful.learningquest.data.anishQuestionsFor
+import com.ashraful.learningquest.data.GameDataStore
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 
 @Composable
 fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
+    val context = LocalContext.current
+    val store = remember { GameDataStore(context) }
+    val scope = rememberCoroutineScope()
+    val data by store.gameData.collectAsState(initial = null)
     val questions = remember(subject) { anishQuestionsFor(subject) }
     var currentIndex by rememberSaveable(subject) { mutableIntStateOf(0) }
     var selected by rememberSaveable(subject) { mutableIntStateOf(-1) }
     var score by rememberSaveable(subject) { mutableIntStateOf(0) }
+    var rewardShown by rememberSaveable(subject) { mutableStateOf(false) }
 
     if (questions.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -44,7 +52,8 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA)
         )
-        Spacer(Modifier.height(5.dp))
+        Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE9F2FF)) { Text("💎 ${data?.diamonds ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA)) }
+        Spacer(Modifier.height(8.dp))
 
         if (finished) {
             Card(
@@ -133,6 +142,8 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     if (selected == -1) {
                         selected = index
                         if (index == question.correctAnswer) score++
+                        scope.launch { store.addAnishDiamonds(5) }
+                        rewardShown = true
                     }
                 },
                 Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -167,6 +178,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         }
 
         if (selected >= 0) {
+            if (rewardShown) Text("💎 +5 ডায়মন্ড!", Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
             Spacer(Modifier.height(10.dp))
             Text(
                 if (selected == question.correctAnswer) "🎉 সঠিক উত্তর!"
@@ -182,6 +194,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                 onClick = {
                     currentIndex++
                     selected = -1
+                    rewardShown = false
                 },
                 Modifier.fillMaxWidth()
             ) {
