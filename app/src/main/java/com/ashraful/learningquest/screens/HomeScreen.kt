@@ -117,6 +117,12 @@ fun HomeScreen() {
             "abid_write_letters" -> AbidWriteLettersScreen { goBack() }
             "abid_bengali_letters" -> AbidBengaliLettersScreen { goBack() }
             "abid_bengali_practice" -> AbidBengaliPracticeScreen { goBack() }
+            "abid_bengali_listen_sets" -> AbidBengaliListenChooseSetsScreen({ set -> navigate("abid_bengali_listen_" + set) }, { goBack() })
+            "abid_bengali_listen_1" -> AbidBengaliListenChooseScreen(1) { goBack() }
+            "abid_bengali_listen_2" -> AbidBengaliListenChooseScreen(2) { goBack() }
+            "abid_bengali_listen_3" -> AbidBengaliListenChooseScreen(3) { goBack() }
+            "abid_bengali_listen_4" -> AbidBengaliListenChooseScreen(4) { goBack() }
+            "abid_bengali_listen_5" -> AbidBengaliListenChooseScreen(5) { goBack() }
             "abid_bengali_picture_match" -> AbidBengaliPictureMatchScreen { goBack() }
             "abid_bengali_tracing" -> AbidBengaliTracingScreen { goBack() }
             "abid_numbers" -> AbidNumbersScreen { goBack() }
