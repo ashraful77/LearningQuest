@@ -21,11 +21,11 @@ import com.ashraful.learningquest.data.GameDataStore
 data class AnishStoreItem(val id:String,val emoji:String,val name:String,val description:String,val price:Int)
 
 private val anishStoreItems = listOf(
-    AnishStoreItem("anish_star","⭐","স্টার ব্যাজ","তোমার সংগ্রহের প্রথম ব্যাজ",25),
-    AnishStoreItem("anish_trophy","🏆","চ্যাম্পিয়ন ট্রফি","অসাধারণ শেখার পুরস্কার",60),
-    AnishStoreItem("anish_rocket","🚀","রকেট","দ্রুত শেখার স্পেশাল আইটেম",100),
-    AnishStoreItem("anish_crown","👑","গোল্ডেন ক্রাউন","মাস্টার লার্নারের পুরস্কার",150),
-    AnishStoreItem("anish_diamond","💎","ডায়মন্ড ট্রফি","বিশেষ সংগ্রহযোগ্য আইটেম",250)
+    AnishStoreItem("anish_star","⭐","Star Badge","Your first collection badge",25),
+    AnishStoreItem("anish_trophy","🏆","Champion Trophy","Reward for excellent learning",60),
+    AnishStoreItem("anish_rocket","🚀","Rocket","Special fast-learning item",100),
+    AnishStoreItem("anish_crown","👑","Golden Crown","Master learner reward",150),
+    AnishStoreItem("anish_diamond","💎","Diamond Trophy","Special collectible item",250)
 )
 
 @Composable
@@ -40,8 +40,8 @@ fun AnishStoreScreen(onBack:()->Unit) {
     Column(Modifier.fillMaxSize().background(Color(0xFFF7FAFF)).verticalScroll(rememberScrollState()).padding(16.dp)) {
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text("🛍️ ডায়মন্ড স্টোর",fontSize=28.sp,fontWeight=FontWeight.ExtraBold,color=Color(0xFF315FBA))
-                Text("ডায়মন্ড জমাও • পছন্দের পুরস্কার কিনো",fontSize=13.sp,color=Color(0xFF60758A))
+                Text("🛍️ Diamond Store",fontSize=28.sp,fontWeight=FontWeight.ExtraBold,color=Color(0xFF315FBA))
+                Text("Earn diamonds • Buy your favorite rewards",fontSize=13.sp,color=Color(0xFF60758A))
             }
             Surface(shape=RoundedCornerShape(16.dp),color=Color(0xFFE9F2FF)) {
                 Text("💎 ${data?.diamonds ?: 0}",Modifier.padding(12.dp),fontWeight=FontWeight.ExtraBold,color=Color(0xFF315FBA))
@@ -60,13 +60,13 @@ fun AnishStoreScreen(onBack:()->Unit) {
                         Text(item.description,fontSize=12.sp,color=Color(0xFF60758A))
                         Text("💎 ${item.price}",fontSize=14.sp,fontWeight=FontWeight.Bold,color=Color(0xFF315FBA))
                     }
-                    Button(enabled=!isOwned && (data?.diamonds ?: 0)>=item.price,onClick={ scope.launch { val ok=store.buyAnishItem(item.id,item.price); message=if(ok) "🎉 ${item.name} কেনা হয়েছে!" else "আরও ডায়মন্ড জমাও।" } }) {
-                        Text(if(isOwned) "কেনা হয়েছে" else "কিনি")
+                    Button(enabled=!isOwned && (data?.diamonds ?: 0)>=item.price,onClick={ scope.launch { val ok=store.buyAnishItem(item.id,item.price); message=if(ok) "🎉 ${item.name} purchased!" else "Earn more diamonds." } }) {
+                        Text(if(isOwned) "Owned" else "Buy")
                     }
                 }
             }
         }
         Spacer(Modifier.height(12.dp))
-        OutlinedButton(onClick=onBack,Modifier.fillMaxWidth()){ Text("‹ ফিরে যাই") }
+        OutlinedButton(onClick=onBack,Modifier.fillMaxWidth()){ Text("‹ Back") }
     }
 }
