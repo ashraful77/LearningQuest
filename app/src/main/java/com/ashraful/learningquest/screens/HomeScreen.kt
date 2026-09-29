@@ -75,6 +75,11 @@ fun HomeScreen() {
         }
     }
 
+    fun goHome() {
+        screen = "home"
+        backStack = ""
+    }
+
     BackHandler(enabled = profile != null && screen != "home") {
         goBack()
     }
@@ -105,8 +110,13 @@ fun HomeScreen() {
         return
     }
 
-    // One persistent in-app Home/Back button for every learning screen.
-    Box(Modifier.fillMaxSize()) {
+    // Fixed navigation bar: the activity content scrolls above it.
+    Column(Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
         when (screen) {
             "math" -> MathScreen { goBack() }
             "english" -> EnglishScreen { goBack() }
@@ -185,25 +195,38 @@ fun HomeScreen() {
             "anish_rewards" -> AnishRewardGalleryScreen { goBack() }
             "anish_model_test" -> AnishModelTestScreen { goBack() }
         }
+        }
 
         Surface(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 12.dp, top = 12.dp),
-            shape = RoundedCornerShape(16.dp),
-            color = Color.White.copy(alpha = 0.96f),
-            shadowElevation = 5.dp
+                .fillMaxWidth()
+                .height(68.dp),
+            color = Color.White,
+            shadowElevation = 10.dp
         ) {
-            TextButton(
-                onClick = { goBack() },
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 18.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("‹  Back", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                TextButton(
+                    onClick = { goHome() },
+                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)
+                ) {
+                    Text("⌂  Home", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                }
+
+                TextButton(
+                    onClick = { goBack() },
+                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)
+                ) {
+                    Text("Back  ›", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7043A8))
+                }
             }
         }
     }
-}
-
 @Composable
 private fun HomeContent(
     scrollState: ScrollState,
