@@ -59,7 +59,29 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA)
         )
-        Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE9F2FF)) { Text("💎 ${data?.diamonds ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA)) }
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE9F2FF)) {
+                Text("💎 ${data?.diamonds ?: 0}", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+            }
+            if (!finished) {
+                Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFEAF8EF)) {
+                    Text("⭐ $score correct", Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontWeight = FontWeight.Bold, color = Color(0xFF23754A))
+                }
+            }
+        }
+        if (!finished) {
+            Spacer(Modifier.height(10.dp))
+            LinearProgressIndicator(
+                progress = { (currentIndex.toFloat() / questions.size).coerceIn(0f, 1f) },
+                Modifier.fillMaxWidth().height(7.dp),
+                color = Color(0xFF315FBA),
+                trackColor = Color(0xFFDCE7F7)
+            )
+        }
         Spacer(Modifier.height(8.dp))
 
         if (finished) {
@@ -190,6 +212,28 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         }
 
         if (selected >= 0) {
+            val answerCorrect = selected == question.correctAnswer
+            Card(
+                Modifier.fillMaxWidth().padding(top = 4.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (answerCorrect) Color(0xFFE8F8EE) else Color(0xFFFFECEC)
+                )
+            ) {
+                Column(Modifier.fillMaxWidth().padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        if (answerCorrect) "🎉 দারুণ! সঠিক উত্তর!" else "💡 চেষ্টা চালিয়ে যাও!",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = if (answerCorrect) Color(0xFF23754A) else Color(0xFFC62828)
+                    )
+                    if (!answerCorrect) {
+                        Spacer(Modifier.height(4.dp))
+                        Text("সঠিক উত্তর: ${question.options[question.correctAnswer]}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color(0xFF23754A), textAlign = TextAlign.Center)
+                    }
+                }
+            }
+            Spacer(Modifier.height(8.dp))
             if (rewardShown) {
                 val rewardScale by animateFloatAsState(
                     targetValue = if (rewardPulse) 1.22f else 1f,
