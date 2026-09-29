@@ -71,6 +71,109 @@ fun AbidLetterSoundsScreen(onBack: () -> Unit) {
         }
     }
 }
+@Composable
+fun AbidListenAndChooseScreen(onBack: () -> Unit) {
+    val letters = ('a'..'z').toList()
+    var round by remember { mutableIntStateOf(0) }
+    var target by remember(round) { mutableStateOf(letters.random()) }
+    var options by remember(round) {
+        mutableStateOf((listOf(target) + letters.filter { it != target }.shuffled().take(3)).shuffled())
+    }
+    var selected by remember { mutableStateOf<Char?>(null) }
+    var score by remember { mutableIntStateOf(0) }
+    var finished by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val tts = remember(context) {
+        TextToSpeech(context) { }.apply { language = Locale("en", "IN") }
+    }
+
+    DisposableEffect(Unit) { onDispose { tts.shutdown() } }
+
+    fun speakLetter() {
+        tts.language = Locale("en", "IN")
+        tts.speak(target.toString(), TextToSpeech.QUEUE_FLUSH, null, "listen_letter")
+    }
+
+    fun nextRound() {
+        if (round == 9) {
+            finished = true
+        } else {
+            round++
+            target = letters.random()
+            options = (listOf(target) + letters.filter { it != target }.shuffled().take(3)).shuffled()
+            selected = null
+        }
+    }
+
+    AbidGameFrame("🎧 Listen & Choose", Color(0xFF7043A8), onBack) {
+        if (finished) {
+            Spacer(Modifier.height(70.dp))
+            Text("🎉 Test Complete!", fontSize = 30.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, color = Color(0xFF7043A8))
+            Spacer(Modifier.height(16.dp))
+            Text("Score: $score / 10", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
+            Spacer(Modifier.height(28.dp))
+            Button(onClick = {
+                round = 0
+                score = 0
+                finished = false
+                target = letters.random()
+                options = (listOf(target) + letters.filter { it != target }.shuffled().take(3)).shuffled()
+                selected = null
+            }, modifier = Modifier.fillMaxWidth().height(58.dp)) {
+                Text("🔄 Play Again", fontSize = 20.sp)
+            }
+        } else {
+            Text("Question ${round + 1} of 10", fontSize = 17.sp, color = Color(0xFF60758A))
+            Spacer(Modifier.height(18.dp))
+            Text("🎧", fontSize = 58.sp)
+            Spacer(Modifier.height(8.dp))
+            Text("Tap the speaker and listen", fontSize = 21.sp, fontWeight = FontWeight.Bold, color = Color(0xFF26354A))
+            Text("Then choose the letter you heard", fontSize = 15.sp, color = Color(0xFF60758A))
+            Spacer(Modifier.height(18.dp))
+            Button(onClick = { speakLetter() }, modifier = Modifier.fillMaxWidth().height(72.dp), shape = RoundedCornerShape(22.dp)) {
+                Text("🔊  Hear the Letter", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+            }
+            Spacer(Modifier.height(22.dp))
+            options.forEach { option ->
+                val isCorrect = option == target
+                val isSelected = selected == option
+                val background = when {
+                    selected == null -> Color(0xFFF3ECFF)
+                    isCorrect -> Color(0xFFE8F8EF)
+                    isSelected -> Color(0xFFFFE8E8)
+                    else -> Color(0xFFF5F5F5)
+                }
+                val textColor = when {
+                    selected == null -> Color(0xFF7043A8)
+                    isCorrect -> Color(0xFF23754A)
+                    isSelected -> Color(0xFFC62828)
+                    else -> Color(0xFF8A96A8)
+                }
+                Card(onClick = {
+                    if (selected == null) {
+                        selected = option
+                        if (option == target) score++
+                    }
+                }, modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).height(68.dp),
+                   shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = background)) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(option.toString(), fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = textColor)
+                    }
+                }
+            }
+            if (selected != null) {
+                Spacer(Modifier.height(8.dp))
+                Text(if (selected == target) "🎉 Correct!" else "😊 The correct letter was $target",
+                    fontSize = 19.sp, fontWeight = FontWeight.Bold,
+                    color = if (selected == target) Color(0xFF23754A) else Color(0xFFC62828))
+                Spacer(Modifier.height(8.dp))
+                Button(onClick = { nextRound() }, modifier = Modifier.fillMaxWidth().height(56.dp)) {
+                    Text(if (round == 9) "🏆 See Result" else "Next →", fontSize = 19.sp)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun AbidLetterPictureMatchScreen(onBack: () -> Unit) {
