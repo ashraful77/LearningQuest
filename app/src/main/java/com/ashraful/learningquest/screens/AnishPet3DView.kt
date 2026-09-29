@@ -95,7 +95,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             GLES20.glEnable(GLES20.GL_CULL_FACE)
             GLES20.glCullFace(GLES20.GL_BACK)
             shader = SimpleShader()
-            sphere = makeSphere(1f, 18, 12)
+            sphere = makeSphere(1f, 24, 16)
             cone = makeCone(1f, 1.7f, 18)
             cube = makeCube()
             lastTime = System.nanoTime()
@@ -136,7 +136,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             Matrix.translateM(model, 0, 0f, jump, 0f)
             Matrix.rotateM(model, 0, userPitch, 1f, 0f, 0f)
             Matrix.rotateM(model, 0, userYaw, 0f, 1f, 0f)
-            drawPet(model, vp)
+            drawPet(model, vp, now)
         }
 
         fun react() {
@@ -144,7 +144,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             onTap?.invoke()
         }
 
-        private fun drawPet(base: FloatArray, vp: FloatArray) {
+        private fun drawPet(base: FloatArray, vp: FloatArray, now: Long) {
             val isPanda = pet == "🐼"
             val isCat = pet == "🐱"
             val isDog = pet == "🐶"
@@ -157,6 +157,11 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val foxOrange = floatArrayOf(0.92f, 0.28f, 0.06f)
             val cream = floatArrayOf(1.0f, 0.82f, 0.57f)
             val pink = floatArrayOf(0.95f, 0.38f, 0.48f)
+
+            if (isPanda) {
+                drawPanda(base, vp, now, white, black, pink)
+                return
+            }
 
             // Body
             part(base, vp, 0f, 0.05f, 0f, 1.25f, 1.55f, 0.95f, if (isPanda) white else if (isFox) foxOrange else if (isCat) orange else tan)
@@ -202,6 +207,73 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val footColor = if (isPanda) black else if (isFox) cream else if (isCat) orange else tan
             part(base, vp, -0.62f, -0.78f, 0.36f, 0.42f, 0.28f, 0.55f, footColor)
             part(base, vp, 0.62f, -0.78f, 0.36f, 0.42f, 0.28f, 0.55f, footColor)
+        }
+
+        private fun drawPanda(
+            base: FloatArray,
+            vp: FloatArray,
+            now: Long,
+            white: FloatArray,
+            black: FloatArray,
+            pink: FloatArray
+        ) {
+            // Gentle breathing keeps the buddy alive even when untouched.
+            val breath = 1f + sin(now / 650_000_000.0).toFloat() * 0.018f
+            val reaction = System.currentTimeMillis() < reactionUntil
+            val wave = if (reaction) sin((now / 75_000_000.0)).toFloat() * 24f else 0f
+
+            // Soft ground shadow.
+            part(base, vp, 0f, -1.08f, 0.08f, 1.25f, 0.10f, 0.62f, floatArrayOf(0.55f, 0.62f, 0.60f))
+
+            // Rounded body and belly.
+            part(base, vp, 0f, 0.02f, 0f, 1.18f, 1.48f * breath, 0.88f, white)
+            part(base, vp, 0f, -0.05f, 0.79f, 0.67f, 0.88f, 0.16f, floatArrayOf(0.86f, 0.86f, 0.83f))
+
+            // Black arms, one waves when tapped.
+            part(base, vp, -1.00f, 0.22f, 0.02f, 0.34f, 0.78f, 0.38f, black, rz = -12f)
+            part(base, vp, 1.00f, 0.22f, 0.02f, 0.34f, 0.78f, 0.38f, black, rz = 12f + wave)
+
+            // Black legs and little paws.
+            part(base, vp, -0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
+            part(base, vp, 0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
+            part(base, vp, -0.58f, -1.02f, 0.55f, 0.44f, 0.22f, 0.30f, black)
+            part(base, vp, 0.58f, -1.02f, 0.55f, 0.44f, 0.22f, 0.30f, black)
+
+            // Small round black tail.
+            part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black)
+
+            // Big rounded head.
+            part(base, vp, 0f, 1.55f, 0f, 1.13f, 1.00f, 1.00f, white)
+            // Ears are rounded, not cones.
+            part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
+            part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black)
+
+            // Classic panda eye patches.
+            part(base, vp, -0.43f, 1.62f, 0.90f, 0.32f, 0.43f, 0.13f, black, ry = -22f, rz = 10f)
+            part(base, vp, 0.43f, 1.62f, 0.90f, 0.32f, 0.43f, 0.13f, black, ry = 22f, rz = -10f)
+
+            // Bright eyes + tiny catchlights.
+            val blink = sin(now / 1_900_000_000.0).toFloat() > 0.985f
+            val eyeHeight = if (blink) 0.025f else 0.14f
+            part(base, vp, -0.43f, 1.62f, 1.015f, 0.115f, eyeHeight, 0.075f, black)
+            part(base, vp, 0.43f, 1.62f, 1.015f, 0.115f, eyeHeight, 0.075f, black)
+            if (!blink) {
+                part(base, vp, -0.39f, 1.67f, 1.085f, 0.030f, 0.040f, 0.018f, white)
+                part(base, vp, 0.47f, 1.67f, 1.085f, 0.030f, 0.040f, 0.018f, white)
+            }
+
+            // White muzzle, black nose and smiling mouth.
+            part(base, vp, -0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
+            part(base, vp, 0.23f, 1.28f, 0.91f, 0.40f, 0.30f, 0.25f, white)
+            part(base, vp, 0f, 1.35f, 1.105f, 0.18f, 0.13f, 0.11f, black)
+            part(base, vp, 0f, 1.19f, 1.075f, 0.08f, 0.16f, 0.06f, black)
+            part(base, vp, -0.09f, 1.12f, 1.07f, 0.06f, 0.12f, 0.05f, black, rz = 22f)
+            part(base, vp, 0.09f, 1.12f, 1.07f, 0.06f, 0.12f, 0.05f, black, rz = -22f)
+
+            // Tiny pink tongue on tap.
+            if (reaction) {
+                part(base, vp, 0f, 1.05f, 1.095f, 0.09f, 0.12f, 0.05f, pink)
+            }
         }
 
         private fun part(
