@@ -336,6 +336,21 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, -0.82f, 2.23f + headBob, -0.02f, 0.43f, 0.43f, 0.36f, black, rz = -earWiggle)
             part(base, vp, 0.82f, 2.23f + headBob, -0.02f, 0.43f, 0.43f, 0.36f, black, rz = earWiggle)
 
+            // Soft silhouette fur tufts: small layered fibers break the perfect sphere outline.
+            // They are deliberately sparse so the Panda stays smooth and cute instead of spiky.
+            val furWhite = floatArrayOf(0.93f, 0.93f, 0.90f)
+            val furBlack = floatArrayOf(0.045f, 0.050f, 0.055f)
+            partCone(base, vp, -0.73f, 2.02f + headBob, 0.02f, 0.12f, 0.30f, furWhite, rz = -35f)
+            partCone(base, vp, -0.48f, 2.36f + headBob, 0.00f, 0.11f, 0.27f, furWhite, rz = -12f)
+            partCone(base, vp, -0.18f, 2.48f + headBob, 0.00f, 0.10f, 0.24f, furWhite, rz = 2f)
+            partCone(base, vp, 0.18f, 2.48f + headBob, 0.00f, 0.10f, 0.24f, furWhite, rz = -2f)
+            partCone(base, vp, 0.48f, 2.36f + headBob, 0.00f, 0.11f, 0.27f, furWhite, rz = 12f)
+            partCone(base, vp, 0.73f, 2.02f + headBob, 0.02f, 0.12f, 0.30f, furWhite, rz = 35f)
+            partCone(base, vp, -1.05f, 0.72f, 0.02f, 0.10f, 0.26f, furWhite, rz = -72f)
+            partCone(base, vp, 1.05f, 0.72f, 0.02f, 0.10f, 0.26f, furWhite, rz = 72f)
+            partCone(base, vp, -0.92f, -0.55f, 0.02f, 0.11f, 0.24f, furBlack, rz = -28f)
+            partCone(base, vp, 0.92f, -0.55f, 0.02f, 0.11f, 0.24f, furBlack, rz = 28f)
+
             // Classic panda eye patches.
             part(base, vp, -0.47f, 1.64f + headBob, 0.96f, 0.36f, 0.46f, 0.14f, black, ry = -22f, rz = 10f)
             part(base, vp, 0.47f, 1.64f + headBob, 0.96f, 0.36f, 0.46f, 0.14f, black, ry = 22f, rz = -10f)
