@@ -62,8 +62,10 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
         val correct = choice == questions[index].correctAnswer
         if (correct) score++
         scope.launch {
-            store.addAnishDiamonds(5)
-            store.recordAnishAnswer(correct)
+            store.recordAnishQuestionAttempt(
+                questions[index].id,
+                correct
+            )
         }
     }
 
