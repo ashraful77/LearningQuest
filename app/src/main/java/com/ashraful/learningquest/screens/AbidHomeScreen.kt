@@ -117,6 +117,7 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
                         1 -> {
                             LearningCard("অ", "বাংলা বর্ণমালা", "শিখি অ, আ, ক, খ এবং আরও!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_letters") }
                             LearningCard("🎯", "বাংলা বর্ণমালা অনুশীলন", "১০টি প্রশ্নে বর্ণ চিনে অনুশীলন করি!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_bengali_practice") }
+                            LearningCard("🎧", "শুনে বেছে নিই", "বর্ণ শুনে সঠিক বর্ণটি বেছে নাও • আলাদা সেট", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("abid_bengali_listen_sets") }
                             LearningCard("🖼️", "বাংলা বর্ণ → ছবি", "বর্ণ দেখে সঠিক ছবি খুঁজি!", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("abid_bengali_picture_match") }
                             LearningCard("✍️", "বাংলা বর্ণ লেখা", "আঙুল দিয়ে বর্ণ অনুসরণ করে লিখি!", Color(0xFFFFF1D6), Color(0xFFB05A00)) { onNavigate("abid_bengali_tracing") }
                         }
