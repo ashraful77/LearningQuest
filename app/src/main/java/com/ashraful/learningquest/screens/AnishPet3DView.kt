@@ -361,15 +361,19 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                 part(base, vp, 0.49f, 1.59f + headBob, 1.086f, 0.014f, 0.018f, 0.010f, tiny)
             }
 
-            // Soft cheek highlights, white muzzle, black nose and smiling mouth.
-            part(base, vp, -0.62f, 1.31f + headBob, 0.90f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
-            part(base, vp, 0.62f, 1.31f, 0.84f, 0.23f, 0.18f, 0.07f, floatArrayOf(0.97f, 0.97f, 0.95f))
-            part(base, vp, -0.25f, 1.28f + headBob, 0.96f, 0.43f, 0.32f, 0.27f, white)
-            part(base, vp, 0.25f, 1.28f + headBob, 0.96f, 0.43f, 0.32f, 0.27f, white)
-            part(base, vp, 0f, 1.35f + headBob, 1.17f, 0.22f, 0.15f, 0.13f, black)
-            part(base, vp, 0f, 1.19f + headBob, 1.145f, 0.08f, 0.16f, 0.06f, black)
-            part(base, vp, -0.11f, 1.12f + headBob, 1.14f, 0.07f, 0.13f, 0.055f, black, rz = 22f)
-            part(base, vp, 0.11f, 1.12f, 1.07f, 0.07f, 0.13f, 0.055f, black, rz = -22f)
+            // Rounded cheeks + layered muzzle give the Panda a softer plush-toy face.
+            val muzzleWhite = floatArrayOf(0.985f, 0.985f, 0.965f)
+            val muzzleShadow = floatArrayOf(0.84f, 0.84f, 0.81f)
+            part(base, vp, -0.63f, 1.32f + headBob, 0.90f, 0.25f, 0.19f, 0.075f, floatArrayOf(0.98f, 0.98f, 0.96f))
+            part(base, vp, 0.63f, 1.32f + headBob, 0.90f, 0.25f, 0.19f, 0.075f, floatArrayOf(0.98f, 0.98f, 0.96f))
+            part(base, vp, -0.25f, 1.28f + headBob, 0.97f, 0.46f, 0.34f, 0.28f, muzzleWhite)
+            part(base, vp, 0.25f, 1.28f + headBob, 0.97f, 0.46f, 0.34f, 0.28f, muzzleWhite)
+            part(base, vp, 0f, 1.16f + headBob, 1.035f, 0.25f, 0.13f, 0.055f, muzzleShadow)
+            part(base, vp, 0f, 1.35f + headBob, 1.19f, 0.23f, 0.16f, 0.14f, black)
+            part(base, vp, -0.055f, 1.385f + headBob, 1.285f, 0.055f, 0.035f, 0.018f, white)
+            part(base, vp, 0f, 1.19f + headBob, 1.155f, 0.075f, 0.17f, 0.065f, black)
+            part(base, vp, -0.11f, 1.12f + headBob, 1.145f, 0.075f, 0.135f, 0.060f, black, rz = 22f)
+            part(base, vp, 0.11f, 1.12f + headBob, 1.145f, 0.075f, 0.135f, 0.060f, black, rz = -22f)
 
             // Soft paw pads make the seated panda feel more tactile and toy-like.
             val pawPad = floatArrayOf(0.28f, 0.17f, 0.15f)
