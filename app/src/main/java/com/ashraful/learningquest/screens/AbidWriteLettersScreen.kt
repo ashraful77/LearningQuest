@@ -41,38 +41,20 @@ private fun makeGuideBitmap(letter: Char): Bitmap {
     return bitmap
 }
 
-private fun guidePoints(bitmap: Bitmap, step: Int = 4): List<Offset> {
-    // Keep only the visible boundary of the glyph.
-    // The old scorer used every filled pixel, so a random stroke
-    // anywhere inside the faint letter could score as a good trace.
+private fun guidePoints(bitmap: Bitmap, step: Int = 5): List<Offset> {
     val points = mutableListOf<Offset>()
-
-    var y = 1
-    while (y < bitmap.height - 1) {
-        var x = 1
-        while (x < bitmap.width - 1) {
+    var y = 2
+    while (y < bitmap.height - 2) {
+        var x = 2
+        while (x < bitmap.width - 2) {
             val p = bitmap.getPixel(x, y)
             val filled = android.graphics.Color.alpha(p) > 80 &&
                 android.graphics.Color.red(p) < 180
-
-            if (filled) {
-                var edge = false
-                for (dy in -1..1) {
-                    for (dx in -1..1) {
-                        if (dx == 0 && dy == 0) continue
-                        val n = bitmap.getPixel(x + dx, y + dy)
-                        if (android.graphics.Color.alpha(n) <= 80) {
-                            edge = true
-                        }
-                    }
-                }
-                if (edge) points += Offset(x.toFloat(), y.toFloat())
-            }
+            if (filled) points += Offset(x.toFloat(), y.toFloat())
             x += step
         }
         y += step
     }
-
     return points
 }
 
@@ -90,30 +72,13 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
     val expectedPoints = remember(letter) { guidePoints(guide) }
 
     fun checkLetter(width: Float, height: Float) {
-        if (userPoints.size < 15 || width <= 0f || height <= 0f) {
+        if (userPoints.size < 20 || width <= 0f || height <= 0f) {
             score = 0
             result = false
             return
         }
 
-        // Score the child's actual strokes against the letter guide.
-        // This is much fairer than requiring the strokes to cover the entire
-        // filled area of the guide letter.
-        val radius = minOf(width, height) * 0.035f
-        val guideMatches = userPoints.count { user ->
-            expectedPoints.any { point ->
-                val target = Offset(
-                    point.x / guide.width * width,
-                    point.y / guide.height * height
-                )
-                hypot(
-                    (user.x - target.x).toDouble(),
-                    (user.y - target.y).toDouble()
-                ) <= radius
-            }
-        }
-
-        val userCoverage = guideMatches * 100 / userPoints.size.coerceAtLeast(1)
+        val radius = minOf(width, height) * 0.045f
 
         val guideCoverage = expectedPoints.count { point ->
             val target = Offset(
@@ -128,11 +93,24 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
             }
         } * 100 / expectedPoints.size.coerceAtLeast(1)
 
-        score = ((userCoverage * 0.50f) + (guideCoverage * 0.50f))
+        val userOnGuide = userPoints.count { user ->
+            expectedPoints.any { point ->
+                val target = Offset(
+                    point.x / guide.width * width,
+                    point.y / guide.height * height
+                )
+                hypot(
+                    (user.x - target.x).toDouble(),
+                    (user.y - target.y).toDouble()
+                ) <= radius
+            }
+        } * 100 / userPoints.size.coerceAtLeast(1)
+
+        score = ((guideCoverage * 0.70f) + (userOnGuide * 0.30f))
             .toInt()
             .coerceIn(0, 100)
 
-        result = score >= 70
+        result = score >= 55
     }
 
     Box(
@@ -152,43 +130,30 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                Modifier.fillMaxWidth().padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(onClick = onBack) {
-                    Text("‹ Home", fontSize = 19.sp, fontWeight = FontWeight.Bold)
-                }
-                Text(
-                    "✍️ Write Letters",
-                    fontSize = 29.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF1769AA)
-                )
-            }
-
+            Spacer(Modifier.height(8.dp))
             Text(
-                "Write this letter",
-                fontSize = 21.sp,
+                "✍️ Write & Trace",
+                fontSize = 29.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF1769AA)
+            )
+            Text(
+                "Trace the letter with your finger",
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF60758A)
             )
             Text(
                 letter.toString(),
-                fontSize = 52.sp,
+                fontSize = 58.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color(0xFF1769AA)
-            )
-            Text(
-                "Trace the light guide with your finger",
-                fontSize = 15.sp,
-                color = Color(0xFF7B8797)
             )
 
             Spacer(Modifier.height(8.dp))
 
             Card(
-                Modifier.fillMaxWidth().weight(1f),
+                Modifier.fillMaxWidth().height(420.dp),
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(5.dp)
@@ -214,7 +179,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                         }
                 ) {
                     val guidePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                        color = android.graphics.Color.rgb(220, 229, 238)
+                        color = android.graphics.Color.rgb(224, 234, 242)
                         typeface = Typeface.create("sans-serif", Typeface.BOLD)
                         textSize = 360f * minOf(size.width / 400f, size.height / 500f)
                         textAlign = Paint.Align.CENTER
@@ -250,19 +215,19 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
 
             when (result) {
                 true -> Text(
-                    "🎉 Excellent! $letter • $score%",
+                    "🎉 Great tracing! $score%",
                     fontSize = 23.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF159447)
                 )
                 false -> Text(
-                    "😊 Try again! $score%",
+                    "😊 Almost there! $score%",
                     fontSize = 21.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFD52E45)
                 )
                 null -> Text(
-                    "Trace the letter boundary carefully to pass",
+                    "Follow the light letter from top to bottom",
                     fontSize = 15.sp,
                     color = Color(0xFF65738A)
                 )
@@ -283,7 +248,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                     },
                     modifier = Modifier.weight(1f).height(54.dp)
                 ) {
-                    Text("Clear", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("🧹 Clear", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
 
                 if (result == true) {
@@ -310,7 +275,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                         },
                         modifier = Modifier.weight(1f).height(54.dp)
                     ) {
-                        Text("✓ Check", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("✓ Check My Writing", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
