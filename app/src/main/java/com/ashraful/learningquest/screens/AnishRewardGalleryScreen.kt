@@ -38,6 +38,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val petAura = when (petLevel) { 1 -> "🌱"; 2 -> "✨"; 3 -> "💫"; 4 -> "🔥"; else -> "👑" }
     val ability = when (selectedPet) { "🐼" -> if (petLevel >= 3) "ZEN BOOST 🧘" else "Calm Friend"; "🐱" -> if (petLevel >= 3) "LUCKY PAW 🍀" else "Quick Friend"; "🐶" -> if (petLevel >= 3) "CHEER BOOST 🎉" else "Happy Friend"; else -> if (petLevel >= 3) "FOX FOCUS 🦊" else "Clever Friend" }
     val abilityMessage = when (selectedPet) { "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"; "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"; "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"; else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!" }
+    var selectedPet by remember { mutableStateOf("🐼") }    val abilityMessage = when (selectedPet) { "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"; "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"; "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"; else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!" }
     var selectedPet by remember { mutableStateOf("🐼") }
     var petTapCount by remember { mutableStateOf(0) }
     var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
