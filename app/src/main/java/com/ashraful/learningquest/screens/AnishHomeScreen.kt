@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.*
 
 @Composable
 fun AnishHomeScreen(onNavigate: (String) -> Unit) {
@@ -117,6 +119,75 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
                     AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "ডায়মন্ড", Modifier.weight(1f))
                     AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "সংগ্রহ", Modifier.weight(1f))
                     AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "রিওয়ার্ড", Modifier.weight(1f))
+                }
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        val totalQuestions = data?.anishTotalQuestions ?: 0
+        val rewardLevel = when {
+            totalQuestions >= 150 -> 3
+            totalQuestions >= 50 -> 2
+            else -> 1
+        }
+        val levelTitle = when (rewardLevel) {
+            3 -> "LEVEL 3 • PET COMPANION"
+            2 -> "LEVEL 2 • TROPHY COLLECTION"
+            else -> "LEVEL 1 • REWARD COLLECTION"
+        }
+        val levelIcon = when (rewardLevel) {
+            3 -> "🐾"
+            2 -> "🏆"
+            else -> "🎁"
+        }
+        val levelDescription = when (rewardLevel) {
+            3 -> "১৫০+ প্রশ্ন • পেট বন্ধু আনলক হয়েছে!"
+            2 -> "৫০+ প্রশ্ন • 3D-style ট্রফি সংগ্রহ করো!"
+            else -> "৫০ প্রশ্নের আগে • ব্যাজ ও ছোট পুরস্কার সংগ্রহ করো"
+        }
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = when (rewardLevel) {
+                    3 -> Color(0xFFEAF8EF)
+                    2 -> Color(0xFFFFF4D8)
+                    else -> Color(0xFFF1F5FF)
+                }
+            ),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            val transition = rememberInfiniteTransition(label = "anish_reward")
+            val pulse by transition.animateFloat(
+                initialValue = 0.94f,
+                targetValue = 1.06f,
+                animationSpec = infiniteRepeatable(tween(850), RepeatMode.Reverse),
+                label = "rewardPulse"
+            )
+            val rotation by transition.animateFloat(
+                initialValue = -6f,
+                targetValue = 6f,
+                animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+                label = "rewardRotation"
+            )
+            Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(levelIcon, fontSize = 48.sp, modifier = Modifier.graphicsLayer {
+                    scaleX = pulse
+                    scaleY = pulse
+                    rotationY = if (rewardLevel >= 2) rotation * 3f else rotation
+                })
+                Spacer(Modifier.width(14.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(levelTitle, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text(levelDescription, fontSize = 12.sp, color = Color(0xFF60758A))
+                    Spacer(Modifier.height(5.dp))
+                    Text("Progress: $totalQuestions / ${if (rewardLevel == 1) 50 else 150} questions", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A))
+                    if (rewardLevel < 3) {
+                        val next = if (rewardLevel == 1) 50 else 150
+                        LinearProgressIndicator(progress = { (totalQuestions.toFloat() / next).coerceIn(0f, 1f) }, Modifier.fillMaxWidth().padding(top = 6.dp).height(6.dp), color = Color(0xFF315FBA), trackColor = Color.White.copy(alpha = 0.7f))
+                    }
                 }
             }
         }
