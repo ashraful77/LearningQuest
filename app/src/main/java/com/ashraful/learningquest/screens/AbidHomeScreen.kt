@@ -132,6 +132,24 @@ fun AbidHomeScreen(
         SimpleFeatureCard("🎪", "Fun Zone", "Treasure Hunt • Odd One Out • Number Jump", Color(0xFFFFF0E6), Color(0xFFB05A00)) { onNavigate("abid_fun_zone") }
         Spacer(Modifier.height(8.dp))
         SimpleFeatureCard("🧠", "Games & Memory", "Memory Match • Fun learning game", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onNavigate("abid_memory2") }
+        Spacer(Modifier.height(10.dp))
+        Card(
+            onClick = { onNavigate("abid_achievements") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Row(Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("⭐", fontSize = 24.sp)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Progress & Rewards", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7043A8))
+                    Text("${progress.stars} ⭐  •  Level ${progress.level}  •  🔥 ${progress.streak} day streak", fontSize = 10.sp, color = Color(0xFF60758A))
+                }
+                Text("›", fontSize = 24.sp, color = Color(0xFF7043A8))
+            }
+        }
 
         Spacer(Modifier.height(18.dp))
         Text("🌟 Keep learning, Abid! Every activity makes you smarter!", modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp), fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF7A8798))
