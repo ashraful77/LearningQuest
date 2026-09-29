@@ -143,6 +143,7 @@ fun HomeScreen() {
             "anish_gk" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান") { goBack() }
             "anish_store" -> AnishStoreScreen { goBack() }
             "anish_rewards" -> AnishRewardGalleryScreen { goBack() }
+            "anish_model_test" -> AnishModelTestScreen { goBack() }
         }
 
         Surface(
