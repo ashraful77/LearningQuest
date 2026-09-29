@@ -345,12 +345,19 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
                 blinkUntil = lastBlinkAt + 180L
             }
             val blink = now / 1_000_000L < blinkUntil
-            val eyeHeight = if (blink) 0.025f else 0.14f
-            part(base, vp, -0.43f, 1.62f, 1.015f, 0.125f, eyeHeight, 0.075f, black)
-            part(base, vp, 0.43f, 1.62f, 1.015f, 0.125f, eyeHeight, 0.075f, black)
+            val eyeHeight = if (blink) 0.025f else if (reaction) 0.12f else 0.14f
+            val eyeWidth = if (reaction) 0.115f else 0.125f
+            part(base, vp, -0.43f, 1.62f + headBob, 1.015f, eyeWidth, eyeHeight, 0.075f, black)
+            part(base, vp, 0.43f, 1.62f + headBob, 1.015f, eyeWidth, eyeHeight, 0.075f, black)
             if (!blink) {
-                part(base, vp, -0.40f, 1.67f, 1.085f, 0.040f, 0.052f, 0.020f, white)
-                part(base, vp, 0.46f, 1.67f, 1.085f, 0.040f, 0.052f, 0.020f, white)
+                // Large glossy catchlights give the Panda a more expressive toy-like gaze.
+                val glint = 0.040f + sin(now / 420_000_000.0).toFloat() * 0.006f
+                part(base, vp, -0.40f, 1.68f + headBob, 1.085f, glint, glint * 1.30f, 0.020f, white)
+                part(base, vp, 0.46f, 1.68f + headBob, 1.085f, glint, glint * 1.30f, 0.020f, white)
+                // A tiny secondary highlight adds depth without changing the model.
+                val tiny = floatArrayOf(0.78f, 0.80f, 0.82f)
+                part(base, vp, -0.37f, 1.59f + headBob, 1.086f, 0.014f, 0.018f, 0.010f, tiny)
+                part(base, vp, 0.49f, 1.59f + headBob, 1.086f, 0.014f, 0.018f, 0.010f, tiny)
             }
 
             // Soft cheek highlights, white muzzle, black nose and smiling mouth.
