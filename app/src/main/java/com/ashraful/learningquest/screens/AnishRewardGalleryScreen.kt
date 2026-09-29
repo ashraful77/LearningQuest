@@ -44,20 +44,20 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
         else -> if (petLevel >= 3) "FOX FOCUS 🦊" else "Clever Friend"
     }
     val abilityMessage = when (selectedPet) {
-        "🐼" -> "পান্ডা তোমাকে শান্তভাবে ফোকাস করতে সাহায্য করে!"
-        "🐱" -> "বিড়ালের Lucky Paw তোমাকে উৎসাহ দেয়!"
-        "🐶" -> "কুকুরছানার Cheer Boost তোমাকে মোটিভেট করে!"
-        else -> "শিয়ালের Focus Mode তোমাকে চ্যালেঞ্জ নিতে সাহায্য করে!"
+        "🐼" -> "Panda helps you stay calm and focused!"
+        "🐱" -> "Cat's Lucky Paw keeps you motivated!"
+        "🐶" -> "Puppy's Cheer Boost keeps you motivated!"
+        else -> "Fox Focus helps you take on challenges!"
     }
     var petTapCount by remember { mutableStateOf(0) }
-    var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
+    var petReaction by remember { mutableStateOf("Learn with me! 🐾") }
     var petBounce by remember { mutableStateOf(false) }
 
     val petReactions = mapOf(
-        "🐼" to listOf("পান্ডা বলছে: দারুণ করেছ! 🎉", "আরও ৫টি প্রশ্ন করি! 📚", "ইয়েস! আমরা পারব! 💪"),
-        "🐱" to listOf("বিড়াল বলছে: মিউ! সঠিক উত্তর! 😺", "চলো পরের প্রশ্নে যাই! ✨", "তুমি খুব ভালো করছ! 🌟"),
-        "🐶" to listOf("কুকুরছানা বলছে: ওয়াও! 🐶", "চলো একসঙ্গে শিখি! 📖", "গুড জব! ⭐"),
-        "🦊" to listOf("শিয়াল বলছে: স্মার্ট উত্তর! 🦊", "চ্যালেঞ্জ নাও! 🚀", "আজকের শেখা অসাধারণ! 🔥")
+        "🐼" to listOf("Panda says: Great job! 🎉", "Let's do 5 more questions! 📚", "Yes! We can do it! 💪"),
+        "🐱" to listOf("Cat says: Meow! Correct answer! 😺", "Let's go to the next question! ✨", "You're doing great! 🌟"),
+        "🐶" to listOf("Puppy says: Wow! 🐶", "Let's learn together! 📖", "Good job! ⭐"),
+        "🦊" to listOf("Fox says: Smart answer! 🦊", "Take the challenge! 🚀", "Today's learning is awesome! 🔥")
     )
     val bounce by animateFloatAsState(
         targetValue = if (petBounce) 1.14f else 1f,
@@ -85,12 +85,12 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Text("🏆 অনিশের রিওয়ার্ড গ্যালারি", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-        Text("প্রশ্ন সমাধান করো • পুরস্কার আনলক করো • সংগ্রহ করো", fontSize = 13.sp, color = Color(0xFF60758A))
+        Text("🏆 Anish Reward Gallery", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+        Text("Solve questions • Unlock rewards • Collect them", fontSize = 13.sp, color = Color(0xFF60758A))
         Spacer(Modifier.height(10.dp))
 
         Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE9F2FF)) {
-            Text("📝 $total প্রশ্ন সম্পন্ন", Modifier.padding(horizontal = 14.dp, vertical = 9.dp), fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
+            Text("📝 $total questions completed", Modifier.padding(horizontal = 14.dp, vertical = 9.dp), fontWeight = FontWeight.Bold, color = Color(0xFF315FBA))
         }
 
         Spacer(Modifier.height(16.dp))
@@ -98,7 +98,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
         RewardCard(
             title = "LEVEL 1 • 2D REWARDS",
             icon = "🎁",
-            description = "শুরুতেই ব্যাজ ও ছোট পুরস্কার সংগ্রহ করো।",
+            description = "Collect badges and starter rewards.",
             unlocked = true,
             color = Color(0xFFF1F5FF),
             pulse = pulse,
@@ -110,7 +110,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
         RewardCard(
             title = "LEVEL 2 • 3D TROPHIES",
             icon = "🏆",
-            description = if (trophyUnlocked) "অভিনন্দন! ট্রফি সংগ্রহ এখন আনলক।" else "৫০টি প্রশ্ন সম্পন্ন করলে 3D-style ট্রফি আনলক হবে।",
+            description = if (trophyUnlocked) "Congratulations! Trophy collection is unlocked." else "Complete 50 questions to unlock 3D-style trophies.",
             unlocked = trophyUnlocked,
             color = Color(0xFFFFF4D8),
             pulse = pulse,
@@ -140,7 +140,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
         RewardCard(
             title = "LEVEL 3 • PET COMPANION",
             icon = "🐾",
-            description = if (petUnlocked) "তোমার পেট বন্ধু আনলক হয়েছে!" else "১৫০টি প্রশ্ন সম্পন্ন করলে পেট বন্ধু আনলক হবে।",
+            description = if (petUnlocked) "Your pet companion is unlocked!" else "Complete 150 questions to unlock your pet companion.",
             unlocked = petUnlocked,
             color = Color(0xFFEAF8EF),
             pulse = pulse,
@@ -206,7 +206,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         }
                     }
                     Spacer(Modifier.height(6.dp))
-                    Text("তোমার Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
+                    Text("Your Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
                     Text("$petAura PET LEVEL $petLevel • $petXp / 50 XP", fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                     Text(
                         when (petLevel) {
@@ -227,7 +227,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         trackColor = Color(0xFFD5EBDD)
                     )
                     Text(
-                        if (petLevel >= 5) "MAX LEVEL! 🌟" else "আর ${50 - petXp}টি প্রশ্নে পেটের পরের লেভেল! 🚀",
+                        if (petLevel >= 5) "MAX LEVEL! 🌟" else "${50 - petXp} more questions to reach the next pet level! 🚀",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF23754A)
@@ -239,7 +239,7 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                         Column(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                             Text("⚡ $ability", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                             Text(
-                                if (petLevel >= 3) abilityMessage else "Level 3-এ এই ability unlock হবে!",
+                                if (petLevel >= 3) abilityMessage else "This ability unlocks at Level 3!",
                                 fontSize = 10.sp,
                                 textAlign = TextAlign.Center,
                                 color = Color(0xFF60758A)
@@ -248,15 +248,15 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                     }
                     Spacer(Modifier.height(6.dp))
                     Text(petReaction, fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF315FBA))
-                    Text("পেটকে ট্যাপ করো • $petTapCount বার খেলেছো 🐾", fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
-                    Text("প্রশ্ন সমাধান করলে পেট XP পাবে এবং নতুন লেভেলে উঠবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
+                    Text("Tap your pet • $petTapCount interactions 🐾", fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
+                    Text("Complete questions to earn Pet XP and reach new levels.", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
                 }
             }
         }
 
         Spacer(Modifier.height(18.dp))
         OutlinedButton(onClick = onBack, Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) {
-            Text("‹ ফিরে যাই", fontWeight = FontWeight.Bold)
+            Text("‹ Back", fontWeight = FontWeight.Bold)
         }
     }
 }
