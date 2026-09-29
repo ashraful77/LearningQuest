@@ -33,12 +33,12 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
     val questions = remember(subject, setNumber) {
         anishQuestionsFor(subject).take(60).chunked(20).getOrNull(setNumber - 1).orEmpty()
     }
-    var currentIndex by rememberSaveable(subject) { mutableIntStateOf(0) }
-    var selected by rememberSaveable(subject) { mutableIntStateOf(-1) }
-    var score by rememberSaveable(subject) { mutableIntStateOf(0) }
-    var rewardShown by rememberSaveable(subject) { mutableStateOf(false) }
-    var rewardPulse by rememberSaveable(subject) { mutableStateOf(false) }
-    var milestoneReward by rememberSaveable(subject) { mutableIntStateOf(0) }
+    var currentIndex by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
+    var selected by rememberSaveable(subject, setNumber) { mutableIntStateOf(-1) }
+    var score by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
+    var rewardShown by rememberSaveable(subject, setNumber) { mutableStateOf(false) }
+    var rewardPulse by rememberSaveable(subject, setNumber) { mutableStateOf(false) }
+    var milestoneReward by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
 
     if (questions.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
