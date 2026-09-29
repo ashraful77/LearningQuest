@@ -2,6 +2,7 @@ package com.ashraful.learningquest.data
 
 data class GameData(
     val coins: Int = 0,
+    val diamonds: Int = 0,
     val xp: Int = 0,
     val level: Int = 1,
     val streak: Int = 0,
