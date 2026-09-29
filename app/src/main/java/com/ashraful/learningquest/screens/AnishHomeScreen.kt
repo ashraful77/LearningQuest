@@ -131,10 +131,12 @@ private fun AnishSubjectCard(
     subtitle: String,
     icon: String,
     background: Color,
-    accent: Color
+    accent: Color,
+    onClick: () -> Unit
 ) {
     Card(
-        onClick = onClick,\n        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = background),
         elevation = CardDefaults.cardElevation(1.dp)
