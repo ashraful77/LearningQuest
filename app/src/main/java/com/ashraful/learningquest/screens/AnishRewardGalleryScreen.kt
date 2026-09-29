@@ -29,10 +29,12 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val data by store.gameData.collectAsState(initial = null)
     val total = data?.anishTotalQuestions ?: 0
 
-    val trophyUnlocked = total >= 50
-    val petUnlocked = total >= 150
-    val petLevel = if (petUnlocked) ((total - 150) / 50 + 1).coerceAtMost(5) else 0
-    val petXp = if (petUnlocked) ((total - 150) % 50) else 0
+    // TEMPORARY TEST MODE: keep all rewards unlocked for testing. Remove/disable before the next release build.
+    val testingAllRewards = true
+    val trophyUnlocked = testingAllRewards || total >= 50
+    val petUnlocked = testingAllRewards || total >= 150
+    val petLevel = if (testingAllRewards) 5 else if (petUnlocked) ((total - 150) / 50 + 1).coerceAtMost(5) else 0
+    val petXp = if (testingAllRewards) 50 else if (petUnlocked) ((total - 150) % 50) else 0
     val petScale = when (petLevel) { 1 -> 0.92f; 2 -> 0.98f; 3 -> 1.04f; 4 -> 1.10f; else -> 1.16f }
     val petRotation = when (petLevel) { 1 -> 2f; 2 -> 4f; 3 -> 7f; 4 -> 10f; else -> 14f }
     val petAura = when (petLevel) { 1 -> "🌱"; 2 -> "✨"; 3 -> "💫"; 4 -> "🔥"; else -> "👑" }
