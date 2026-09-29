@@ -25,12 +25,14 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
 
 @Composable
-fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
+fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Unit) {
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
     val data by store.gameData.collectAsState(initial = null)
-    val questions = remember(subject) { anishQuestionsFor(subject) }
+    val questions = remember(subject, setNumber) {
+        anishQuestionsFor(subject).take(60).chunked(20).getOrNull(setNumber - 1).orEmpty()
+    }
     var currentIndex by rememberSaveable(subject) { mutableIntStateOf(0) }
     var selected by rememberSaveable(subject) { mutableIntStateOf(-1) }
     var score by rememberSaveable(subject) { mutableIntStateOf(0) }
@@ -54,7 +56,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
             .padding(16.dp)
     ) {
         Text(
-            "📚 Anish • ${subject}",
+            "📚 Anish • ${subject} • Set ${setNumber}",
             fontSize = 25.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA)
@@ -172,12 +174,14 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                         selected = index
                         if (index == question.correctAnswer) score++
                         scope.launch {
-                            store.addAnishDiamonds(5)
-                            milestoneReward = store.recordAnishAnswer(index == question.correctAnswer)
+                            val result = store.recordAnishQuestionAttempt(
+                                question.id,
+                                index == question.correctAnswer
+                            )
+                            milestoneReward = result.milestoneBonus
+                            rewardPulse = result.dailyRewarded
+                            rewardShown = result.dailyRewarded || result.milestoneBonus > 0
                         }
-                        rewardPulse = false
-                        rewardShown = true
-                        rewardPulse = true
                     }
                 },
                 Modifier.fillMaxWidth().padding(vertical = 4.dp),
