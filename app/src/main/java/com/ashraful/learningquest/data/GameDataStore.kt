@@ -20,6 +20,9 @@ class GameDataStore(private val context: Context) {
         val COINS = intPreferencesKey("coins")
         val ANISH_DIAMONDS = intPreferencesKey("anish_diamonds")
         val ANISH_OWNED_ITEMS = stringPreferencesKey("anish_owned_items")
+        val ANISH_TOTAL_QUESTIONS = intPreferencesKey("anish_total_questions")
+        val ANISH_CORRECT_ANSWERS = intPreferencesKey("anish_correct_answers")
+        val ANISH_ACHIEVEMENTS = stringPreferencesKey("anish_achievements")
         val XP = intPreferencesKey("xp")
         val LEVEL = intPreferencesKey("level")
         val STREAK = intPreferencesKey("streak")
@@ -174,6 +177,11 @@ class GameDataStore(private val context: Context) {
                 correctAnswers = correctAnswers,
                 achievementCount = achievementCount,
                 diamonds = preferences[Keys.ANISH_DIAMONDS] ?: 0,
+                anishTotalQuestions = preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0,
+                anishCorrectAnswers = preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0,
+                anishAchievements = preferences[Keys.ANISH_ACHIEVEMENTS]
+                    ?.split(",")?.filter { it.isNotBlank() }?.mapNotNull { it.toIntOrNull() }?.toSet()
+                    ?: emptySet(),
                 todayProgress =
                     if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == today) {
                         preferences[Keys.TODAY_PROGRESS] ?: 0
@@ -193,6 +201,34 @@ class GameDataStore(private val context: Context) {
                     (preferences[Keys.CORRECT_ANSWERS] ?: 0) + 1
             }
         }
+    }
+
+    suspend fun recordAnishAnswer(correct: Boolean): Int {
+        var milestoneBonus = 0
+        context.gameDataStore.edit { preferences ->
+            val total = (preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0) + 1
+            val correctTotal = (preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0) + if (correct) 1 else 0
+            val achieved = preferences[Keys.ANISH_ACHIEVEMENTS]
+                ?.split(",")?.filter { it.isNotBlank() }?.mapNotNull { it.toIntOrNull() }?.toMutableSet()
+                ?: mutableSetOf()
+
+            val milestones = listOf(5 to 10, 20 to 25, 50 to 50, 100 to 100)
+            for ((threshold, bonus) in milestones) {
+                if (total >= threshold && threshold !in achieved) {
+                    achieved.add(threshold)
+                    milestoneBonus += bonus
+                }
+            }
+
+            preferences[Keys.ANISH_TOTAL_QUESTIONS] = total
+            preferences[Keys.ANISH_CORRECT_ANSWERS] = correctTotal
+            preferences[Keys.ANISH_ACHIEVEMENTS] = achieved.joinToString(",")
+            if (milestoneBonus > 0) {
+                preferences[Keys.ANISH_DIAMONDS] =
+                    (preferences[Keys.ANISH_DIAMONDS] ?: 0) + milestoneBonus
+            }
+        }
+        return milestoneBonus
     }
 
     suspend fun addAnishDiamonds(amount: Int) {
