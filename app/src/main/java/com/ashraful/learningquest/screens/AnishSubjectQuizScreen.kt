@@ -6,11 +6,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +35,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
     var selected by rememberSaveable(subject) { mutableIntStateOf(-1) }
     var score by rememberSaveable(subject) { mutableIntStateOf(0) }
     var rewardShown by rememberSaveable(subject) { mutableStateOf(false) }
+    var rewardPulse by rememberSaveable(subject) { mutableStateOf(false) }
 
     if (questions.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -143,8 +148,13 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     if (selected == -1) {
                         selected = index
                         if (index == question.correctAnswer) score++
-                        scope.launch { store.addAnishDiamonds(5) }
+                        scope.launch {
+                            store.addAnishDiamonds(5)
+                            if ((currentIndex + 1) % 5 == 0) store.addAnishDiamonds(5)
+                        }
+                        rewardPulse = false
                         rewardShown = true
+                        rewardPulse = true
                     }
                 },
                 Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -179,7 +189,32 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
         }
 
         if (selected >= 0) {
-            if (rewardShown) Text("💎 +5 ডায়মন্ড!", Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+            if (rewardShown) {
+                val rewardScale by animateFloatAsState(
+                    targetValue = if (rewardPulse) 1.22f else 1f,
+                    animationSpec = tween(500, easing = FastOutSlowInEasing),
+                    label = "diamondScale"
+                )
+                val rewardRotation by animateFloatAsState(
+                    targetValue = if (rewardPulse) 360f else 0f,
+                    animationSpec = tween(650, easing = FastOutSlowInEasing),
+                    label = "diamondRotation"
+                )
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("💎", fontSize = 48.sp, modifier = Modifier.graphicsLayer {
+                        scaleX = rewardScale
+                        scaleY = rewardScale
+                        rotationY = rewardRotation
+                    })
+                    Text(
+                        if ((currentIndex + 1) % 5 == 0) "✨ +10 ডায়মন্ড!  •  5 প্রশ্নের মাইলস্টোন" else "💎 +5 ডায়মন্ড!",
+                        textAlign = TextAlign.Center,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF315FBA)
+                    )
+                }
+            }
             Spacer(Modifier.height(10.dp))
             Text(
                 if (selected == question.correctAnswer) "🎉 সঠিক উত্তর!"
@@ -196,6 +231,7 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                     currentIndex++
                     selected = -1
                     rewardShown = false
+                    rewardPulse = false
                 },
                 Modifier.fillMaxWidth()
             ) {
