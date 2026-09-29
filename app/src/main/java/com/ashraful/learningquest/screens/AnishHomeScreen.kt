@@ -43,7 +43,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "📚 অনিশের লার্নিং জোন",
+            "📚 Anish Learning Zone",
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color(0xFF315FBA),
@@ -51,13 +51,13 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         )
         Spacer(Modifier.height(5.dp))
         Text(
-            "শ্রেণি ৫ • বাংলা মাধ্যম",
+            "Class 5 • Bengali Medium",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF7043A8)
         )
         Text(
-            "পড়ি • অনুশীলন করি • পরীক্ষা দিই • এগিয়ে যাই 🚀",
+            "Learn • Practise • Test • Grow 🚀",
             fontSize = 13.sp,
             color = Color(0xFF60758A),
             textAlign = TextAlign.Center
@@ -70,7 +70,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text("👧 আরিফার স্ক্রিনে যাও", fontWeight = FontWeight.Bold)
+            Text("👧 Switch to Arifa", fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(8.dp))
@@ -80,7 +80,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text("👦 আবিদের স্ক্রিনে যাও", fontWeight = FontWeight.Bold)
+            Text("👦 Switch to Abid", fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(12.dp))
@@ -90,8 +90,8 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
                 Text("💎", fontSize = 30.sp)
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("ডায়মন্ড স্টোর", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                    Text("প্রশ্ন সমাধান করে ডায়মন্ড জমাও, পুরস্কার কিনো", fontSize = 12.sp, color = Color(0xFF60758A))
+                    Text("Diamond Store", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text("Solve questions, earn diamonds and buy rewards", fontSize = 12.sp, color = Color(0xFF60758A))
                 }
                 Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))
             }
@@ -109,16 +109,16 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
                     Text("🏆", fontSize = 30.sp)
                     Spacer(Modifier.width(10.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("আমার রিওয়ার্ডস", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                        Text("ডায়মন্ড • সংগ্রহ • মাইলস্টোন", fontSize = 12.sp, color = Color(0xFF60758A))
+                        Text("My Rewards", fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                        Text("Diamonds • Collection • Milestones", fontSize = 12.sp, color = Color(0xFF60758A))
                     }
                     Text("›", fontSize = 28.sp, color = Color(0xFF315FBA))
                 }
                 Spacer(Modifier.height(12.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "ডায়মন্ড", Modifier.weight(1f))
-                    AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "সংগ্রহ", Modifier.weight(1f))
-                    AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "রিওয়ার্ড", Modifier.weight(1f))
+                    AnishRewardStat("💎", (data?.diamonds ?: 0).toString(), "Diamonds", Modifier.weight(1f))
+                    AnishRewardStat("🏆", ownedItems.size.toString() + "/5", "Collection", Modifier.weight(1f))
+                    AnishRewardStat("⭐", if ((data?.diamonds ?: 0) >= 250) "MAX" else "চলছে", "Reward", Modifier.weight(1f))
                 }
             }
         }
@@ -142,9 +142,9 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
             else -> "🎁"
         }
         val levelDescription = when (rewardLevel) {
-            3 -> "১৫০+ প্রশ্ন • পেট বন্ধু আনলক হয়েছে!"
-            2 -> "৫০+ প্রশ্ন • 3D-style ট্রফি সংগ্রহ করো!"
-            else -> "৫০ প্রশ্নের আগে • ব্যাজ ও ছোট পুরস্কার সংগ্রহ করো"
+            3 -> "150+ questions • Pet companion unlocked!"
+            2 -> "৫০+ প্রশ্ন • 3D-style ট্রফি Collection করো!"
+            else -> "৫০ প্রশ্নের আগে • ব্যাজ ও ছোট পুরস্কার Collection করো"
         }
 
         Card(
@@ -203,13 +203,13 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         ) {
             Column(Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(
-                    "🏆 আমার মাইলস্টোন",
+                    "🏆 My Milestones",
                     fontSize = 19.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF7043A8)
                 )
                 Text(
-                    "প্রশ্নের সংখ্যা বাড়াও, নতুন ব্যাজ আনলক করো",
+                    "Complete more questions to unlock new badges",
                     fontSize = 12.sp,
                     color = Color(0xFF60758A)
                 )
@@ -249,7 +249,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         Spacer(Modifier.height(18.dp))
 
         Text(
-            "📖 আমার বিষয়সমূহ",
+            "📖 My Subjects",
             modifier = Modifier.fillMaxWidth(),
             fontSize = 17.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -258,12 +258,12 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(8.dp))
 
-        AnishSubjectCard("বাংলা", "পাঠ, ব্যাকরণ, শব্দার্থ ও অনুশীলন", "📖", Color(0xFFFFEAF4), Color(0xFFB12A73)) { onNavigate("anish_bengali") }
-        AnishSubjectCard("গণিত", "হিসাব, ভগ্নাংশ, জ্যামিতি ও সমস্যা সমাধান", "➗", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("anish_math") }
-        AnishSubjectCard("বিজ্ঞান", "জীবন, পদার্থ, শক্তি, পরিবেশ ও পরীক্ষা", "🔬", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("anish_science") }
-        AnishSubjectCard("ইতিহাস ও ভূগোল", "ভারত, পৃথিবী, মানচিত্র ও গুরুত্বপূর্ণ ঘটনা", "🌍", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("anish_history") }
-        AnishSubjectCard("ইংরেজি", "শব্দভাণ্ডার, ব্যাকরণ, পাঠ ও অনুশীলন", "🔤", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("anish_english") }
-        AnishSubjectCard("সাধারণ জ্ঞান", "দেশ, রাজ্য, বিজ্ঞান ও দৈনন্দিন জ্ঞান", "🧠", Color(0xFFFFF8E8), Color(0xFF8B6500)) { onNavigate("anish_gk") }
+        AnishSubjectCard("Bengali", "Lessons, grammar, vocabulary and practice", "📖", Color(0xFFFFEAF4), Color(0xFFB12A73)) { onNavigate("anish_bengali") }
+        AnishSubjectCard("Maths", "Arithmetic, fractions, geometry and problem solving", "➗", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("anish_math") }
+        AnishSubjectCard("Science", "Life, matter, energy, environment and experiments", "🔬", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("anish_science") }
+        AnishSubjectCard("History & Geography", "India, the world, maps and important events", "🌍", Color(0xFFFFF1DE), Color(0xFF9A5A00)) { onNavigate("anish_history") }
+        AnishSubjectCard("English", "Vocabulary, grammar, reading and practice", "🔤", Color(0xFFF3ECFF), Color(0xFF7043A8)) { onNavigate("anish_english") }
+        AnishSubjectCard("General Knowledge", "Country, state, science and everyday knowledge", "🧠", Color(0xFFFFF8E8), Color(0xFF8B6500)) { onNavigate("anish_gk") }
 
         Spacer(Modifier.height(12.dp))
 
@@ -275,14 +275,14 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
         ) {
             Column(Modifier.fillMaxWidth().padding(17.dp)) {
                 Text(
-                    "📝 মডেল টেস্ট",
+                    "📝 Model Tests",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF315FBA)
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "বিষয়ভিত্তিক ও মিশ্র প্রশ্নের পরীক্ষা এখানে যোগ করা হবে।",
+                    "Subject-wise and mixed tests will be added here.",
                     fontSize = 13.sp,
                     color = Color(0xFF60758A)
                 )
@@ -291,7 +291,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
 
         Spacer(Modifier.height(18.dp))
         Text(
-            "অনিশের জন্য সব শেখার উপকরণ ধাপে ধাপে যোগ করা হবে। 🌟",
+            "More learning materials for Anish will be added step by step. 🌟",
             modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
