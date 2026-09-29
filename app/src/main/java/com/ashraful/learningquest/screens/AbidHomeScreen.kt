@@ -51,6 +51,16 @@ fun AbidHomeScreen(onNavigate: (String) -> Unit) {
             Text("👧 Switch to Arifa", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
         }
 
+        Spacer(Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = { onNavigate("switch_to_anish") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp)
+        ) {
+            Text("🧑 Switch to Anish", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        }
+
         Spacer(Modifier.height(10.dp))
 
         LearningSection("🔤", "Language & Letters", "9 activities", Color(0xFF1769AA), expandedSection == "language", { expandedSection = if (expandedSection == "language") null else "language" }) {
