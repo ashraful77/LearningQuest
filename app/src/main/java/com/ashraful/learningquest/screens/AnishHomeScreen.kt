@@ -3,6 +3,7 @@ package com.ashraful.learningquest.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -24,7 +25,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.animation.core.*
 
 @Composable
-fun AnishHomeScreen(onNavigate: (String) -> Unit) {
+fun AnishHomeScreen(
+    scrollState: ScrollState,
+    onNavigate: (String) -> Unit
+) {
     val context = LocalContext.current
     val store = remember { GameDataStore(context) }
     val data by store.gameData.collectAsState(initial = null)
@@ -33,7 +37,7 @@ fun AnishHomeScreen(onNavigate: (String) -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .background(
                 Brush.verticalGradient(
                     listOf(Color(0xFFEAF4FF), Color.White, Color(0xFFF3ECFF))
