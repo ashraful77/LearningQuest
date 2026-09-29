@@ -32,6 +32,21 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
     val trophyUnlocked = total >= 50
     val petUnlocked = total >= 150
     var selectedPet by remember { mutableStateOf("🐼") }
+    var petTapCount by remember { mutableIntStateOf(0) }
+    var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
+    var petBounce by remember { mutableStateOf(false) }
+
+    val petReactions = mapOf(
+        "🐼" to listOf("পান্ডা বলছে: দারুণ করেছ! 🎉", "আরও ৫টি প্রশ্ন করি! 📚", "ইয়েস! আমরা পারব! 💪"),
+        "🐱" to listOf("বিড়াল বলছে: মিউ! সঠিক উত্তর! 😺", "চলো পরের প্রশ্নে যাই! ✨", "তুমি খুব ভালো করছ! 🌟"),
+        "🐶" to listOf("কুকুরছানা বলছে: ওয়াও! 🐶", "চলো একসঙ্গে শিখি! 📖", "গুড জব! ⭐"),
+        "🦊" to listOf("শিয়াল বলছে: স্মার্ট উত্তর! 🦊", "চ্যালেঞ্জ নাও! 🚀", "আজকের শেখা অসাধারণ! 🔥")
+    )
+    val bounce by animateFloatAsState(
+        targetValue = if (petBounce) 1.14f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "pet_bounce"
+    )
 
     val transition = rememberInfiniteTransition(label = "reward_gallery")
     val pulse by transition.animateFloat(
@@ -145,13 +160,36 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                 colors = CardDefaults.cardColors(Color(0xFFE8F8EE))
             ) {
                 Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(selectedPet, fontSize = 86.sp, modifier = Modifier.graphicsLayer {
-                        scaleX = pulse
-                        scaleY = pulse
-                        rotationY = spin * 4f
-                    })
+                    Surface(
+                        onClick = {
+                            petTapCount++
+                            petBounce = true
+                            petReaction = petReactions[selectedPet]?.get(petTapCount % 3) ?: "চলো শিখি! 🐾"
+                        },
+                        shape = RoundedCornerShape(32.dp),
+                        color = Color.White
+                    ) {
+                        Text(
+                            selectedPet,
+                            fontSize = 86.sp,
+                            modifier = Modifier.padding(horizontal = 26.dp, vertical = 8.dp).graphicsLayer {
+                                scaleX = pulse * bounce
+                                scaleY = pulse * bounce
+                                rotationY = spin * 4f
+                            }
+                        )
+                    }
+                    LaunchedEffect(petBounce) {
+                        if (petBounce) {
+                            kotlinx.coroutines.delay(280)
+                            petBounce = false
+                        }
+                    }
+                    Spacer(Modifier.height(6.dp))
                     Text("তোমার Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
-                    Text("এটি তোমার সঙ্গে থাকবে — আরও প্রশ্ন সমাধান করলে নতুন পেট যোগ হবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
+                    Text(petReaction, fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF315FBA))
+                    Text("পেটকে ট্যাপ করো • $petTapCount বার খেলেছো 🐾", fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
+                    Text("আরও প্রশ্ন সমাধান করলে নতুন পেট যোগ হবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
                 }
             }
         }
