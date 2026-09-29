@@ -142,6 +142,7 @@ fun HomeScreen() {
             "anish_english" -> AnishSubjectQuizScreen("ইংরেজি") { goBack() }
             "anish_gk" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান") { goBack() }
             "anish_store" -> AnishStoreScreen { goBack() }
+            "anish_rewards" -> AnishRewardGalleryScreen { goBack() }
         }
 
         Surface(
