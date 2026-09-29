@@ -303,6 +303,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             val reaction = System.currentTimeMillis() < reactionUntil
             val wave = if (reaction) sin((now / 75_000_000.0)).toFloat() * 24f else 0f
             val happyTilt = if (reaction) sin(now / 95_000_000.0).toFloat() * 3.5f else 0f
+            val headBob = sin(now / 1_050_000_000.0).toFloat() * 0.025f + if (reaction) sin(now / 110_000_000.0).toFloat() * 0.055f else 0f
             val earWiggle = if (reaction) sin(now / 80_000_000.0).toFloat() * 8f else sin(now / 1_700_000_000.0).toFloat() * 1.5f
 
             // Soft ground shadow.
@@ -328,7 +329,7 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0.92f, 0.52f, -0.68f, 0.30f, 0.30f, 0.30f, black)
 
             // Big rounded head with a slightly shorter, friendlier profile.
-            part(base, vp, 0f, 1.56f, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f + happyTilt)
+            part(base, vp, 0f, 1.56f + headBob, 0f, 1.08f, 0.96f, 1.00f, white, rz = idleSway * 0.10f + happyTilt)
             // Rounded ears gently wiggle during interaction.
             part(base, vp, -0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = -earWiggle)
             part(base, vp, 0.76f, 2.18f, -0.02f, 0.40f, 0.40f, 0.34f, black, rz = earWiggle)
@@ -375,8 +376,13 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, -0.70f, 1.38f, 0.87f, 0.18f, 0.13f, 0.055f, cheek)
             part(base, vp, 0.70f, 1.38f, 0.87f, 0.18f, 0.13f, 0.055f, cheek)
 
-            // Tiny pink tongue on tap.
+            // Soft blush appears briefly when the Panda is tapped.
             if (reaction) {
+                val blush = floatArrayOf(1.0f, 0.48f, 0.55f)
+                part(base, vp, -0.68f, 1.27f, 0.94f, 0.13f, 0.075f, 0.035f, blush)
+                part(base, vp, 0.68f, 1.27f, 0.94f, 0.13f, 0.075f, 0.035f, blush)
+
+                // Tiny pink tongue on tap.
                 part(base, vp, 0f, 1.05f, 1.095f, 0.09f, 0.12f, 0.05f, pink)
             }
         }
