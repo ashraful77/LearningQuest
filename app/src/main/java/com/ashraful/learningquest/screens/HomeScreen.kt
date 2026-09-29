@@ -135,12 +135,30 @@ fun HomeScreen() {
             "abid_match_letters" -> AbidMatchLettersScreen { goBack() }
             "abid_number_match" -> AbidNumberMatchScreen { goBack() }
             "abid_challenge" -> AbidMiniChallengeScreen { goBack() }
-            "anish_bengali" -> AnishSubjectQuizScreen("বাংলা") { goBack() }
-            "anish_math" -> AnishSubjectQuizScreen("গণিত") { goBack() }
-            "anish_science" -> AnishSubjectQuizScreen("বিজ্ঞান") { goBack() }
-            "anish_history" -> AnishSubjectQuizScreen("ইতিহাস ও ভূগোল") { goBack() }
-            "anish_english" -> AnishSubjectQuizScreen("ইংরেজি") { goBack() }
-            "anish_gk" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান") { goBack() }
+            "anish_bengali" -> AnishSetSelectionScreen("বাংলা", { set -> navigate("anish_quiz_bengali_" + set) }, { goBack() })
+            "anish_math" -> AnishSetSelectionScreen("গণিত", { set -> navigate("anish_quiz_math_" + set) }, { goBack() })
+            "anish_science" -> AnishSetSelectionScreen("বিজ্ঞান", { set -> navigate("anish_quiz_science_" + set) }, { goBack() })
+            "anish_history" -> AnishSetSelectionScreen("ইতিহাস ও ভূগোল", { set -> navigate("anish_quiz_history_" + set) }, { goBack() })
+            "anish_english" -> AnishSetSelectionScreen("ইংরেজি", { set -> navigate("anish_quiz_english_" + set) }, { goBack() })
+            "anish_gk" -> AnishSetSelectionScreen("সাধারণ জ্ঞান", { set -> navigate("anish_quiz_gk_" + set) }, { goBack() })
+            "anish_quiz_bengali_1" -> AnishSubjectQuizScreen("বাংলা", 1) { goBack() }
+            "anish_quiz_bengali_2" -> AnishSubjectQuizScreen("বাংলা", 2) { goBack() }
+            "anish_quiz_bengali_3" -> AnishSubjectQuizScreen("বাংলা", 3) { goBack() }
+            "anish_quiz_math_1" -> AnishSubjectQuizScreen("গণিত", 1) { goBack() }
+            "anish_quiz_math_2" -> AnishSubjectQuizScreen("গণিত", 2) { goBack() }
+            "anish_quiz_math_3" -> AnishSubjectQuizScreen("গণিত", 3) { goBack() }
+            "anish_quiz_science_1" -> AnishSubjectQuizScreen("বিজ্ঞান", 1) { goBack() }
+            "anish_quiz_science_2" -> AnishSubjectQuizScreen("বিজ্ঞান", 2) { goBack() }
+            "anish_quiz_science_3" -> AnishSubjectQuizScreen("বিজ্ঞান", 3) { goBack() }
+            "anish_quiz_history_1" -> AnishSubjectQuizScreen("ইতিহাস ও ভূগোল", 1) { goBack() }
+            "anish_quiz_history_2" -> AnishSubjectQuizScreen("ইতিহাস ও ভূগোল", 2) { goBack() }
+            "anish_quiz_history_3" -> AnishSubjectQuizScreen("ইতিহাস ও ভূগোল", 3) { goBack() }
+            "anish_quiz_english_1" -> AnishSubjectQuizScreen("ইংরেজি", 1) { goBack() }
+            "anish_quiz_english_2" -> AnishSubjectQuizScreen("ইংরেজি", 2) { goBack() }
+            "anish_quiz_english_3" -> AnishSubjectQuizScreen("ইংরেজি", 3) { goBack() }
+            "anish_quiz_gk_1" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান", 1) { goBack() }
+            "anish_quiz_gk_2" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান", 2) { goBack() }
+            "anish_quiz_gk_3" -> AnishSubjectQuizScreen("সাধারণ জ্ঞান", 3) { goBack() }
             "anish_store" -> AnishStoreScreen { goBack() }
             "anish_rewards" -> AnishRewardGalleryScreen { goBack() }
             "anish_model_test" -> AnishModelTestScreen { goBack() }
