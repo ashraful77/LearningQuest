@@ -227,6 +227,8 @@ fun HomeScreen() {
             }
         }
     }
+}
+ 
 @Composable
 private fun HomeContent(
     scrollState: ScrollState,
