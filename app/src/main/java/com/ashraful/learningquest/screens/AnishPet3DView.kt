@@ -321,6 +321,16 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, -1.00f, 0.13f + greetingLift, 0.34f, 0.30f, 0.30f, 0.34f, black, rz = -18f - wave * 0.25f)
             part(base, vp, 0.95f, -0.02f, 0.34f, 0.30f, 0.30f, 0.34f, black, rz = 10f)
 
+            // NEW: a little bamboo snack makes the Panda feel like a real companion.
+            // It tilts toward the mouth during interaction, then gently settles back.
+            val munch = if (reaction) sin(now / 85_000_000.0).toFloat() * 9f else sin(now / 1_900_000_000.0).toFloat() * 2f
+            val snackBase = FloatArray(16)
+            Matrix.setIdentityM(snackBase, 0)
+            Matrix.rotateM(snackBase, 0, -12f + munch, 0f, 0f, 1f)
+            cylinderPart(vp, 0.78f, 0.88f, 0.82f, 0.075f, 0.95f, floatArrayOf(0.22f, 0.62f, 0.26f), snackBase, rz = -12f + munch)
+            cubePart(vp, 0.70f, 1.34f, 0.84f, 0.28f, 0.055f, 0.10f, floatArrayOf(0.30f, 0.72f, 0.32f), snackBase, rz = 18f + munch)
+            cubePart(vp, 0.88f, 1.24f, 0.82f, 0.24f, 0.05f, 0.09f, floatArrayOf(0.26f, 0.68f, 0.29f), snackBase, rz = -28f + munch)
+
             // Black legs and little paws.
             part(base, vp, -0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
             part(base, vp, 0.58f, -0.82f, 0.22f, 0.48f, 0.42f, 0.56f, black)
@@ -389,6 +399,16 @@ class AnishPet3DView(context: Context) : GLSurfaceView(context) {
             part(base, vp, 0f, 1.19f + headBob, 1.155f, 0.075f, 0.17f, 0.065f, black)
             part(base, vp, -0.11f, 1.12f + headBob, 1.145f, 0.075f, 0.135f, 0.060f, black, rz = 22f)
             part(base, vp, 0.11f, 1.12f + headBob, 1.145f, 0.075f, 0.135f, 0.060f, black, rz = -22f)
+
+            // Tiny facial details inspired by the richer Cat prototype:
+            // soft whisker roots and a moving nose highlight add life at close range.
+            val whisker = floatArrayOf(0.52f, 0.53f, 0.50f)
+            part(base, vp, -0.34f, 1.25f + headBob, 1.075f, 0.22f, 0.018f, 0.014f, whisker, rz = 8f)
+            part(base, vp, -0.34f, 1.19f + headBob, 1.075f, 0.22f, 0.014f, 0.012f, whisker, rz = -8f)
+            part(base, vp, 0.34f, 1.25f + headBob, 1.075f, 0.22f, 0.018f, 0.014f, whisker, rz = -8f)
+            part(base, vp, 0.34f, 1.19f + headBob, 1.075f, 0.22f, 0.014f, 0.012f, whisker, rz = 8f)
+            val noseGlow = 0.030f + sin(now / 260_000_000.0).toFloat() * 0.008f
+            part(base, vp, -0.045f, 1.39f + headBob, 1.292f, noseGlow, noseGlow, 0.012f, white)
 
             // Soft paw pads make the seated panda feel more tactile and toy-like.
             val pawPad = floatArrayOf(0.28f, 0.17f, 0.15f)
