@@ -31,6 +31,8 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
 
     val trophyUnlocked = total >= 50
     val petUnlocked = total >= 150
+    val petLevel = if (petUnlocked) ((total - 150) / 50 + 1).coerceAtMost(5) else 0
+    val petXp = if (petUnlocked) ((total - 150) % 50) else 0
     var selectedPet by remember { mutableStateOf("🐼") }
     var petTapCount by remember { mutableIntStateOf(0) }
     var petReaction by remember { mutableStateOf("আমার সঙ্গে শেখো! 🐾") }
@@ -187,9 +189,22 @@ fun AnishRewardGalleryScreen(onBack: () -> Unit) {
                     }
                     Spacer(Modifier.height(6.dp))
                     Text("তোমার Learning Buddy", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF23754A))
+                    Text("PET LEVEL $petLevel • $petXp / 50 XP", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    LinearProgressIndicator(
+                        progress = { petXp / 50f },
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 5.dp),
+                        color = Color(0xFF43A866),
+                        trackColor = Color(0xFFD5EBDD)
+                    )
+                    Text(
+                        if (petLevel >= 5) "MAX LEVEL! 🌟" else "আর ${50 - petXp}টি প্রশ্নে পেটের পরের লেভেল! 🚀",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF23754A)
+                    )
                     Text(petReaction, fontSize = 13.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = Color(0xFF315FBA))
                     Text("পেটকে ট্যাপ করো • $petTapCount বার খেলেছো 🐾", fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
-                    Text("আরও প্রশ্ন সমাধান করলে নতুন পেট যোগ হবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
+                    Text("প্রশ্ন সমাধান করলে পেট XP পাবে এবং নতুন লেভেলে উঠবে।", fontSize = 12.sp, textAlign = TextAlign.Center, color = Color(0xFF60758A))
                 }
             }
         }
