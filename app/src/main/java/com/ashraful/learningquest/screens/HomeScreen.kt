@@ -111,7 +111,11 @@ fun HomeScreen() {
     }
 
     // Fixed navigation bar: the activity content scrolls above it.
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
