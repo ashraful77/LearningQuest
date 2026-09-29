@@ -261,15 +261,6 @@ fun AnishSubjectQuizScreen(subject: String, onBack: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(10.dp))
-            Text(
-                if (selected == question.correctAnswer) "🎉 সঠিক উত্তর!"
-                else "💡 সঠিক উত্তর: ${question.options[question.correctAnswer]}",
-                Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = if (selected == question.correctAnswer) Color(0xFF23754A) else Color(0xFFC62828)
-            )
             Spacer(Modifier.height(10.dp))
             Button(
                 onClick = {
