@@ -180,7 +180,7 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                             )
                             milestoneReward = result.milestoneBonus
                             rewardPulse = result.dailyRewarded
-                            rewardShown = true
+                            rewardShown = result.dailyRewarded || result.milestoneBonus > 0 || result.alreadyRewardedToday
                         }
                     }
                 },
@@ -249,6 +249,10 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                     animationSpec = tween(650, easing = FastOutSlowInEasing),
                     label = "diamondRotation"
                 )
+                val resultAlreadyRewarded = run {
+                    // rewardShown is only true for a reward, milestone, or an already-rewarded question.
+                    !rewardPulse && milestoneReward == 0
+                }
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         if (rewardPulse) "💎" else if (milestoneReward > 0) "🏆" else "ℹ️",
@@ -264,7 +268,8 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                             milestoneReward > 0 && rewardPulse -> "💎 +5 + 🏆 " + milestoneReward + " bonus diamonds!"
                             milestoneReward > 0 -> "🏆 +" + milestoneReward + " milestone diamonds!"
                             rewardPulse -> "💎 +5 diamonds!"
-                            else -> "আজ এই প্রশ্নের ডায়মন্ড ইতিমধ্যে পাওয়া হয়েছে"
+                            resultAlreadyRewarded -> "আজ এই প্রশ্নের ডায়মন্ড ইতিমধ্যে পাওয়া হয়েছে"
+                            else -> ""
                         },
                         textAlign = TextAlign.Center,
                         fontSize = 16.sp,
