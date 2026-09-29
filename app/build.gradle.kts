@@ -6,7 +6,7 @@ plugins {
 android {
     namespace = "com.ashraful.learningquest"
     compileSdk {
-        version = release(37)
+        version = release(37) {\n            minorApiLevel = 0\n        }
     }
 
     defaultConfig {
