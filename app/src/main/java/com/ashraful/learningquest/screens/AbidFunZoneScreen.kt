@@ -14,11 +14,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.random.Random
+import kotlinx.coroutines.delay
 
 private enum class FunGame(val title: String, val icon: String) {
     TREASURE("Treasure Hunt", "🕵️"),
     ODD_ONE("Odd One Out", "🧩"),
-    NUMBER_JUMP("Number Jump", "🎲")
+    NUMBER_JUMP("Number Jump", "🎲"),
+    LETTER_HUNT("Letter Hunt", "🔤"),
+    PATTERN("Complete Pattern", "🧩"),
+    NOT_BELONG("Doesn't Belong", "🚫"),
+    FAST_FINGER("Fast Finger", "⚡")
 }
 
 private data class FunRound(val prompt: String, val options: List<String>, val correct: Int)
@@ -31,6 +36,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     var score by remember { mutableIntStateOf(0) }
     var rounds by remember { mutableIntStateOf(0) }
     var finished by remember { mutableStateOf(false) }
+    var timeLeft by remember { mutableIntStateOf(0) }
 
     fun startGame(g: FunGame) {
         game = g
@@ -39,6 +45,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         score = 0
         rounds = 0
         finished = false
+        timeLeft = if (g == FunGame.FAST_FINGER) 5 else 0
     }
 
     fun answer(index: Int) {
@@ -53,6 +60,21 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
             rounds++
             round = makeFunRound(game)
             selected = -1
+            timeLeft = if (game == FunGame.FAST_FINGER) 5 else 0
+        }
+    }
+
+    LaunchedEffect(game, rounds, finished) {
+        if (game == FunGame.FAST_FINGER && !finished && selected == -1) {
+            for (t in 5 downTo 1) {
+                timeLeft = t
+                delay(1000)
+                if (selected != -1) return@LaunchedEffect
+            }
+            if (selected == -1) {
+                timeLeft = 0
+                selected = -2
+            }
         }
     }
 
@@ -72,15 +94,19 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
 
         Spacer(Modifier.height(12.dp))
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            FunGame.values().forEach { g ->
-                FilterChip(
-                    selected = game == g,
-                    onClick = { startGame(g) },
-                    label = { Text(g.icon + " " + g.title, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
-                    modifier = Modifier.weight(1f)
-                )
+        FunGame.values().toList().chunked(4).forEach { rowGames ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                rowGames.forEach { g ->
+                    FilterChip(
+                        selected = game == g,
+                        onClick = { startGame(g) },
+                        label = { Text(g.icon + " " + g.title, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                repeat(4 - rowGames.size) { Spacer(Modifier.weight(1f)) }
             }
+            Spacer(Modifier.height(4.dp))
         }
 
         Spacer(Modifier.height(16.dp))
@@ -109,7 +135,10 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         } else {
             Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(26.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.fillMaxWidth().padding(20.dp)) {
-                    Text((rounds + 1).toString() + " / 10", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8A96A8))
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text((rounds + 1).toString() + " / 10", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8A96A8))
+                        if (game == FunGame.FAST_FINGER && selected == -1) Text("⏱️ " + timeLeft + "s", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = if (timeLeft <= 2) Color(0xFFC62828) else Color(0xFF7043A8))
+                    }
                     Spacer(Modifier.height(10.dp))
                     Text(round.prompt, Modifier.fillMaxWidth(), fontSize = 23.sp, lineHeight = 31.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center, color = Color(0xFF26354A))
                     Spacer(Modifier.height(18.dp))
@@ -126,7 +155,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
                                 Spacer(Modifier.width(12.dp))
                                 Text(option, Modifier.weight(1f), fontSize = 21.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                                 if (selected >= 0 && index == round.correct) Text("✓", fontSize = 25.sp, color = Color(0xFF23754A))
-                                else if (selected == index) Text("✗", fontSize = 25.sp, color = Color(0xFFC62828))
+                                else if (selected >= 0 && selected == index) Text("✗", fontSize = 25.sp, color = Color(0xFFC62828))
                             }
                         }
                     }
@@ -135,7 +164,11 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
             if (selected >= 0) {
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    if (selected == round.correct) "🎉 Correct! Great job!" else "💡 Nice try! The correct answer is " + round.options[round.correct],
+                    when {
+                        selected == round.correct -> "🎉 Correct! Great job!"
+                        selected == -2 -> "⏰ Time's up! The correct answer is " + round.options[round.correct]
+                        else -> "💡 Nice try! The correct answer is " + round.options[round.correct]
+                    },
                     Modifier.fillMaxWidth(), fontSize = 16.sp, fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center, color = if (selected == round.correct) Color(0xFF23754A) else Color(0xFFC62828)
                 )
@@ -170,6 +203,44 @@ private fun makeFunRound(game: FunGame): FunRound {
             val answer = Random.nextInt(1, 11)
             val options = (listOf(answer) + (1..10).filter { it != answer }.shuffled().take(3)).shuffled()
             FunRound("🎲 Jump to number " + answer, options.map { it.toString() }, options.indexOf(answer))
+        }
+        FunGame.LETTER_HUNT -> {
+            val letters = ("A".."Z").flatMap { it.toList() }
+            val answer = letters.random()
+            val options = (listOf(answer) + letters.filter { it != answer }.shuffled().take(3)).shuffled()
+            FunRound("🔤 Find the letter: " + answer, options, options.indexOf(answer))
+        }
+        FunGame.PATTERN -> {
+            val data = listOf(
+                Pair(listOf("⭐","🔵","⭐","🔵","❓"), "⭐"),
+                Pair(listOf("🔴","🔴","🟢","🔴","🔴","❓"), "🟢"),
+                Pair(listOf("🍎","🍌","🍎","🍌","❓"), "🍎"),
+                Pair(listOf("🔺","🟦","🔺","🟦","❓"), "🔺"),
+                Pair(listOf("1","2","1","2","❓"), "1")
+            ).random()
+            val options = (listOf(data.second) + listOf("⭐","🔵","🔴","🟢","🍎","🍌","🔺","🟦","1","2").filter { it != data.second }.shuffled().take(3)).shuffled()
+            FunRound("🧩 Complete the pattern!\n" + data.first.joinToString("  "), options, options.indexOf(data.second))
+        }
+        FunGame.NOT_BELONG -> {
+            val groups = listOf(
+                listOf("🍎","🍎","🍎","🚗"),
+                listOf("🐱","🐶","🐰","🍌"),
+                listOf("🔴","🔵","🟢","⭐"),
+                listOf("🔺","🔺","🔺","🟦"),
+                listOf("1","2","3","🍎"),
+                listOf("🍌","🍎","🥕","🐱")
+            )
+            val group = groups.random()
+            val counts = group.groupingBy { it }.eachCount()
+            val answer = counts.minBy { it.value }.key
+            val options = group.shuffled()
+            FunRound("🚫 Which one doesn't belong?", options, options.indexOf(answer))
+        }
+        FunGame.FAST_FINGER -> {
+            val targets = listOf("⭐","🔴","🔵","🟢","🍎","🔺","🐱","❤️")
+            val answer = targets.random()
+            val options = (listOf(answer) + targets.filter { it != answer }.shuffled().take(3)).shuffled()
+            FunRound("⚡ FAST! Tap the " + answer + "!", options, options.indexOf(answer))
         }
     }
 }
