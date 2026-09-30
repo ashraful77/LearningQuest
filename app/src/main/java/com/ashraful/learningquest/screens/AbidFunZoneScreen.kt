@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.ashraful.learningquest.data.AbidRewardStore
 import kotlin.random.Random
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private enum class FunGame(val title: String, val icon: String) {
     TREASURE("Treasure Hunt", "🕵️"),
