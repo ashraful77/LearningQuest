@@ -205,7 +205,7 @@ private fun makeFunRound(game: FunGame): FunRound {
             FunRound("🎲 Jump to number " + answer, options.map { it.toString() }, options.indexOf(answer))
         }
         FunGame.LETTER_HUNT -> {
-            val letters = ("A".."Z").flatMap { it.toList() }
+            val letters = ('A'..'Z').toList().map { it.toString() }
             val answer = letters.random()
             val options = (listOf(answer) + letters.filter { it != answer }.shuffled().take(3)).shuffled()
             FunRound("🔤 Find the letter: " + answer, options, options.indexOf(answer))
