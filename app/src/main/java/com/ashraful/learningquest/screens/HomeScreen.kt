@@ -171,6 +171,7 @@ fun HomeScreen() {
             "abid_number_match" -> AbidNumberMatchScreen { goBack() }
             "abid_challenge" -> AbidMiniChallengeScreen { goBack() }
             "abid_fun_zone" -> AbidFunZoneScreen { goBack() }
+            "abid_rewards" -> AbidRewardRoomScreen { goBack() }
             "anish_bengali" -> AnishSetSelectionScreen("বাংলা", { set -> navigate("anish_quiz_bengali_" + set) }, { goBack() })
             "anish_math" -> AnishSetSelectionScreen("গণিত", { set -> navigate("anish_quiz_math_" + set) }, { goBack() })
             "anish_science" -> AnishSetSelectionScreen("বিজ্ঞান", { set -> navigate("anish_quiz_science_" + set) }, { goBack() })
