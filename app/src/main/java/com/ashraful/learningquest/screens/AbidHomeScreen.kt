@@ -129,7 +129,9 @@ fun AbidHomeScreen(
         Spacer(Modifier.height(6.dp))
         SimpleFeatureCard("🏆", "Little Challenge", "5 fun questions • Letters, numbers, colors & shapes", Color(0xFFEAF2FF), Color(0xFF1769AA)) { onNavigate("abid_challenge") }
         Spacer(Modifier.height(8.dp))
-        SimpleFeatureCard("🎪", "Fun Zone", "Treasure Hunt • Odd One Out • Number Jump", Color(0xFFFFF0E6), Color(0xFFB05A00)) { onNavigate("abid_fun_zone") }
+        SimpleFeatureCard("🎪", "Fun Zone", "Treasure Hunt • 7 fun games", Color(0xFFFFF0E6), Color(0xFFB05A00)) { onNavigate("abid_fun_zone") }
+        Spacer(Modifier.height(8.dp))
+        SimpleFeatureCard("🔵", "Blue Coin Rewards", "Earn coins, buy gifts and decorate your reward room", Color(0xFFEAF4FF), Color(0xFF1769AA)) { onNavigate("abid_rewards") }
         Spacer(Modifier.height(8.dp))
         SimpleFeatureCard("🧠", "Games & Memory", "Memory Match • Fun learning game", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onNavigate("abid_memory2") }
         Spacer(Modifier.height(10.dp))
