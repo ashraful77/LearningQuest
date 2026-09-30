@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import com.ashraful.learningquest.data.AbidRewardStore
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 
@@ -37,6 +39,9 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     var rounds by remember { mutableIntStateOf(0) }
     var finished by remember { mutableStateOf(false) }
     var timeLeft by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+    val rewardStore = remember(context) { AbidRewardStore(context) }
+    val scope = rememberCoroutineScope()
 
     fun startGame(g: FunGame) {
         game = g
@@ -51,7 +56,10 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     fun answer(index: Int) {
         if (selected != -1 || finished) return
         selected = index
-        if (index == round.correct) score++
+        if (index == round.correct) {
+            score++
+            scope.launch { rewardStore.addChip() }
+        }
     }
 
     fun next() {
@@ -154,18 +162,18 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
                                 Text(('A'.code + index).toChar().toString() + ".", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                                 Spacer(Modifier.width(12.dp))
                                 Text(option, Modifier.weight(1f), fontSize = 21.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                                if (selected >= 0 && index == round.correct) Text("✓", fontSize = 25.sp, color = Color(0xFF23754A))
-                                else if (selected >= 0 && selected == index) Text("✗", fontSize = 25.sp, color = Color(0xFFC62828))
+                                if (selected != -1 && index == round.correct) Text("✓", fontSize = 25.sp, color = Color(0xFF23754A))
+                                else if (selected != -1 && selected == index) Text("✗", fontSize = 25.sp, color = Color(0xFFC62828))
                             }
                         }
                     }
                 }
             }
-            if (selected >= 0) {
+            if (selected != -1) {
                 Spacer(Modifier.height(12.dp))
                 Text(
                     when {
-                        selected == round.correct -> "🎉 Correct! Great job!"
+                        selected == round.correct -> "🎉 Correct! +1 🔵 Blue Coin!"
                         selected == -2 -> "⏰ Time's up! The correct answer is " + round.options[round.correct]
                         else -> "💡 Nice try! The correct answer is " + round.options[round.correct]
                     },
