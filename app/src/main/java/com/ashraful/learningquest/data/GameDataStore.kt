@@ -26,6 +26,8 @@ class GameDataStore(private val context: Context) {
         val ANISH_ANSWERED_QUESTIONS = stringPreferencesKey("anish_answered_questions")
         val ANISH_DAILY_REWARD_DATE = stringPreferencesKey("anish_daily_reward_date")
         val ANISH_DAILY_REWARDED_QUESTIONS = stringPreferencesKey("anish_daily_rewarded_questions")
+        val ARIFA_DAILY_REWARD_DATE = stringPreferencesKey("arifa_daily_reward_date")
+        val ARIFA_DAILY_REWARDED_QUESTIONS = stringPreferencesKey("arifa_daily_rewarded_questions")
         val XP = intPreferencesKey("xp")
         val LEVEL = intPreferencesKey("level")
         val STREAK = intPreferencesKey("streak")
@@ -325,8 +327,33 @@ class GameDataStore(private val context: Context) {
         return purchased
     }
 
-    suspend fun addReward(coins: Int, xp: Int) {
+    suspend fun recordArifaQuestionReward(questionId: String, coins: Int, xp: Int): Boolean {
+        if (questionId.isBlank() || coins < 0 || xp < 0) return false
+
+        var rewarded = false
+        val today = LocalDate.now(ZoneId.systemDefault()).toString()
+
         context.gameDataStore.edit { preferences ->
+            val savedDate = preferences[Keys.ARIFA_DAILY_REWARD_DATE]
+            val rewardedToday = if (savedDate == today) {
+                preferences[Keys.ARIFA_DAILY_REWARDED_QUESTIONS]
+                    ?.split(",")
+                    ?.filter { it.isNotBlank() }
+                    ?.toMutableSet()
+                    ?: mutableSetOf()
+            } else {
+                mutableSetOf()
+            }
+
+            // One reward per question per calendar day.
+            if (questionId in rewardedToday) {
+                return@edit
+            }
+
+            rewardedToday.add(questionId)
+            preferences[Keys.ARIFA_DAILY_REWARD_DATE] = today
+            preferences[Keys.ARIFA_DAILY_REWARDED_QUESTIONS] =
+                rewardedToday.joinToString(",")
 
             val currentCoins = preferences[Keys.COINS] ?: 0
             val currentXp = preferences[Keys.XP] ?: 0
@@ -334,43 +361,45 @@ class GameDataStore(private val context: Context) {
             val currentStreak = preferences[Keys.STREAK] ?: 0
             val lastActivityDay = preferences[Keys.LAST_ACTIVITY_DAY] ?: 0
 
-            val today = LocalDate.now(ZoneId.systemDefault())
+            val todayEpoch = LocalDate.now(ZoneId.systemDefault())
                 .toEpochDay()
                 .toInt()
 
             val newStreak = when {
-                lastActivityDay == today -> currentStreak
-                lastActivityDay == today - 1 -> currentStreak + 1
+                lastActivityDay == todayEpoch -> currentStreak
+                lastActivityDay == todayEpoch - 1 -> currentStreak + 1
                 else -> 1
             }
 
             val newXp = currentXp + xp
-
             val progressDay =
-                if (lastActivityDay == today) {
+                if ((preferences[Keys.LAST_PROGRESS_DAY] ?: 0) == todayEpoch) {
                     preferences[Keys.TODAY_PROGRESS] ?: 0
                 } else {
                     0
                 }
 
-            // Arifa's daily reward cap: only the first 3 reward-earning
-            // activities of each calendar day can award coins and XP.
-            if (progressDay >= 3) {
-                preferences[Keys.LAST_PROGRESS_DAY] = today
-                preferences[Keys.TODAY_PROGRESS] = 3
-                return@edit
-            }
-
-            val newProgress = (progressDay + 1).coerceAtMost(3)
-            val newLevel = (newXp / 100) + 1
-
             preferences[Keys.COINS] = currentCoins + coins
             preferences[Keys.XP] = newXp
-            preferences[Keys.LEVEL] = maxOf(currentLevel, newLevel)
+            preferences[Keys.LEVEL] = maxOf(currentLevel, (newXp / 100) + 1)
             preferences[Keys.STREAK] = newStreak
-            preferences[Keys.LAST_ACTIVITY_DAY] = today
-            preferences[Keys.TODAY_PROGRESS] = newProgress
-            preferences[Keys.LAST_PROGRESS_DAY] = today
+            preferences[Keys.LAST_ACTIVITY_DAY] = todayEpoch
+            preferences[Keys.TODAY_PROGRESS] = (progressDay + 1).coerceAtMost(3)
+            preferences[Keys.LAST_PROGRESS_DAY] = todayEpoch
+            rewarded = true
+        }
+        return rewarded
+    }
+
+    // Kept for existing callers outside Arifa question rewards.
+    suspend fun addReward(coins: Int, xp: Int) {
+        context.gameDataStore.edit { preferences ->
+            preferences[Keys.COINS] = (preferences[Keys.COINS] ?: 0) + coins
+            preferences[Keys.XP] = (preferences[Keys.XP] ?: 0) + xp
+            preferences[Keys.LEVEL] = maxOf(
+                preferences[Keys.LEVEL] ?: 1,
+                ((preferences[Keys.XP] ?: 0) / 100) + 1
+            )
         }
     }
 
