@@ -54,6 +54,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         score = 0
         rounds = 0
         finished = false
+        showContents = false
         timeLeft = if (g == FunGame.FAST_FINGER) 5 else 0
     }
 
