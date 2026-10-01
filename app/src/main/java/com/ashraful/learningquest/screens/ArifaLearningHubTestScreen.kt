@@ -44,6 +44,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     var finished by rememberSaveable { mutableStateOf(false) }
     var testStarted by rememberSaveable { mutableStateOf(false) }
     var showBengali by rememberSaveable { mutableStateOf(false) }
+    var rewardGiven by rememberSaveable { mutableStateOf(false) }
     var hubTab by rememberSaveable { mutableIntStateOf(0) }
 
     val topicProgress = remember(progress) {
@@ -76,6 +77,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         finished = false
         testStarted = true
         showBengali = false
+        rewardGiven = false
     }
 
     Box(
@@ -206,6 +208,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 finished = false
                 testStarted = true
                 showBengali = false
+                rewardGiven = false
             }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp)) {
                 Text("🚀 Start Adaptive Test", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
@@ -400,6 +403,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                             selected = null
                             answered = false
                             showBengali = false
+                            rewardGiven = false
                         }
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
