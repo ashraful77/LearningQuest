@@ -184,6 +184,7 @@ private fun ScienceQuizScreen(
         mutableIntStateOf(0)
     }
 
+    var rewardGiven by remember { mutableStateOf(false) }
     var earnedXp by remember {
         mutableIntStateOf(0)
     }
@@ -455,9 +456,14 @@ private fun ScienceQuizScreen(
                         if (option == question.answer) {
                             correct = true
                             score++
-                            earnedCoins += 10
-                            earnedXp += 10
-                            scope.launch { dataStore.recordArifaQuestionReward(question.question, 10, 10) }
+                            scope.launch {
+                                val rewarded = dataStore.recordArifaQuestionReward(question.question, 10, 10)
+                                rewardGiven = rewarded
+                                if (rewarded) {
+                                    earnedCoins += 10
+                                    earnedXp += 10
+                                }
+                            }
                         } else {
                             correct = false
                         }
@@ -517,7 +523,11 @@ private fun ScienceQuizScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        if (correct) "+10 Coins  •  +10 XP" else "Correct answer: " + question.answer,
+                        when {
+                            !correct -> "Correct answer: " + question.answer
+                            rewardGiven -> "+10 Coins  •  +10 XP"
+                            else -> "✓ Correct! Reward already collected today • New coins tomorrow"
+                        },
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
