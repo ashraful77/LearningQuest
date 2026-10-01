@@ -48,6 +48,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
     var score by remember { mutableIntStateOf(0) }
     var answered by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<String?>(null) }
+    var rewardGiven by remember { mutableStateOf(false) }
     var correct by remember { mutableStateOf(false) }
     var finished by remember { mutableStateOf(false) }
 
@@ -156,7 +157,9 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                             correct = option == current.question.answer
                             if (correct) {
                                 score++
-                                scope.launch { dataStore.recordArifaQuestionReward(current.question.question, 5, 5) }
+                                scope.launch {
+                                    rewardGiven = dataStore.recordArifaQuestionReward(current.question.question, 5, 5)
+                                }
                             }
                         }
                     },
@@ -218,7 +221,11 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                         )
                         Spacer(Modifier.height(3.dp))
                         Text(
-                            if (correct) "+5 Coins  •  +5 XP" else "Correct answer: " + current.question.answer,
+                            when {
+                                !correct -> "Correct answer: " + current.question.answer
+                                rewardGiven -> "+5 Coins  •  +5 XP"
+                                else -> "✓ Correct! Reward already collected today • New coins tomorrow"
+                            },
                             fontSize = 15.sp, fontWeight = FontWeight.Bold,
                             color = if (correct) Color(0xFF159447) else Color(0xFFD52E45)
                         )
