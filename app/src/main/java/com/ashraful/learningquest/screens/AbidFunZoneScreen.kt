@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.ashraful.learningquest.data.AbidRewardStore
 import kotlin.random.Random
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private enum class FunGame(val title: String, val icon: String) {
     TREASURE("Treasure Hunt", "🕵️"),
@@ -42,7 +41,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     var timeLeft by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     val rewardStore = remember(context) { AbidRewardStore(context) }
-    val scope = rememberCoroutineScope()
+    var chipAwardTrigger by remember { mutableIntStateOf(0) }
 
     fun startGame(g: FunGame) {
         game = g
@@ -59,7 +58,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         selected = index
         if (index == round.correct) {
             score++
-            scope.launch { rewardStore.addChip() }
+            chipAwardTrigger++
         }
     }
 
@@ -73,7 +72,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         }
     }
 
-    LaunchedEffect(game, rounds, finished) {
+    LaunchedEffect(chipAwardTrigger) {\n        if (chipAwardTrigger > 0) rewardStore.addChip()\n    }\n\n    LaunchedEffect(game, rounds, finished) {
         if (game == FunGame.FAST_FINGER && !finished && selected == -1) {
             for (t in 5 downTo 1) {
                 timeLeft = t
