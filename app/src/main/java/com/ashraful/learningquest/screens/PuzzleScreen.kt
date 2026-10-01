@@ -509,10 +509,7 @@ private fun PuzzleQuizScreen(
                             earnedXp += 10
 
                             scope.launch {
-                                dataStore.addReward(
-                                    coins = 10,
-                                    xp = 10
-                                )
+                                dataStore.recordArifaQuestionReward(question.question, 10, 10)
                             }
 
                         } else {
