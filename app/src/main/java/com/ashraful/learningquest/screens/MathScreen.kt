@@ -222,7 +222,7 @@ fun MathScreen(onBack: () -> Unit) {
                             score++
                             message = "Correct! +10 Coins +10 XP"
                             scope.launch {
-                                dataStore.addReward(10, 10)
+                                dataStore.recordArifaQuestionReward(question.text, 10, 10)
                                 dataStore.recordMathAnswer(true)
                             }
                         } else {
