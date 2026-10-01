@@ -156,7 +156,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                             correct = option == current.question.answer
                             if (correct) {
                                 score++
-                                scope.launch { dataStore.addReward(5, 5) }
+                                scope.launch { dataStore.recordArifaQuestionReward(current.question.question, 5, 5) }
                             }
                         }
                     },
