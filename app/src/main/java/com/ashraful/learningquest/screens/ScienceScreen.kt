@@ -457,7 +457,7 @@ private fun ScienceQuizScreen(
                             score++
                             earnedCoins += 10
                             earnedXp += 10
-                            scope.launch { dataStore.addReward(10, 10) }
+                            scope.launch { dataStore.recordArifaQuestionReward(question.question, 10, 10) }
                         } else {
                             correct = false
                         }
