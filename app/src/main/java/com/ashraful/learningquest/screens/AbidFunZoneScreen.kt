@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*\nimport androidx.compose.foundation.rememberScrollState\nimport androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,7 +40,8 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     var selected by remember { mutableIntStateOf(-1) }
     var score by remember { mutableIntStateOf(0) }
     var rounds by remember { mutableIntStateOf(0) }
-    var finished by remember { mutableStateOf(false) }\n    var showContents by rememberSaveable { mutableStateOf(true) }
+    var finished by remember { mutableStateOf(false) }
+    var showContents by rememberSaveable { mutableStateOf(true) }
     var timeLeft by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     val rewardStore = remember(context) { AbidRewardStore(context) }
