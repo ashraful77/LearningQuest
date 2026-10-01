@@ -307,7 +307,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                                 gameStore.recordAnswer(correct)
                                 if (correct) {
                                     score++
-                                    gameStore.recordArifaQuestionReward(q.id, 5, 5)
+                                    rewardGiven = gameStore.recordArifaQuestionReward(q.id, 5, 5)
                                 }
                             }
                         }
@@ -360,7 +360,11 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            if (selected == q.correctIndex) "🎉 CORRECT! +5 XP +5 Coins" else "❌ WRONG ANSWER",
+                            when {
+                            selected != q.correctIndex -> "❌ WRONG ANSWER"
+                            rewardGiven -> "🎉 CORRECT! +5 XP +5 Coins"
+                            else -> "✓ CORRECT! Reward already collected today • New coins tomorrow"
+                        },
                             fontSize = 17.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = if (selected == q.correctIndex) Color(0xFF138A43) else Color(0xFFC62828)
