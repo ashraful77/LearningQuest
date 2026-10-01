@@ -307,7 +307,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                                 gameStore.recordAnswer(correct)
                                 if (correct) {
                                     score++
-                                    gameStore.addReward(5, 5)
+                                    gameStore.recordArifaQuestionReward(q.id, 5, 5)
                                 }
                             }
                         }
