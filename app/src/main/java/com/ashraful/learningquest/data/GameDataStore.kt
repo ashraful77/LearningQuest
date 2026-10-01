@@ -353,6 +353,14 @@ class GameDataStore(private val context: Context) {
                     0
                 }
 
+            // Arifa's daily reward cap: only the first 3 reward-earning
+            // activities of each calendar day can award coins and XP.
+            if (progressDay >= 3) {
+                preferences[Keys.LAST_PROGRESS_DAY] = today
+                preferences[Keys.TODAY_PROGRESS] = 3
+                return@edit
+            }
+
             val newProgress = (progressDay + 1).coerceAtMost(3)
             val newLevel = (newXp / 100) + 1
 
