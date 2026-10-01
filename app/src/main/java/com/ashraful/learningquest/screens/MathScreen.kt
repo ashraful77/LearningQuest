@@ -220,9 +220,13 @@ fun MathScreen(onBack: () -> Unit) {
                         if (option == question.answer) {
                             correct = true
                             score++
-                            message = "Correct! +10 Coins +10 XP"
                             scope.launch {
-                                dataStore.recordArifaQuestionReward(question.text, 10, 10)
+                                val rewarded = dataStore.recordArifaQuestionReward(question.text, 10, 10)
+                                message = if (rewarded) {
+                                    "Correct! +10 Coins +10 XP"
+                                } else {
+                                    "Correct! Reward already collected today • New coins tomorrow"
+                                }
                                 dataStore.recordMathAnswer(true)
                             }
                         } else {
