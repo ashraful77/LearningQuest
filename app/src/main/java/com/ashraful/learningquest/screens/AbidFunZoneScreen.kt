@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.*\nimport androidx.compose.foundation.rememberScrollState\nimport androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,7 +37,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     var selected by remember { mutableIntStateOf(-1) }
     var score by remember { mutableIntStateOf(0) }
     var rounds by remember { mutableIntStateOf(0) }
-    var finished by remember { mutableStateOf(false) }
+    var finished by remember { mutableStateOf(false) }\n    var showContents by rememberSaveable { mutableStateOf(true) }
     var timeLeft by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     val rewardStore = remember(context) { AbidRewardStore(context) }
@@ -72,7 +72,11 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
         }
     }
 
-    LaunchedEffect(chipAwardTrigger) {\n        if (chipAwardTrigger > 0) rewardStore.addChip()\n    }\n\n    LaunchedEffect(game, rounds, finished) {
+    LaunchedEffect(chipAwardTrigger) {
+        if (chipAwardTrigger > 0) rewardStore.addChip()
+    }
+
+    LaunchedEffect(game, rounds, finished) {
         if (game == FunGame.FAST_FINGER && !finished && selected == -1) {
             for (t in 5 downTo 1) {
                 timeLeft = t
@@ -92,7 +96,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
             .padding(16.dp)
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onBack) { Text("‹ Back", fontWeight = FontWeight.Bold, fontSize = 17.sp) }
+            TextButton(onClick = { if (showContents) onBack() else showContents = true }) { Text(if (showContents) "‹ Back" else "‹ Games", fontWeight = FontWeight.Bold, fontSize = 17.sp) }
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("🎪 Fun Zone", fontSize = 27.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7043A8))
                 Text("Play • Think • Have Fun!", fontSize = 12.sp, color = Color(0xFF60758A))
@@ -102,24 +106,50 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
 
         Spacer(Modifier.height(12.dp))
 
-        FunGame.values().toList().chunked(4).forEach { rowGames ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                rowGames.forEach { g ->
-                    FilterChip(
-                        selected = game == g,
-                        onClick = { startGame(g) },
-                        label = { Text(g.icon + " " + g.title, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
-                        modifier = Modifier.weight(1f)
-                    )
+        if (showContents) {
+            Text(
+                "📚 Choose a game to play",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF7043A8),
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            FunGame.values().forEach { g ->
+                Card(
+                    onClick = { startGame(g) },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(Color.White),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(g.icon, fontSize = 34.sp)
+                        Spacer(Modifier.width(14.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(g.title, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
+                            Text(
+                                when (g) {
+                                    FunGame.TREASURE -> "Find the correct treasure."
+                                    FunGame.ODD_ONE -> "Find what is different."
+                                    FunGame.NUMBER_JUMP -> "Find the requested number."
+                                    FunGame.LETTER_HUNT -> "Find the requested letter."
+                                    FunGame.PATTERN -> "Complete the missing pattern."
+                                    FunGame.NOT_BELONG -> "Find the item that doesn't belong."
+                                    FunGame.FAST_FINGER -> "Tap the correct answer quickly."
+                                },
+                                fontSize = 12.sp,
+                                color = Color(0xFF60758A)
+                            )
+                        }
+                        Text("›", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color(0xFF7043A8))
+                    }
                 }
-                repeat(4 - rowGames.size) { Spacer(Modifier.weight(1f)) }
             }
-            Spacer(Modifier.height(4.dp))
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        if (finished) {
+        } else if (finished) {
             Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(3.dp)) {
                 Column(Modifier.fillMaxWidth().padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("🎉🏆🎉", fontSize = 48.sp)
