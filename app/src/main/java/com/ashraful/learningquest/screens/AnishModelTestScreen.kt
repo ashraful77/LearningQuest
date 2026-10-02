@@ -30,14 +30,27 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
     val store = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
     val data by store.gameData.collectAsState(initial = null)
-    val questions = remember { anishQuestionBank.shuffled().take(MODEL_TEST_SIZE) }
+    val resumePrefs = remember { context.getSharedPreferences("anish_model_test_resume", 0) }
+    val savedIds = remember { resumePrefs.getString("ids", "") ?: "" }
+    val questions = remember {
+        if (savedIds.isNotBlank()) {
+            savedIds.split(",").mapNotNull { id -> anishQuestionBank.firstOrNull { it.id == id } }
+                .ifEmpty { anishQuestionBank.shuffled().take(MODEL_TEST_SIZE) }
+        } else anishQuestionBank.shuffled().take(MODEL_TEST_SIZE)
+    }
 
-    var index by rememberSaveable { mutableIntStateOf(0) }
+    var index by rememberSaveable { mutableIntStateOf(resumePrefs.getInt("index", 0)) }
     var selected by rememberSaveable { mutableIntStateOf(-1) }
-    var score by rememberSaveable { mutableIntStateOf(0) }
+    var score by rememberSaveable { mutableIntStateOf(resumePrefs.getInt("score", 0)) }
     var secondsLeft by rememberSaveable { mutableIntStateOf(MODEL_TEST_SECONDS) }
     var finished by rememberSaveable { mutableStateOf(false) }
     var recorded by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (resumePrefs.getString("ids", "").isNullOrBlank()) {
+            resumePrefs.edit().putString("ids", questions.joinToString(",") { it.id }).apply()
+        }
+    }
 
     LaunchedEffect(finished) {
         if (!finished) {
@@ -61,6 +74,7 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
         selected = choice
         val correct = choice == questions[index].correctAnswer
         if (correct) score++
+        resumePrefs.edit().putInt("index", index).putInt("score", score).apply()
         scope.launch {
             store.recordAnishQuestionAttempt(
                 questions[index].id,
@@ -71,10 +85,13 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
 
     fun next() {
         if (selected == -1) return
-        if (index == questions.lastIndex) finished = true
-        else {
+        if (index == questions.lastIndex) {
+            finished = true
+            resumePrefs.edit().clear().apply()
+        } else {
             index++
             selected = -1
+            resumePrefs.edit().putInt("index", index).putInt("score", score).apply()
         }
     }
 
@@ -89,6 +106,7 @@ fun AnishModelTestScreen(onBack: () -> Unit) {
                 score, MODEL_TEST_SIZE, data?.diamonds ?: 0,
                 onBack,
                 onRetry = {
+                    resumePrefs.edit().clear().apply()
                     index = 0
                     selected = -1
                     score = 0
