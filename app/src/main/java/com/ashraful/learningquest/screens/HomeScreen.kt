@@ -170,6 +170,7 @@ fun HomeScreen() {
             "abid_achievements" -> AbidAchievementsScreen { goBack() }
             "abid_match_letters" -> AbidMatchLettersScreen { goBack() }
             "abid_number_match" -> AbidNumberMatchScreen { goBack() }
+            "abid_match_numbers_test" -> AbidMatchNumbersTestScreen { goBack() }
             "abid_challenge" -> AbidMiniChallengeScreen { goBack() }
             "abid_fun_zone" -> AbidFunZoneScreen { goBack() }
             "abid_rewards" -> AbidRewardRoomScreen { goBack() }
