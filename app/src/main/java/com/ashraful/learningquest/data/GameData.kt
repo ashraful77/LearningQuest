@@ -15,6 +15,8 @@ data class GameData(
     val totalQuestions: Int = 0,
     val correctAnswers: Int = 0,
     val achievementCount: Int = 0,
+    val ownedGiftCount: Int = 0,
+    val equippedGiftId: String? = null,
     val anishTotalQuestions: Int = 0,
     val anishCorrectAnswers: Int = 0,
     val anishAchievements: Set<Int> = emptySet()
