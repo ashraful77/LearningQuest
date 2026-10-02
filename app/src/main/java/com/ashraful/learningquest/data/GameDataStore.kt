@@ -181,6 +181,9 @@ class GameDataStore(private val context: Context) {
                 totalQuestions = totalQuestions,
                 correctAnswers = correctAnswers,
                 achievementCount = achievementCount,
+                ownedGiftCount = preferences[Keys.OWNED_GIFTS]
+                    ?.split(",")?.filter { it.isNotBlank() }?.size ?: 0,
+                equippedGiftId = preferences[Keys.EQUIPPED_GIFT],
                 diamonds = preferences[Keys.ANISH_DIAMONDS] ?: 0,
                 anishTotalQuestions = preferences[Keys.ANISH_TOTAL_QUESTIONS] ?: 0,
                 anishCorrectAnswers = preferences[Keys.ANISH_CORRECT_ANSWERS] ?: 0,
