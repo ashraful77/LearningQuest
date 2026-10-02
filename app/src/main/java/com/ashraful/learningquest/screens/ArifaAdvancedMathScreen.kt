@@ -107,7 +107,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
     var answer by rememberSaveable { mutableStateOf("") }
     var checked by rememberSaveable { mutableStateOf(false) }
     var correct by rememberSaveable { mutableStateOf(false) }
-    var bengali by rememberSaveable { mutableStateOf(false) }
+    var bengali by rememberSaveable { mutableStateOf(true) }
     var score by rememberSaveable { mutableIntStateOf(0) }
     var finished by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
@@ -135,7 +135,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
         answer = ""
         checked = false
         correct = false
-        bengali = false
+        bengali = true
         finished = false
     }
 
@@ -274,7 +274,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
                         answer = ""
                         checked = false
                         correct = false
-                        bengali = false
+                        bengali = true
                     }
                 },
                 modifier=Modifier.fillMaxWidth().height(52.dp)
@@ -289,8 +289,7 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
             Card(Modifier.fillMaxWidth(), colors=CardDefaults.cardColors(Color(0xFFFFE8E8))) {
                 Column(Modifier.fillMaxWidth().padding(18.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                     Text("❌ WRONG ANSWER",fontSize=22.sp,fontWeight=FontWeight.ExtraBold,color=Color(0xFFC62828))
-                    Text(if(bengali) "সঠিক উত্তর: " + q.answer else "Correct answer: " + q.answer,fontSize=18.sp,fontWeight=FontWeight.Bold,color=Color(0xFF23754A))
-                    Text(q.explanation,Modifier.padding(top=6.dp),fontWeight=FontWeight.Bold)
+                    Text("উত্তরটি সঠিক হয়নি। আবার চেষ্টা করুন।",fontSize=17.sp,fontWeight=FontWeight.Bold,textAlign=TextAlign.Center)
                 }
             }
             Spacer(Modifier.height(12.dp))
