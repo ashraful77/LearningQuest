@@ -123,13 +123,35 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
         setIndex == 0 || isAttempted(setIndex - 1)
 
     fun startSet(setIndex: Int) {
-        selectedSet=setIndex; index=0; score=0; answer=""; checked=false; correct=false; bengali=false; finished=false
+        val questions = advancedMathSets[setIndex]
+        val savedIndex = prefs.getInt("set_${setIndex + 1}_progress", 0)
+            .coerceIn(0, questions.lastIndex)
+        val savedScore = prefs.getInt("set_${setIndex + 1}_progress_score", 0)
+            .coerceAtLeast(0)
+
+        selectedSet = setIndex
+        index = savedIndex
+        score = savedScore
+        answer = ""
+        checked = false
+        correct = false
+        bengali = false
+        finished = false
+    }
+
+    fun saveProgress(nextIndex: Int, currentScore: Int) {
+        prefs.edit()
+            .putInt("set_${selectedSet + 1}_progress", nextIndex)
+            .putInt("set_${selectedSet + 1}_progress_score", currentScore)
+            .apply()
     }
 
     fun completeSet() {
         prefs.edit()
             .putBoolean("set_${selectedSet + 1}_attempted", true)
             .putInt("set_${selectedSet + 1}_score", score)
+            .remove("set_${selectedSet + 1}_progress")
+            .remove("set_${selectedSet + 1}_progress_score")
             .apply()
         finished=true
     }
@@ -163,7 +185,12 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
                         Text(title, fontSize=20.sp, fontWeight=FontWeight.ExtraBold)
                         Text(
                             if(!unlocked) "Complete previous set first"
-                            else pair.second + " • 10 Questions" + if(attempted) " • Score " + latestScore(i) + "/10" else "",
+                            else pair.second + " • 10 Questions" +
+                                if (prefs.contains("set_${i + 1}_progress"))
+                                    " • Resume Q" + (prefs.getInt("set_${i + 1}_progress", 0) + 1)
+                                else if (attempted)
+                                    " • Score " + latestScore(i) + "/10"
+                                else "",
                             fontSize=12.sp
                         )
                         if(attempted) Text("↻ Retest available", fontSize=12.sp, fontWeight=FontWeight.Bold)
@@ -178,6 +205,14 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
 
     val questions = advancedMathSets[selectedSet]
     val q = questions[index]
+
+    DisposableEffect(selectedSet, index) {
+        onDispose {
+            if (!finished) {
+                saveProgress(index, score)
+            }
+        }
+    }
 
     if (finished) {
         Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment=Alignment.CenterHorizontally, verticalArrangement=Arrangement.Center) {
@@ -208,7 +243,24 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
         OutlinedTextField(value=answer, onValueChange={if(!checked) answer=it.filter(Char::isDigit)}, enabled=!checked, modifier=Modifier.fillMaxWidth(), label={Text(if(bengali) "উত্তর লিখুন" else "Write your answer")}, keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number), singleLine=true, textStyle=LocalTextStyle.current.copy(fontSize=24.sp,fontWeight=FontWeight.Bold,textAlign=TextAlign.Center))
         Spacer(Modifier.height(12.dp))
         if(!checked) {
-            Button(onClick={correct=answer.toIntOrNull()==q.answer; checked=true; if(correct) score++}, enabled=answer.isNotBlank(), modifier=Modifier.fillMaxWidth().height(54.dp)) { Text(if(bengali) "✓ উত্তর যাচাই করুন" else "✓ Check Answer", fontSize=17.sp, fontWeight=FontWeight.Bold) }
+            Button(
+                onClick = {
+                    correct = answer.toIntOrNull() == q.answer
+                    checked = true
+                    if (correct) {
+                        score++
+                        saveProgress(index, score)
+                    }
+                },
+                enabled=answer.isNotBlank(),
+                modifier=Modifier.fillMaxWidth().height(54.dp)
+            ) {
+                Text(
+                    if(bengali) "✓ উত্তর যাচাই করুন" else "✓ Check Answer",
+                    fontSize=17.sp,
+                    fontWeight=FontWeight.Bold
+                )
+            }
         } else if(correct) {
             Card(Modifier.fillMaxWidth(), colors=CardDefaults.cardColors(Color(0xFFE8F8EE))) {
                 Column(Modifier.fillMaxWidth().padding(18.dp), horizontalAlignment=Alignment.CenterHorizontally) {
@@ -218,7 +270,28 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(12.dp))
-            Button(onClick={if(index==questions.lastIndex) completeSet() else {index++;answer="";checked=false;correct=false;bengali=false}}, modifier=Modifier.fillMaxWidth().height(52.dp)) { Text(if(index==questions.lastIndex) "🏆 Finish Set" else "Next Question →",fontWeight=FontWeight.Bold,fontSize=17.sp) }
+            Button(
+                onClick = {
+                    if (index == questions.lastIndex) {
+                        completeSet()
+                    } else {
+                        val nextIndex = index + 1
+                        saveProgress(nextIndex, score)
+                        index = nextIndex
+                        answer = ""
+                        checked = false
+                        correct = false
+                        bengali = false
+                    }
+                },
+                modifier=Modifier.fillMaxWidth().height(52.dp)
+            ) {
+                Text(
+                    if(index==questions.lastIndex) "🏆 Finish Set" else "Next Question →",
+                    fontWeight=FontWeight.Bold,
+                    fontSize=17.sp
+                )
+            }
         } else {
             Card(Modifier.fillMaxWidth(), colors=CardDefaults.cardColors(Color(0xFFFFE8E8))) {
                 Column(Modifier.fillMaxWidth().padding(18.dp),horizontalAlignment=Alignment.CenterHorizontally) {
