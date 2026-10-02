@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ashraful.learningquest.data.AbidProgressStore
@@ -131,7 +133,7 @@ fun AbidBengaliTracingScreen(onBack: () -> Unit) {
                     drawContext.canvas.nativeCanvas.drawText(letter, size.width/2f, baseline, paint)
                     strokes.forEach { stroke ->
                         stroke.zipWithNext().forEach { (a,b) ->
-                            drawLine(Color(0xFFB05A00), a, b, 16f, cap = StrokeCap.Round)
+                            drawLine(Color(0xFFB05A00), a, b, brushSizeDp.dp.toPx(), cap = StrokeCap.Round)
                         }
                     }
                     points.forEach { drawCircle(Color(0xFFB05A00), brushSizeDp.dp.toPx() / 2f, it) }
