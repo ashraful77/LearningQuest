@@ -33,20 +33,60 @@ fun AbidBengaliTracingScreen(onBack: () -> Unit) {
     var result by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var score by rememberSaveable { mutableIntStateOf(0) }
     var rewarded by rememberSaveable { mutableStateOf(false) }
+    var brushSizeDp by rememberSaveable { mutableFloatStateOf(8f) }
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
 
     val letter = bengaliTraceLetters[index]
 
     fun check() {
         if (points.size < 20) { score = 0; result = false; return }
-        val cx = 200f
-        val cy = 230f
-        val scale = 1.0f
-        val matches = points.count { p ->
-            val dx = (p.x - cx) / scale
-            val dy = (p.y - cy) / scale
-            hypot(dx.toDouble(), dy.toDouble()) < 180.0
+        val width = canvasSize.width.toFloat()
+        val height = canvasSize.height.toFloat()
+        if (width <= 0f || height <= 0f) { score = 0; result = false; return }
+
+        // Score the actual Bengali glyph instead of a circular area.
+        val bitmap = android.graphics.Bitmap.createBitmap(500, 500, android.graphics.Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bitmap)
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            color = android.graphics.Color.BLACK
+            typeface = android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.BOLD)
+            textSize = 330f
+            textAlign = android.graphics.Paint.Align.CENTER
         }
-        score = (matches * 100 / points.size).coerceIn(0,100)
+        val metrics = paint.fontMetrics
+        val baseline = 250f - (metrics.ascent + metrics.descent) / 2f
+        canvas.drawText(letter, 250f, baseline, paint)
+
+        val expected = mutableListOf<Offset>()
+        var y = 2
+        while (y < 498) {
+            var x = 2
+            while (x < 498) {
+                val pixel = bitmap.getPixel(x, y)
+                if (android.graphics.Color.alpha(pixel) > 80 && android.graphics.Color.red(pixel) < 180) {
+                    expected += Offset(x.toFloat(), y.toFloat())
+                }
+                x += 6
+            }
+            y += 6
+        }
+
+        val radius = minOf(width, height) * 0.045f
+        val guideCoverage = expected.count { target ->
+            val scaled = Offset(target.x / 500f * width, target.y / 500f * height)
+            points.any { user ->
+                hypot((user.x - scaled.x).toDouble(), (user.y - scaled.y).toDouble()) <= radius
+            }
+        } * 100 / expected.size.coerceAtLeast(1)
+
+        val userOnGuide = points.count { user ->
+            expected.any { target ->
+                val scaled = Offset(target.x / 500f * width, target.y / 500f * height)
+                hypot((user.x - scaled.x).toDouble(), (user.y - scaled.y).toDouble()) <= radius
+            }
+        } * 100 / points.size.coerceAtLeast(1)
+
+        score = ((guideCoverage * 0.70f) + (userOnGuide * 0.30f)).toInt().coerceIn(0, 100)
         result = score >= 55
     }
 
@@ -64,6 +104,7 @@ fun AbidBengaliTracingScreen(onBack: () -> Unit) {
             Card(Modifier.fillMaxWidth().weight(1f), shape = RoundedCornerShape(28.dp), colors = CardDefaults.cardColors(Color.White)) {
                 Canvas(
                     Modifier.fillMaxSize().padding(10.dp)
+                        .onSizeChanged { canvasSize = it }
                         .pointerInput(letter) {
                             detectDragGestures(
                                 onDragStart = { p ->
@@ -93,11 +134,23 @@ fun AbidBengaliTracingScreen(onBack: () -> Unit) {
                             drawLine(Color(0xFFB05A00), a, b, 16f, cap = StrokeCap.Round)
                         }
                     }
-                    points.forEach { drawCircle(Color(0xFFB05A00), 7f, it) }
+                    points.forEach { drawCircle(Color(0xFFB05A00), brushSizeDp.dp.toPx() / 2f, it) }
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(3.dp))
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text("পাতলা", fontSize = 11.sp, color = Color(0xFF60758A))
+                Slider(
+                    value = brushSizeDp,
+                    onValueChange = { brushSizeDp = it },
+                    valueRange = 3f..12f,
+                    steps = 8,
+                    modifier = Modifier.weight(1f).padding(horizontal = 5.dp)
+                )
+                Text("মোটা", fontSize = 11.sp, color = Color(0xFF60758A))
+            }
+            Spacer(Modifier.height(3.dp))
             Text(
                 when (result) {
                     true -> "🎉 দারুণ! ${score}%"
