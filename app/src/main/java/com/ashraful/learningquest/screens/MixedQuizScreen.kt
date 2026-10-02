@@ -1,6 +1,9 @@
 package com.ashraful.learningquest.screens
 
+import android.util.Base64
 import androidx.compose.animation.core.*
+import org.json.JSONArray
+import org.json.JSONObject
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +34,41 @@ fun MixedQuizScreen(onBack: () -> Unit) {
     val dataStore = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
     val gameData by dataStore.gameData.collectAsState(initial = null)
-    var quizSeed by remember { mutableIntStateOf(0) }
+    val resumePrefs = remember { context.getSharedPreferences("arifa_mixed_quiz_resume", 0) }
+    var quizSeed by remember { mutableIntStateOf(resumePrefs.getInt("seed", 0)) }
+    var index by remember { mutableIntStateOf(resumePrefs.getInt("index", 0)) }
+    var score by remember { mutableIntStateOf(resumePrefs.getInt("score", 0)) }
+
+    fun encodeQuestions(list: List<MixedQuestion>): String {
+        val arr = JSONArray()
+        list.forEach {
+            val o = JSONObject()
+            o.put("subject", it.subject)
+            o.put("question", it.question.question)
+            o.put("answer", it.question.answer)
+            o.put("options", JSONArray(it.question.options))
+            arr.put(o)
+        }
+        return Base64.encodeToString(arr.toString().toByteArray(), Base64.NO_WRAP)
+    }
+
+    fun decodeQuestions(value: String): List<MixedQuestion> = try {
+        val arr = JSONArray(String(Base64.decode(value, Base64.DEFAULT)))
+        (0 until arr.length()).map { i ->
+            val o = arr.getJSONObject(i)
+            val opts = o.getJSONArray("options")
+            MixedQuestion(
+                o.getString("subject"),
+                Question(o.getString("question"), (0 until opts.length()).map { j -> opts.getString(j) }, o.getString("answer"))
+            )
+        }
+    } catch (_: Exception) { emptyList() }
+
+    val savedQuestions = remember { resumePrefs.getString("questions", "") ?: "" }
+    var restoredQuestions by remember { mutableStateOf<List<MixedQuestion>?>(null) }
+    LaunchedEffect(Unit) {
+        if (savedQuestions.isNotBlank()) restoredQuestions = decodeQuestions(savedQuestions)
+    }
 
     val questions = remember(quizSeed) {
         val english = englishSections.flatMap { it.questions }.map { MixedQuestion("English", it) }
@@ -43,9 +80,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
         }
         (english + science + puzzles + math).shuffled().take(20)
     }
-
-    var index by remember { mutableIntStateOf(0) }
-    var score by remember { mutableIntStateOf(0) }
+    val activeQuestions = restoredQuestions?.takeIf { it.isNotEmpty() } ?: questions
     var answered by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<String?>(null) }
     var rewardGiven by remember { mutableStateOf(false) }
@@ -84,7 +119,14 @@ fun MixedQuizScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(28.dp))
             Button(
                 onClick = {
-                    quizSeed++; index = 0; score = 0; answered = false; selected = null; correct = false; finished = false
+                    quizSeed++
+                    index = 0
+                    score = 0
+                    answered = false
+                    selected = null
+                    correct = false
+                    finished = false
+                    resumePrefs.edit().clear().putInt("seed", quizSeed).apply()
                 },
                 modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)
             ) { Text("🔄 Try Again", fontSize = 18.sp) }
@@ -96,7 +138,13 @@ fun MixedQuizScreen(onBack: () -> Unit) {
         return
     }
 
-    val current = questions[index]
+    LaunchedEffect(activeQuestions.size) {
+        if (resumePrefs.getString("questions", "").isNullOrBlank()) {
+            resumePrefs.edit().putString("questions", encodeQuestions(activeQuestions)).putInt("seed", quizSeed).apply()
+        }
+    }
+
+    val current = activeQuestions[index]
     val options = remember(index) { current.question.options.shuffled() }
 
     Box(Modifier.fillMaxSize()) {
@@ -157,6 +205,7 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                             correct = option == current.question.answer
                             if (correct) {
                                 score++
+                                resumePrefs.edit().putInt("index", index).putInt("score", score).apply()
                                 scope.launch {
                                     rewardGiven = dataStore.recordArifaQuestionReward(current.question.question, 5, 5)
                                 }
@@ -234,8 +283,16 @@ fun MixedQuizScreen(onBack: () -> Unit) {
                 Spacer(Modifier.height(8.dp))
                 Button(
                     onClick = {
-                        if (index == questions.lastIndex) finished = true
-                        else { index++; answered = false; selected = null; correct = false }
+                        if (index == activeQuestions.lastIndex) {
+                            finished = true
+                            resumePrefs.edit().clear().apply()
+                        } else {
+                            index++
+                            answered = false
+                            selected = null
+                            correct = false
+                            resumePrefs.edit().putInt("index", index).putInt("score", score).apply()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)
                 ) {
