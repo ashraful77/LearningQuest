@@ -45,7 +45,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
 
     Column(
         Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()
-            .background(Brush.verticalGradient(listOf(Color(0xFFEAF4FF), Color.White, Color(0xFFFFF5DE)))
+            .background(Brush.verticalGradient(listOf(Color(0xFFEAF4FF), Color.White, Color(0xFFFFF5DE))))
             .padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
