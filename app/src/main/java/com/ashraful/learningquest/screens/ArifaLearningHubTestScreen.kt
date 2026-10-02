@@ -32,13 +32,20 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
     val progressStore = remember { QuestionProgressStore(context) }
     val scope = rememberCoroutineScope()
     val progress by progressStore.progress.collectAsState(initial = emptyMap())
+    val resumePrefs = remember { context.getSharedPreferences("arifa_learning_hub_resume", 0) }
 
-    var questionIds by rememberSaveable { mutableStateOf("") }
+    var questionIds by rememberSaveable {
+        mutableStateOf(resumePrefs.getString("question_ids", "") ?: "")
+    }
     val questions = remember(questionIds) {
         questionIds.split(",").filter { it.isNotBlank() }.mapNotNull(QuestionBank::findById)
     }
-    var index by rememberSaveable { mutableIntStateOf(0) }
-    var score by rememberSaveable { mutableIntStateOf(0) }
+    var index by rememberSaveable {
+        mutableIntStateOf(resumePrefs.getInt("index", 0))
+    }
+    var score by rememberSaveable {
+        mutableIntStateOf(resumePrefs.getInt("score", 0))
+    }
     var selected by rememberSaveable { mutableStateOf<Int?>(null) }
     var answered by rememberSaveable { mutableStateOf(false) }
     var finished by rememberSaveable { mutableStateOf(false) }
@@ -72,6 +79,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
         questionIds = selectedQuestions.joinToString(",") { it.id }
         index = 0
         score = 0
+        resumePrefs.edit().putString("question_ids", questionIds).putInt("index", 0).putInt("score", 0).apply()
         selected = null
         answered = false
         finished = false
@@ -203,6 +211,7 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                 questionIds = AdaptiveQuestionEngine.mixedTest(questions = QuestionBank.all, progress = progress, count = minOf(10, QuestionBank.all.size)).joinToString(",") { it.id }
                 index = 0
                 score = 0
+                resumePrefs.edit().putString("question_ids", questionIds).putInt("index", 0).putInt("score", 0).apply()
                 selected = null
                 answered = false
                 finished = false
@@ -398,12 +407,14 @@ fun ArifaLearningHubTestScreen(onBack: () -> Unit) {
                     onClick = {
                         if (index == questions.lastIndex) {
                             finished = true
+                            resumePrefs.edit().clear().apply()
                         } else {
                             index++
                             selected = null
                             answered = false
                             showBengali = false
                             rewardGiven = false
+                            resumePrefs.edit().putInt("index", index).putInt("score", score).apply()
                         }
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
@@ -428,18 +439,26 @@ private fun RealTestScreen(
     val context = LocalContext.current
     val gameStore = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
-    var count by rememberSaveable { mutableIntStateOf(10) }
-    var subject by rememberSaveable { mutableStateOf("Mixed") }
-    var ids by rememberSaveable { mutableStateOf("") }
+    val resumePrefs = remember { context.getSharedPreferences("arifa_real_test_resume", 0) }
+    var count by rememberSaveable { mutableIntStateOf(resumePrefs.getInt("count", 10)) }
+    var subject by rememberSaveable { mutableStateOf(resumePrefs.getString("subject", "Mixed") ?: "Mixed") }
+    var ids by rememberSaveable { mutableStateOf(resumePrefs.getString("ids", "") ?: "") }
     val questions = remember(ids) { ids.split(",").filter { it.isNotBlank() }.mapNotNull(QuestionBank::findById) }
-    var index by rememberSaveable { mutableIntStateOf(0) }
+    var index by rememberSaveable { mutableIntStateOf(resumePrefs.getInt("index", 0)) }
     var finished by rememberSaveable { mutableStateOf(false) }
     var startedAt by rememberSaveable { mutableLongStateOf(0L) }
     var elapsed by rememberSaveable { mutableLongStateOf(0L) }
     var showSubmit by rememberSaveable { mutableStateOf(false) }
     var review by rememberSaveable { mutableStateOf(false) }
     var showBengali by rememberSaveable { mutableStateOf(false) }
-    val answers = remember { mutableStateMapOf<Int, Int>() }
+    val answers = remember {
+        mutableStateMapOf<Int, Int>().apply {
+            (resumePrefs.getString("answers", "") ?: "").split(",").forEach { part ->
+                val bits = part.split(":")
+                if (bits.size == 2) bits[0].toIntOrNull()?.let { k -> bits[1].toIntOrNull()?.let { v -> put(k, v) } }
+            }
+        }
+    }
     val testStore = remember { GameDataStore(context) }
     val testHistory by testStore.realTestHistory.collectAsState(initial = emptyList())
 
@@ -470,6 +489,14 @@ private fun RealTestScreen(
         showSubmit = false
         elapsed = 0L
         startedAt = System.currentTimeMillis()
+        resumePrefs.edit()
+            .putInt("count", count)
+            .putString("subject", subject)
+            .putString("ids", ids)
+            .putInt("index", 0)
+            .putString("answers", "")
+            .putLong("startedAt", startedAt)
+            .apply()
     }
 
     fun submitTest() {
@@ -479,6 +506,7 @@ private fun RealTestScreen(
         finished = true
         startedAt = 0L
         showSubmit = false
+        resumePrefs.edit().clear().apply()
     }
 
     if (finished) {
@@ -603,12 +631,16 @@ private fun RealTestScreen(
         Spacer(Modifier.height(12.dp))
         order.forEach { optionIndex ->
             val optionText = if (showBengali) q.bengaliOptions?.getOrNull(optionIndex) ?: q.options[optionIndex] else q.options[optionIndex]
-            Button(onClick = { answers[index] = optionIndex }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(optionText, fontSize = 18.sp, fontWeight = FontWeight.Bold) }
+            Button(onClick = {
+                answers[index] = optionIndex
+                val encoded = answers.entries.joinToString(",") { it.key.toString() + ":" + it.value }
+                resumePrefs.edit().putString("answers", encoded).apply()
+            }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).height(58.dp), shape = RoundedCornerShape(17.dp), colors = ButtonDefaults.buttonColors(containerColor = if (current == optionIndex) Color(0xFFDCE9FF) else Color(0xFFF4F6FA), contentColor = Color(0xFF26354A))) { Text(optionText, fontSize = 18.sp, fontWeight = FontWeight.Bold) }
         }
         Spacer(Modifier.height(8.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = { if (index > 0) index-- }, enabled = index > 0, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text("← Previous") }
-            Button(onClick = { if (index < questions.lastIndex) index++ else showSubmit = true }, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text(if (index == questions.lastIndex) "SUBMIT TEST" else "Next →") }
+            OutlinedButton(onClick = { if (index > 0) { index--; resumePrefs.edit().putInt("index", index).apply() } }, enabled = index > 0, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text("← Previous") }
+            Button(onClick = { if (index < questions.lastIndex) { index++; resumePrefs.edit().putInt("index", index).apply() } else showSubmit = true }, modifier = Modifier.weight(1f), shape = RoundedCornerShape(16.dp)) { Text(if (index == questions.lastIndex) "SUBMIT TEST" else "Next →") }
         }
         Spacer(Modifier.height(8.dp))
         Text(answers.size.toString() + " answered • " + (questions.size - answers.size) + " unanswered", fontSize = 12.sp, color = Color(0xFF68778C))
