@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -31,6 +32,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
 
     val numbers = remember(round) { (1..10).shuffled().take(5) }
     val objects = remember(round) { numbers.shuffled() }
+    val density = LocalDensity.current
     val emoji = listOf("🍎", "⭐", "🔵", "🌸", "🎈")
 
     fun newRound() {
@@ -67,6 +69,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                     Modifier.fillMaxSize().pointerInput(numbers, objects, matches) {
                         detectDragGestures(
                             onDragStart = { point ->
+                                val leftCenters = leftCentersDp.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
                                 val nearest = leftCenters.indices.minByOrNull { abs(leftCenters[it].y - point.y) }
                                 if (nearest != null && abs(leftCenters[nearest].y - point.y) < 70f && !matches.containsKey(numbers[nearest])) {
                                     dragStart = nearest
@@ -77,6 +80,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                             onDragEnd = {
                                 if (dragStart >= 0) {
                                     val end = dragPoint
+                                    val rightCenters = rightCentersDp.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
                                     val nearestRight = if (end != null) rightCenters.indices.minByOrNull { abs(rightCenters[it].y - end.y) } else null
                                     if (nearestRight != null && abs(rightCenters[nearestRight].y - end!!.y) < 70f) {
                                         val number = numbers[dragStart]
@@ -96,6 +100,8 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                         )
                     }
                 ) {
+                    val leftCenters = leftCentersDp.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
+                    val rightCenters = rightCentersDp.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
                     matches.forEach { (number, target) ->
                         val li = numbers.indexOf(number)
                         val ri = objects.indexOf(target)
