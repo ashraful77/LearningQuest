@@ -206,13 +206,6 @@ fun ArifaAdvancedMathScreen(onBack: () -> Unit) {
     val questions = advancedMathSets[selectedSet]
     val q = questions[index]
 
-    DisposableEffect(selectedSet, index) {
-        onDispose {
-            if (!finished) {
-                saveProgress(index, score)
-            }
-        }
-    }
 
     if (finished) {
         Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment=Alignment.CenterHorizontally, verticalArrangement=Arrangement.Center) {
