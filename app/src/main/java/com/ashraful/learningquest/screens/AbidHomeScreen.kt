@@ -110,6 +110,7 @@ fun AbidHomeScreen(
                         else -> {
                             LearningCard("🔢", "Numbers", "Learn numbers and counting!", Color(0xFFFFF1D6), Color(0xFF9A5A00)) { onNavigate("abid_numbers") }
                             LearningCard("🔢", "Count & Match", "Count objects and choose the number!", Color(0xFFFFE8EC), Color(0xFFC13A63)) { onNavigate("abid_number_match") }
+                            LearningCard("🔗", "Match Numbers Test", "Drag a line from each number to its matching objects!", Color(0xFFEAF2FF), Color(0xFF2457A6)) { onNavigate("abid_match_numbers_test") }
                             LearningCard("➕", "Little Maths", "Practice easy addition!", Color(0xFFFFF3D9), Color(0xFF9A5A00)) { onNavigate("abid_simple_math") }
                         }
                     }
