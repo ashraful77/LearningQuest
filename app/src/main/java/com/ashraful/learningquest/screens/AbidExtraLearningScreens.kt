@@ -150,15 +150,22 @@ fun AbidListenAndChooseScreen(onBack: () -> Unit) {
                     isSelected -> Color(0xFFC62828)
                     else -> Color(0xFF8A96A8)
                 }
-                Button(onClick = {
-                    if (selected == null) {
-                        selected = option
-                        if (option == target) score++
-                    }
-                }, enabled = selected == null, modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).height(68.dp), shape = RoundedCornerShape(20.dp), colors = ButtonDefaults.buttonColors(containerColor = background, contentColor = textColor),
-                   Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(option.toString(), fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = textColor)
-                    }
+                Button(
+                    onClick = {
+                        if (selected == null) {
+                            selected = option
+                            if (option == target) score++
+                        }
+                    },
+                    enabled = selected == null,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).height(68.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = background,
+                        contentColor = textColor
+                    )
+                ) {
+                    Text(option.toString(), fontSize = 34.sp, fontWeight = FontWeight.ExtraBold, color = textColor)
                 }
             }
             if (selected != null) {
