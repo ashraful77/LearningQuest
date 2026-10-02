@@ -155,6 +155,7 @@ fun HomeScreen() {
             "abid_bengali_picture_match" -> AbidBengaliPictureMatchScreen { goBack() }
             "abid_bengali_tracing" -> AbidBengaliTracingScreen { goBack() }
             "abid_numbers" -> AbidNumbersScreen { goBack() }
+            "abid_number_writing" -> AbidNumberWritingScreen { goBack() }
             "abid_shapes" -> AbidShapesScreen { goBack() }
             "abid_colors" -> AbidColorsScreen { goBack() }
             "abid_color_match" -> AbidColorMatchScreen { goBack() }
