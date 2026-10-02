@@ -30,12 +30,14 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
     val store = remember { GameDataStore(context) }
     val scope = rememberCoroutineScope()
     val data by store.gameData.collectAsState(initial = null)
+    val resumePrefs = remember { context.getSharedPreferences("anish_subject_resume", 0) }
+    val resumeKey = subject + "_" + setNumber
     val questions = remember(subject, setNumber) {
         anishQuestionsFor(subject).take(60).chunked(20).getOrNull(setNumber - 1).orEmpty()
     }
-    var currentIndex by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
+    var currentIndex by rememberSaveable(subject, setNumber) { mutableIntStateOf(resumePrefs.getInt(resumeKey + "_index", 0)) }
     var selected by rememberSaveable(subject, setNumber) { mutableIntStateOf(-1) }
-    var score by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
+    var score by rememberSaveable(subject, setNumber) { mutableIntStateOf(resumePrefs.getInt(resumeKey + "_score", 0)) }
     var rewardShown by rememberSaveable(subject, setNumber) { mutableStateOf(false) }
     var rewardPulse by rememberSaveable(subject, setNumber) { mutableStateOf(false) }
     var milestoneReward by rememberSaveable(subject, setNumber) { mutableIntStateOf(0) }
@@ -107,6 +109,7 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                     Text("Correct answers: ${score}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(18.dp))
                     Button(onClick = {
+                        resumePrefs.edit().remove(resumeKey + "_index").remove(resumeKey + "_score").apply()
                         currentIndex = 0
                         selected = -1
                         score = 0
@@ -173,6 +176,7 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
                     if (selected == -1) {
                         selected = index
                         if (index == question.correctAnswer) score++
+                        resumePrefs.edit().putInt(resumeKey + "_index", currentIndex).putInt(resumeKey + "_score", score).apply()
                         scope.launch {
                             val result = store.recordAnishQuestionAttempt(
                                 question.id,
@@ -282,6 +286,11 @@ fun AnishSubjectQuizScreen(subject: String, setNumber: Int = 1, onBack: () -> Un
             Spacer(Modifier.height(10.dp))
             Button(
                 onClick = {
+                    if (currentIndex == questions.lastIndex) {
+                        resumePrefs.edit().remove(resumeKey + "_index").remove(resumeKey + "_score").apply()
+                    } else {
+                        resumePrefs.edit().putInt(resumeKey + "_index", currentIndex + 1).putInt(resumeKey + "_score", score).apply()
+                    }
                     currentIndex++
                     selected = -1
                     rewardShown = false
