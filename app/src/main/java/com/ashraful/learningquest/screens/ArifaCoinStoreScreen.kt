@@ -40,8 +40,16 @@ fun ArifaCoinStoreScreen(onBack: () -> Unit) {
         }
         Spacer(Modifier.height(18.dp))
 
-        Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(Color(0xFFFFE9A8)), elevation = CardDefaults.cardElevation(2.dp)) {
-            Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Card(
+            Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(Color(0xFFFFE9A8)),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Column(
+                Modifier.fillMaxWidth().padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text("🪙", fontSize = 52.sp)
                 Text("$coins", fontSize = 38.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
                 Text("Learning Coins", fontSize = 15.sp, fontWeight = FontWeight.Bold)
@@ -49,21 +57,26 @@ fun ArifaCoinStoreScreen(onBack: () -> Unit) {
         }
 
         Spacer(Modifier.height(14.dp))
-        InfoCard("🎯 Earn Coins", "Answer questions correctly. Each Arifa question can reward coins once per calendar day.")
-        InfoCard("🎁 Spend Coins", "Use your coins in the Gift Store to permanently unlock gifts and equip your favourites.")
-        InfoCard("⭐ Keep Learning", "Different questions can earn rewards on the same day. The same question becomes eligible again tomorrow.")
+        InfoCard("🎯", "Earn Coins", "Answer questions correctly. Each Arifa question can reward coins once per calendar day.")
+        InfoCard("🎁", "Spend Coins", "Use your coins in the Gift Store to permanently unlock gifts and equip your favourites.")
+        InfoCard("⭐", "Keep Learning", "Different questions can earn rewards on the same day. The same question becomes eligible again tomorrow.")
     }
 }
 
 @Composable
-private fun InfoCard(icon: String, title: String, text: String) {
-    Card(Modifier.fillMaxWidth().padding(vertical = 5.dp), shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(1.dp)) {
+private fun InfoCard(icon: String, title: String, description: String) {
+    Card(
+        Modifier.fillMaxWidth().padding(vertical = 5.dp),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(Color.White),
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
         Row(Modifier.fillMaxWidth().padding(15.dp), verticalAlignment = Alignment.Top) {
             Text(icon, fontSize = 27.sp)
             Spacer(Modifier.width(12.dp))
             Column {
                 Text(title, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                Text(text, fontSize = 12.sp, color = Color(0xFF71809A))
+                Text(description, fontSize = 12.sp, color = Color(0xFF71809A))
             }
         }
     }
