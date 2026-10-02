@@ -139,6 +139,7 @@ fun HomeScreen() {
             "arifa_speaking" -> ArifaEnglishSpeakingScreen { goBack() }
             "arifa_daily" -> ArifaDailyChallengeScreen { goBack() }
             "arifa_achievements2" -> ArifaAchievements2Screen { goBack() }
+            "arifa_coin_store" -> ArifaCoinStoreScreen { goBack() }
             "arifa_path" -> ArifaLearningPathScreen { goBack() }
             "arifa_gift_store" -> ArifaGiftStoreScreen { goBack() }
             "abid_letters" -> AbidLettersScreen { goBack() }
@@ -312,21 +313,66 @@ private fun HomeContent(
         SubjectCard("🛤️", "Learning Path", "Follow your learning journey", Color(0xFFE8F8EF), Color(0xFF23754A)) { onNavigate("arifa_path") }
 
         Spacer(Modifier.height(10.dp))
-        Card(onClick = { onNavigate("arifa_achievements2") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(2.dp)) {
-            Row(Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("⭐", fontSize = 24.sp)
-                Spacer(Modifier.width(10.dp))
-                Column(Modifier.weight(1f)) {
-                    Text("Progress & Rewards", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
-                    Text("${data?.coins ?: 0} 🪙  •  Level ${data?.level ?: 1}  •  🔥 ${data?.streak ?: 0} day streak", fontSize = 10.sp, color = Color(0xFF60758A))
+        Text("🏆 Rewards & Collection", modifier = Modifier.fillMaxWidth(), fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF26354A))
+
+        val equippedGift = giftCatalog.firstOrNull { it.id == data?.equippedGiftId }
+
+        if (equippedGift != null) {
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(Color(0xFFFFF8E8)),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(equippedGift.emoji, fontSize = 38.sp)
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("🎁 Equipped Gift", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF8B5B00))
+                        Text(equippedGift.name, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                        Text("Your reward is displayed here!", fontSize = 10.sp, color = Color(0xFF71809A))
+                    }
                 }
-                Text("›", fontSize = 24.sp, color = Color(0xFF315FBA))
             }
         }
+
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            RewardHomeCard("🏆", "Achievements", "${data?.achievementCount ?: 0} unlocked", Modifier.weight(1f)) {
+                onNavigate("arifa_achievements2")
+            }
+            RewardHomeCard("🎁", "Gift Store", "${data?.ownedGiftCount ?: 0}/${giftCatalog.size} collected", Modifier.weight(1f)) {
+                onNavigate("arifa_gift_store")
+            }
+            RewardHomeCard("🪙", "Coin Store", "${data?.coins ?: 0} coins", Modifier.weight(1f)) {
+                onNavigate("arifa_coin_store")
+            }
+        }
+
         Spacer(Modifier.height(8.dp))
         Text("🌟 Keep learning, Arifa!", modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), fontSize = 11.sp, textAlign = TextAlign.Center, color = Color(0xFF7A8798))
     }
 }
+
+@Composable
+private fun RewardHomeCard(icon: String, title: String, subtitle: String, modifier: Modifier, onClick: () -> Unit) {
+    Card(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(Color.White),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(icon, fontSize = 25.sp)
+            Text(title, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA), textAlign = TextAlign.Center)
+            Text(subtitle, fontSize = 9.sp, color = Color(0xFF71809A), textAlign = TextAlign.Center, maxLines = 2)
+        }
+    }
+}
+
 @Composable
 private fun CompactSubject(icon: String, title: String, background: Color, accent: Color, modifier: Modifier, onClick: () -> Unit) {
     Card(onClick = onClick, modifier = modifier.padding(vertical = 3.dp), shape = RoundedCornerShape(18.dp),
