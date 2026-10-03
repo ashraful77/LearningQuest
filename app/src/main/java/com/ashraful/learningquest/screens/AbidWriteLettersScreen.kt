@@ -9,6 +9,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -152,7 +154,9 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
             }
         } else {
             Column(
-                Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                Modifier.fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(Modifier.height(8.dp))
@@ -162,7 +166,7 @@ fun AbidWriteLettersScreen(onBack: () -> Unit) {
                     }
                     Spacer(Modifier.weight(1f))
                     Text(
-                        "Letter $index - startIndex + 1} of $26 - startIndex}",
+                        "Letter ${index - startIndex + 1} of ${26 - startIndex}",
                         fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color(0xFF60758A)
                     )
                 }
