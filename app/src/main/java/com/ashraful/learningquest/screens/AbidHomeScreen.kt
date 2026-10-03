@@ -135,7 +135,7 @@ fun AbidHomeScreen(
         Spacer(Modifier.height(8.dp))
         SimpleFeatureCard("🔵", "Blue Coin Rewards", "Earn coins, buy gifts and decorate your reward room", Color(0xFFEAF4FF), Color(0xFF1769AA)) { onNavigate("abid_rewards") }
         Spacer(Modifier.height(8.dp))
-        SimpleFeatureCard("🧠", "Games & Memory", "Memory Match • Fun learning game", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onNavigate("abid_memory2") }
+        SimpleFeatureCard("🧠", "Games & Memory", "Memory Match • Fun learning game", Color(0xFFF0EAFF), Color(0xFF7043A8)) { onNavigate("abid_memory") }
         Spacer(Modifier.height(10.dp))
         Card(
             onClick = { onNavigate("abid_achievements") },
