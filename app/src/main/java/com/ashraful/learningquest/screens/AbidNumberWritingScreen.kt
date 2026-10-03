@@ -136,7 +136,7 @@ fun AbidNumberWritingScreen(onBack: () -> Unit) {
             Button(
                 onClick = {
                     number = if (number == 9) 1 else number + 1
-                    strokes = 0
+                    strokes = emptyList()
                 },
                 modifier = Modifier.weight(1f).height(52.dp)
             ) { Text("Next →", fontSize = 17.sp) }
