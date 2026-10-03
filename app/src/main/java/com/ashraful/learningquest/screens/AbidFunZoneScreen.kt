@@ -68,7 +68,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
     }
 
     fun next() {
-        if (rounds + 1 >= 10) finished = true
+        if (rounds + 1 >= 20) finished = true
         else {
             rounds++
             round = makeFunRound(game)
@@ -160,7 +160,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
                     Text("🎉🏆🎉", fontSize = 48.sp)
                     Text("Fun Complete!", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF7043A8))
                     Spacer(Modifier.height(8.dp))
-                    Text(score.toString() + " / 10", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
+                    Text(score.toString() + " / 20", fontSize = 42.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF315FBA))
                     Text(
                         when {
                             score >= 9 -> "🌟 Amazing! Super explorer!"
@@ -179,7 +179,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
             Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(26.dp), colors = CardDefaults.cardColors(Color.White), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.fillMaxWidth().padding(20.dp)) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text((rounds + 1).toString() + " / 10", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8A96A8))
+                        Text((rounds + 1).toString() + " / 20", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF8A96A8))
                         if (game == FunGame.FAST_FINGER && selected == -1) Text("⏱️ " + timeLeft + "s", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = if (timeLeft <= 2) Color(0xFFC62828) else Color(0xFF7043A8))
                     }
                     Spacer(Modifier.height(10.dp))
@@ -216,7 +216,7 @@ fun AbidFunZoneScreen(onBack: () -> Unit) {
                     textAlign = TextAlign.Center, color = if (selected == round.correct) Color(0xFF23754A) else Color(0xFFC62828)
                 )
                 Spacer(Modifier.height(10.dp))
-                Button(onClick = ::next, modifier = Modifier.fillMaxWidth()) { Text(if (rounds == 9) "See My Score 🏆" else "Next Fun →") }
+                Button(onClick = ::next, modifier = Modifier.fillMaxWidth()) { Text(if (rounds == 19) "See My Score 🏆" else "Next Fun →") }
             }
         }
     }
@@ -234,7 +234,11 @@ private fun makeFunRound(game: FunGame): FunRound {
             val groups = listOf(
                 listOf("🍎","🍎","🍎","🍌"), listOf("🐱","🐱","🐶","🐱"),
                 listOf("🔴","🔴","🔵","🔴"), listOf("🔺","🔺","🔺","🟦"),
-                listOf("⭐","⭐","🌟","⭐")
+                listOf("⭐","⭐","🌟","⭐"),
+                listOf("🍎","🍎","🍎","🍊"), listOf("🐶","🐶","🐱","🐶"),
+                listOf("🟦","🟦","🟩","🟦"), listOf("❤️","❤️","💙","❤️"),
+                listOf("1","1","2","1"), listOf("A","A","B","A"),
+                listOf("🍌","🍌","🍓","🍌"), listOf("🚗","🚗","🚌","🚗")
             )
             val group = groups.random()
             val counts = group.groupingBy { it }.eachCount()
@@ -259,7 +263,15 @@ private fun makeFunRound(game: FunGame): FunRound {
                 Pair(listOf("🔴","🔴","🟢","🔴","🔴","❓"), "🟢"),
                 Pair(listOf("🍎","🍌","🍎","🍌","❓"), "🍎"),
                 Pair(listOf("🔺","🟦","🔺","🟦","❓"), "🔺"),
-                Pair(listOf("1","2","1","2","❓"), "1")
+                Pair(listOf("1","2","1","2","❓"), "1"),
+                Pair(listOf("A","B","A","B","❓"), "A"),
+                Pair(listOf("🍎","🍎","🍌","🍎","🍎","❓"), "🍌"),
+                Pair(listOf("🔴","🟢","🔵","🔴","🟢","❓"), "🔵"),
+                Pair(listOf("⭐","⭐","🔵","⭐","⭐","❓"), "🔵"),
+                Pair(listOf("2","4","2","4","❓"), "2"),
+                Pair(listOf("5","6","7","5","6","❓"), "7"),
+                Pair(listOf("🐱","🐶","🐱","🐶","❓"), "🐱"),
+                Pair(listOf("🟢","🟢","🟡","🟢","🟢","❓"), "🟡")
             ).random()
             val options = (listOf(data.second) + listOf("⭐","🔵","🔴","🟢","🍎","🍌","🔺","🟦","1","2").filter { it != data.second }.shuffled().take(3)).shuffled()
             FunRound("🧩 Complete the pattern!\n" + data.first.joinToString("  "), options, options.indexOf(data.second))
@@ -271,7 +283,15 @@ private fun makeFunRound(game: FunGame): FunRound {
                 listOf("🔴","🔵","🟢","⭐"),
                 listOf("🔺","🔺","🔺","🟦"),
                 listOf("1","2","3","🍎"),
-                listOf("🍌","🍎","🥕","🐱")
+                listOf("🍌","🍎","🥕","🐱"),
+                listOf("🐶","🐱","🐰","🚗"),
+                listOf("🔴","🔵","🟢","🍎"),
+                listOf("1","2","3","⭐"),
+                listOf("🍎","🍌","🍊","🐶"),
+                listOf("🔺","🟦","⚪","🍌"),
+                listOf("A","B","C","🍎"),
+                listOf("🐱","🐶","🐰","🔵"),
+                listOf("⭐","🌟","✨","🍎")
             )
             val group = groups.random()
             val counts = group.groupingBy { it }.eachCount()
