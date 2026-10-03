@@ -71,7 +71,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                             onDragStart = { point ->
                                 val leftCenters = leftCenters.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
                                 val nearest = leftCenters.indices.minByOrNull { abs(leftCenters[it].y - point.y) }
-                                if (nearest != null && abs(leftCenters[nearest].y - point.y) < 70f && !matches.containsKey(numbers[nearest])) {
+                                if (nearest != null && abs(leftCenters[nearest].y - point.y) < 110f && !matches.containsKey(numbers[nearest])) {
                                     dragStart = nearest
                                     dragPoint = point
                                 }
@@ -82,7 +82,7 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                                     val end = dragPoint
                                     val rightCenters = rightCenters.map { Offset(with(density) { it.x.dp.toPx() }, with(density) { it.y.dp.toPx() }) }
                                     val nearestRight = if (end != null) rightCenters.indices.minByOrNull { abs(rightCenters[it].y - end.y) } else null
-                                    if (nearestRight != null && abs(rightCenters[nearestRight].y - end!!.y) < 70f) {
+                                    if (nearestRight != null && abs(rightCenters[nearestRight].y - end!!.y) < 110f) {
                                         val number = numbers[dragStart]
                                         val target = objects[nearestRight]
                                         if (number == target) {
@@ -119,8 +119,20 @@ fun AbidMatchNumbersTestScreen(onBack: () -> Unit) {
                 }
 
                 objects.forEachIndexed { i, n ->
-                    Column(Modifier.offset(x = rightX - 72.dp, y = rowHeight * i + rowHeight / 2 - 38.dp).width(144.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text((0 until n).joinToString(" ") { emoji[i % emoji.size] }, fontSize = 23.sp, textAlign = TextAlign.Center, maxLines = 2)
+                    Column(
+                        Modifier.offset(
+                            x = rightX - 92.dp,
+                            y = rowHeight * i + rowHeight / 2 - 42.dp
+                        ).width(184.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            (0 until n).joinToString(" ") { emoji[i % emoji.size] },
+                            fontSize = 20.sp,
+                            lineHeight = 24.sp,
+                            textAlign = TextAlign.Center,
+                            maxLines = 3
+                        )
                     }
                 }
             }
