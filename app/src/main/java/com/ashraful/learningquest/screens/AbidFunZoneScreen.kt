@@ -231,20 +231,24 @@ private fun makeFunRound(game: FunGame): FunRound {
             FunRound("🗺️ Find the treasure: " + answer, options, options.indexOf(answer))
         }
         FunGame.ODD_ONE -> {
-            val groups = listOf(
-                listOf("🍎","🍎","🍎","🍌"), listOf("🐱","🐱","🐶","🐱"),
-                listOf("🔴","🔴","🔵","🔴"), listOf("🔺","🔺","🔺","🟦"),
-                listOf("⭐","⭐","🌟","⭐"),
-                listOf("🍎","🍎","🍎","🍊"), listOf("🐶","🐶","🐱","🐶"),
-                listOf("🟦","🟦","🟩","🟦"), listOf("❤️","❤️","💙","❤️"),
-                listOf("1","1","2","1"), listOf("A","A","B","A"),
-                listOf("🍌","🍌","🍓","🍌"), listOf("🚗","🚗","🚌","🚗")
+            val rounds = listOf(
+                Pair(listOf("🍎","🍎","🍎","🍌"), "🍌"),
+                Pair(listOf("🐱","🐱","🐶","🐱"), "🐶"),
+                Pair(listOf("🔴","🔴","🔵","🔴"), "🔵"),
+                Pair(listOf("🔺","🔺","🔺","🟦"), "🟦"),
+                Pair(listOf("⭐","⭐","🌟","⭐"), "🌟"),
+                Pair(listOf("🍎","🍎","🍎","🍊"), "🍊"),
+                Pair(listOf("🐶","🐶","🐱","🐶"), "🐱"),
+                Pair(listOf("🟦","🟦","🟩","🟦"), "🟩"),
+                Pair(listOf("❤️","❤️","💙","❤️"), "💙"),
+                Pair(listOf("1","1","2","1"), "2"),
+                Pair(listOf("A","A","B","A"), "B"),
+                Pair(listOf("🍌","🍌","🍓","🍌"), "🍓"),
+                Pair(listOf("🚗","🚗","🚌","🚗"), "🚌")
             )
-            val group = groups.random()
-            val counts = group.groupingBy { it }.eachCount()
-            val answer = counts.minBy { it.value }.key
-            val options = group.shuffled()
-            FunRound("🕵️ Which one is different?", options, options.indexOf(answer))
+            val data = rounds.random()
+            val options = data.first.shuffled()
+            FunRound("🕵️ Which one is different?", options, options.indexOf(data.second))
         }
         FunGame.NUMBER_JUMP -> {
             val answer = Random.nextInt(1, 11)
@@ -277,27 +281,26 @@ private fun makeFunRound(game: FunGame): FunRound {
             FunRound("🧩 Complete the pattern!\n" + data.first.joinToString("  "), options, options.indexOf(data.second))
         }
         FunGame.NOT_BELONG -> {
-            val groups = listOf(
-                listOf("🍎","🍎","🍎","🚗"),
-                listOf("🐱","🐶","🐰","🍌"),
-                listOf("🔴","🔵","🟢","⭐"),
-                listOf("🔺","🔺","🔺","🟦"),
-                listOf("1","2","3","🍎"),
-                listOf("🍌","🍎","🥕","🐱"),
-                listOf("🐶","🐱","🐰","🚗"),
-                listOf("🔴","🔵","🟢","🍎"),
-                listOf("1","2","3","⭐"),
-                listOf("🍎","🍌","🍊","🐶"),
-                listOf("🔺","🟦","⚪","🍌"),
-                listOf("A","B","C","🍎"),
-                listOf("🐱","🐶","🐰","🔵"),
-                listOf("⭐","🌟","✨","🍎")
+            val rounds = listOf(
+                Pair(listOf("🐶","🐱","🐰","🍌"), "🍌"),
+                Pair(listOf("🍎","🍌","🍊","🐶"), "🐶"),
+                Pair(listOf("🐶","🐱","🐰","🚗"), "🚗"),
+                Pair(listOf("🔴","🔵","🟢","⭐"), "⭐"),
+                Pair(listOf("🔺","🟦","⚪","🍌"), "🍌"),
+                Pair(listOf("1","2","3","🍎"), "🍎"),
+                Pair(listOf("A","B","C","🍎"), "🍎"),
+                Pair(listOf("🐱","🐶","🐰","🔵"), "🔵"),
+                Pair(listOf("🍎","🍌","🥕","🐱"), "🐱"),
+                Pair(listOf("⭐","🌟","✨","🍎"), "🍎"),
+                Pair(listOf("🔴","🟢","🔵","🍌"), "🍌"),
+                Pair(listOf("2","4","6","🍎"), "🍎"),
+                Pair(listOf("A","E","I","7"), "7"),
+                Pair(listOf("🐶","🐱","🐰","🔺"), "🔺"),
+                Pair(listOf("🍎","🍌","🍊","🚲"), "🚲")
             )
-            val group = groups.random()
-            val counts = group.groupingBy { it }.eachCount()
-            val answer = counts.minBy { it.value }.key
-            val options = group.shuffled()
-            FunRound("🚫 Which one doesn't belong?", options, options.indexOf(answer))
+            val data = rounds.random()
+            val options = data.first.shuffled()
+            FunRound("🚫 Which one doesn't belong?", options, options.indexOf(data.second))
         }
         FunGame.FAST_FINGER -> {
             val targets = listOf("⭐","🔴","🔵","🟢","🍎","🔺","🐱","❤️")
