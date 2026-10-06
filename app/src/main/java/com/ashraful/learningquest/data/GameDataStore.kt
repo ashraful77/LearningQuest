@@ -46,6 +46,7 @@ class GameDataStore(private val context: Context) {
         val EQUIPPED_GIFT = stringPreferencesKey("equipped_gift")
         val SEEN_GIFTS = stringPreferencesKey("seen_gifts")
         val REAL_TEST_HISTORY = stringPreferencesKey("real_test_history")
+        val ARIFA_6000_RECOVERY_GRANTED = androidx.datastore.preferences.core.booleanPreferencesKey("arifa_6000_recovery_granted")
     }
 
     val profile: Flow<String?> =
@@ -395,6 +396,18 @@ class GameDataStore(private val context: Context) {
     }
 
     // Kept for existing callers outside Arifa question rewards.
+    suspend fun restoreArifa6000CoinsOnce(): Boolean {
+        var granted = false
+        context.gameDataStore.edit { preferences ->
+            if (preferences[Keys.ARIFA_6000_RECOVERY_GRANTED] != true) {
+                preferences[Keys.COINS] = (preferences[Keys.COINS] ?: 0) + 6000
+                preferences[Keys.ARIFA_6000_RECOVERY_GRANTED] = true
+                granted = true
+            }
+        }
+        return granted
+    }
+
     suspend fun addReward(coins: Int, xp: Int) {
         context.gameDataStore.edit { preferences ->
             preferences[Keys.COINS] = (preferences[Keys.COINS] ?: 0) + coins
