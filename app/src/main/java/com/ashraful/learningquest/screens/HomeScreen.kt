@@ -80,6 +80,13 @@ fun HomeScreen() {
         backStack = ""
     }
 
+    val context = LocalContext.current
+    val recoveryStore = remember { GameDataStore(context) }
+
+    LaunchedEffect(profile) {
+        if (profile == "arifa") recoveryStore.restoreArifa6000CoinsOnce()
+    }
+
     BackHandler(enabled = profile != null && screen != "home") {
         goBack()
     }
