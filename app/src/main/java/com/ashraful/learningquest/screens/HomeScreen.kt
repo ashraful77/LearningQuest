@@ -151,6 +151,7 @@ fun HomeScreen() {
             "arifa_gift_store" -> ArifaGiftStoreScreen { goBack() }
             "abid_letters" -> AbidLettersScreen { goBack() }
             "abid_write_letters" -> AbidWriteLettersScreen { goBack() }
+            "abid_small_letter_writing" -> AbidSmallLetterWritingScreen { goBack() }
             "abid_bengali_letters" -> AbidBengaliLettersScreen { goBack() }
             "abid_bengali_practice" -> AbidBengaliPracticeScreen { goBack() }
             "abid_bengali_listen_sets" -> AbidBengaliListenChooseSetsScreen({ set -> navigate("abid_bengali_listen_" + set) }, { goBack() })
